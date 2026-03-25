@@ -4,6 +4,9 @@
 
 #pragma once
 
+class UI;
+class Game_Manager;
+class Player;
 
 namespace Tmpl8
 {
@@ -24,6 +27,10 @@ public:
 	void KeyDown( int ) { /* implement if you want to handle keys */ }
 	// data members
 	int2 mousePos;
+
+	UI* m_UI;
+	Game_Manager* m_Game_Manager;
+	Player* m_Player;
 
 };
 
