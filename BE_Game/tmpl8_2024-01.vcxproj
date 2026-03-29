@@ -121,9 +121,13 @@
   </ItemDefinitionGroup>
   <!-- END Custom section -->
   <ItemGroup>
+    <ClCompile Include="Craftingtable.cpp" />
+    <ClCompile Include="Craftingtable_Manager.cpp" />
     <ClCompile Include="game.cpp" />
     <ClCompile Include="Game_Manager.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="Resources.cpp" />
+    <ClCompile Include="Resource_Manager.cpp" />
     <ClCompile Include="template\opencl.cpp" />
     <ClCompile Include="template\opengl.cpp" />
     <ClCompile Include="template\scene.cpp">
@@ -140,12 +144,17 @@
     </ClCompile>
     <ClCompile Include="template\tmpl8math.cpp" />
     <ClCompile Include="UI.cpp" />
+    <ClCompile Include="Window_Manager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cl\tools.cl" />
+    <ClInclude Include="Craftingtable.h" />
+    <ClInclude Include="Craftingtable_Manager.h" />
     <ClInclude Include="game.h" />
     <ClInclude Include="Game_Manager.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="Resources.h" />
+    <ClInclude Include="Resource_Manager.h" />
     <ClInclude Include="template\common.h" />
     <ClInclude Include="template\opencl.h" />
     <ClInclude Include="template\opengl.h" />
@@ -155,6 +164,7 @@
     <ClInclude Include="template\surface.h" />
     <ClInclude Include="template\tmpl8math.h" />
     <ClInclude Include="UI.h" />
+    <ClInclude Include="Window_Manager.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="cl\kernels.cl" />
