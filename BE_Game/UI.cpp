@@ -53,10 +53,10 @@ void UI::Forest_UI(Surface* screen, Resource_Manager* resource_Manager, Player* 
 
 	// draws the level progress bar
 	{
-		double level_Indicator = 150 + (player->Get_Lumberjack_Exp() / player->Get_Lumberjack_Exp_Needed_Level_Up() * (SCRWIDTH - 150));
+		double level_Indicator = 150 + (player->Get_Stats("Lumberjack")->Get_Exp() / player->Get_Stats("Lumberjack")->Get_Exp_Needed() * (SCRWIDTH - 150));
 		screen->Bar(150, 100, level_Indicator, 150, 0x00FF00);
-		double player_Exp = std::round(player->Get_Lumberjack_Exp());
-		double player_Exp_Needed = std::round(player->Get_Lumberjack_Exp_Needed_Level_Up());
+		double player_Exp = std::round(player->Get_Stats("Lumberjack")->Get_Exp());
+		double player_Exp_Needed = std::round(player->Get_Stats("Lumberjack")->Get_Exp_Needed());
 		std::string level_Idicator_Tekst = "Exp: " + std::to_string(static_cast<int>(std::round(player_Exp))) + " / Exp Needed: " + std::to_string(static_cast<int>(std::round(player_Exp_Needed)));
 		screen->Print(level_Idicator_Tekst.c_str(), (SCRWIDTH - 150) / 2, 125, 0xFF0000 , 2.0F);
 	}
@@ -79,10 +79,10 @@ void UI::Forge_UI(Surface* screen, Resource_Manager* resource_Manager, Player* p
 {
 	// draws the level progress bar
 	{
-		double level_Indicator = 150 + (player->Get_Crafting_Exp() / player->Get_Crafting_Exp_Needed_Level_Up() * (SCRWIDTH - 150));
+		double level_Indicator = 150 + (player->Get_Stats("Crafting")->Get_Exp() / player->Get_Stats("Crafting")->Get_Exp_Needed() * (SCRWIDTH - 150));
 		screen->Bar(150, 100, level_Indicator, 150, 0x00FF00);
-		double player_Exp = std::round(player->Get_Crafting_Exp());
-		double player_Exp_Needed = std::round(player->Get_Crafting_Exp_Needed_Level_Up());
+		double player_Exp = std::round(player->Get_Stats("Crafting")->Get_Exp());
+		double player_Exp_Needed = std::round(player->Get_Stats("Crafting")->Get_Exp_Needed());
 		std::string level_Idicator_Tekst = "Exp: " + std::to_string(static_cast<int>(std::round(player_Exp))) + " / Exp Needed: " + std::to_string(static_cast<int>(std::round(player_Exp_Needed)));
 		screen->Print(level_Idicator_Tekst.c_str(), (SCRWIDTH - 150) / 2, 125, 0xFF0000, 2.0F);
 	}

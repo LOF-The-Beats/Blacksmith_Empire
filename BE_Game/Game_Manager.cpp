@@ -90,8 +90,8 @@ void Game_Manager::Forest_Buttons(Player* player, Resource_Manager* resource_Man
 {
 	if (Is_Mouse_Over_Standard(player, 160, 160))
 	{
-		resource_Manager->Add_Resource_Quantity("SoftWood", player->Get_Lumberjack_Power());
-		player->Add_Lumberjack_Exp(1);
+		resource_Manager->Add_Resource_Quantity("SoftWood", player->Get_Stats("Lumberjack")->Get_Power());
+		player->Get_Stats("Lumberjack")->Add_Exp(1);
 	}
 	if (Is_Mouse_Over_Standard(player, 160, 230) &&
 		resource_Manager->Get_Resource("SoftWood")->Get_Worker_Cost() <= resource_Manager->Get_Resource_Quantity("SoftWood"))
@@ -141,22 +141,22 @@ void Game_Manager::Update_All_Per_Seccond_Events(double deltaTime, Player* playe
 
 void Game_Manager::Check_Level_Up(Player* player)
 {
-	if (player->Get_Lumberjack_Exp() >= player->Get_Lumberjack_Exp_Needed_Level_Up())
+	if (player->Get_Stats("Lumberjack")->Get_Exp() >= player->Get_Stats("Lumberjack")->Get_Exp_Needed())
 	{
-		player->Add_Lumberjack_Level(1);
-		player->Add_Lumberjack_Exp_Needed_Level_Up(50);
-		player->Set_Lumberjack_Exp(0);
+		player->Get_Stats("Lumberjack")->Add_Level(1);
+		player->Get_Stats("Lumberjack")->Add_Exp_Needed(50);
+		player->Get_Stats("Lumberjack")->Set_Exp(0);
 	}
-	if (player->Get_Crafting_Exp() >= player->Get_Crafting_Exp_Needed_Level_Up())
+	if (player->Get_Stats("Crafting")->Get_Exp() >= player->Get_Stats("Crafting")->Get_Exp_Needed())
 	{
-		player->Add_Crafting_Level(1);
-		player->Add_Crafting_Exp_Needed_Level_Up(50);
-		player->Set_Crafting_Exp(0);
+		player->Get_Stats("Crafting")->Add_Level(1);
+		player->Get_Stats("Crafting")->Add_Exp_Needed(50);
+		player->Get_Stats("Crafting")->Set_Exp(0);
 	}
 }
 
 void Game_Manager::Check_Player_Stats(Player* player)
 {
-	player->Set_Lumberjack_Power(player->Get_Lumberjack_Level());
-	player->Set_Crafting_Power(player->Get_Crafting_Level());
+	player->Get_Stats("Lumberjack")->Set_Power(player->Get_Stats("Lumberjack")->Get_Level());
+	player->Get_Stats("Crafting")->Set_Power(player->Get_Stats("Crafting")->Get_Level());
 }

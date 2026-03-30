@@ -34,6 +34,10 @@ void Game::Init()
 
 	//Craftingtables
 	m_Craftingtable_Manager->Add_Craftingtable("Craftingtable 1");
+
+	//Stats
+	m_Player->Add_Stats("Lumberjack", 1);
+	m_Player->Add_Stats("Crafting", 1);
 }
 
 

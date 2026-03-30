@@ -128,6 +128,7 @@
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Resources.cpp" />
     <ClCompile Include="Resource_Manager.cpp" />
+    <ClCompile Include="Stats.cpp" />
     <ClCompile Include="template\opencl.cpp" />
     <ClCompile Include="template\opengl.cpp" />
     <ClCompile Include="template\scene.cpp">
@@ -155,6 +156,7 @@
     <ClInclude Include="Player.h" />
     <ClInclude Include="Resources.h" />
     <ClInclude Include="Resource_Manager.h" />
+    <ClInclude Include="Stats.h" />
     <ClInclude Include="template\common.h" />
     <ClInclude Include="template\opencl.h" />
     <ClInclude Include="template\opengl.h" />
