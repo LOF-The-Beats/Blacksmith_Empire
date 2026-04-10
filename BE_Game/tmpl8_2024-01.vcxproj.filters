@@ -32,6 +32,10 @@
     <ClCompile Include="Craftingtable.cpp" />
     <ClCompile Include="Craftingtable_Manager.cpp" />
     <ClCompile Include="Stats.cpp" />
+    <ClCompile Include="Blueprints.cpp" />
+    <ClCompile Include="Blueprint_Manager.cpp" />
+    <ClCompile Include="Item.cpp" />
+    <ClCompile Include="Item_Manager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="game.h" />
@@ -71,6 +75,10 @@
     <ClInclude Include="Craftingtable.h" />
     <ClInclude Include="Craftingtable_Manager.h" />
     <ClInclude Include="Stats.h" />
+    <ClInclude Include="Blueprints.h" />
+    <ClInclude Include="Blueprint_Manager.h" />
+    <ClInclude Include="Item.h" />
+    <ClInclude Include="Item_Manager.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="README.md">

@@ -2,7 +2,7 @@
 #include "Craftingtable.h"
 
 Craftingtable::Craftingtable(string name)
-	:name(name), resource(""), blueprint(""), in_Use(false), progress(0.0)
+	:name(name), resource("none"), blueprint("none"), in_Use(false), progress(0.0)
 {
 }
 

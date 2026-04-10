@@ -121,10 +121,14 @@
   </ItemDefinitionGroup>
   <!-- END Custom section -->
   <ItemGroup>
+    <ClCompile Include="Blueprints.cpp" />
+    <ClCompile Include="Blueprint_Manager.cpp" />
     <ClCompile Include="Craftingtable.cpp" />
     <ClCompile Include="Craftingtable_Manager.cpp" />
     <ClCompile Include="game.cpp" />
     <ClCompile Include="Game_Manager.cpp" />
+    <ClCompile Include="Item.cpp" />
+    <ClCompile Include="Item_Manager.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Resources.cpp" />
     <ClCompile Include="Resource_Manager.cpp" />
@@ -148,11 +152,15 @@
     <ClCompile Include="Window_Manager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Blueprints.h" />
+    <ClInclude Include="Blueprint_Manager.h" />
     <ClInclude Include="cl\tools.cl" />
     <ClInclude Include="Craftingtable.h" />
     <ClInclude Include="Craftingtable_Manager.h" />
     <ClInclude Include="game.h" />
     <ClInclude Include="Game_Manager.h" />
+    <ClInclude Include="Item.h" />
+    <ClInclude Include="Item_Manager.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Resources.h" />
     <ClInclude Include="Resource_Manager.h" />

@@ -2,7 +2,7 @@
 #include "Stats.h"
 
 Stats::Stats(string name, double power)
-	:name(name), power(power), exp(0), exp_Needed(50), level(1)
+	:name(name), power(power), exp(0), exp_Needed(50), level(1), tool_Name("Hands"), tool_Power(1.0)
 {
 }
 
@@ -11,9 +11,19 @@ string Stats::Get_Name() const
 	return name;
 }
 
+string Stats::Get_Tool_Name() const
+{
+	return tool_Name;
+}
+
 double Stats::Get_Power() const
 {
 	return power;
+}
+
+double Stats::Get_Tool_Power() const
+{
+	return tool_Power;
 }
 
 double Stats::Get_Exp() const
@@ -37,9 +47,21 @@ void Stats::Set_Name(string n)
 	return;
 }
 
+void Stats::Set_Tool_Name(string n)
+{
+	tool_Name = n;
+	return;
+}
+
 void Stats::Set_Power(double amount)
 {
 	power = amount;
+	return;
+}
+
+void Stats::Set_Tool_Power(double amount)
+{
+	tool_Power = amount;
 	return;
 }
 

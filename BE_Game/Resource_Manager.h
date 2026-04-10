@@ -12,7 +12,7 @@ public:
 	double Get_Resource_Quantity(const string name) const;
 	
 	//adders
-	void Add_Resource(const string name, double quantity);
+	void Add_Resource(const string name, double quantity, double hardness);
 	void Add_Resource_Quantity(const string name, double amount);
 	
 	//subtrackters

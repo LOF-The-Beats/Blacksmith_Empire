@@ -25,11 +25,11 @@ double Resource_Manager::Get_Resource_Quantity(const string name) const
 	return 0.0;
 }
 
-void Resource_Manager::Add_Resource(const string name, double quantity)
+void Resource_Manager::Add_Resource(const string name, double quantity, double hardness)
 {
 	if (resources.find(name) == resources.end())
 	{
-		resources[name] = new Resources(name, quantity);
+		resources[name] = new Resources(name, quantity, hardness);
 	}
 }
 

@@ -1,0 +1,41 @@
+#pragma once
+class Item
+{
+public:
+	Item(string name, string resource, string blueprint, double level, double value, double power);
+
+	//getters
+	string Get_Name() const;
+	string Get_Resource() const;
+	string Get_Blueprint() const;
+	double Get_Level() const;
+	double Get_Power() const;
+	double Get_Quantity() const;
+	double Get_Value() const;
+
+	//setters
+	void Set_Name(string n);
+	void Set_Resource(string n);
+	void Set_Blueprint(string n);
+	void Set_Level(double amount);
+	void Set_Power(double amount);
+	void Set_Quantity(double amount);
+	void Set_Value(double amount);
+
+	//adders
+	void Add_Level(double amount);
+	void Add_Power(double amount);
+	void Add_Quantity(double amount);
+
+	
+	//Subtrackters
+	void Sub_Level(double amount);
+	void Sub_Power(double amount);
+	void Sub_Quantity(double amount);
+
+private:
+
+	string name , resource, blueprint;
+	double level, power, quantity, value;
+};
+

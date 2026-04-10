@@ -6,14 +6,18 @@ public:
 
 	// Getters
 	string Get_Name() const;
+	string Get_Tool_Name() const;
 	double Get_Power() const;
+	double Get_Tool_Power() const;
 	double Get_Exp() const;
 	double Get_Exp_Needed() const;
 	double Get_Level() const;
 	
 	// Setters
 	void Set_Name(string n);
+	void Set_Tool_Name(string n);
 	void Set_Power(double amount);
+	void Set_Tool_Power(double amount);
 	void Set_Exp(double amount);
 	void Set_Exp_Needed(double amount);
 	void Set_Level(double amount);
@@ -34,7 +38,9 @@ public:
 
 private:
 	string name;
+	string tool_Name;
 	double power;
+	double tool_Power;
 	double exp;
 	double exp_Needed;
 	double level;

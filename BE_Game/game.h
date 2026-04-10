@@ -10,6 +10,8 @@ class Player;
 class Resource_Manager;
 class Window_Manager;
 class Craftingtable_Manager;
+class Blueprint_Manager;
+class Item_Manager;
 
 
 namespace Tmpl8
@@ -38,6 +40,8 @@ public:
 	Resource_Manager* m_Resource_Manager;
 	Window_Manager* m_Window_Manager;
 	Craftingtable_Manager* m_Craftingtable_Manager;
+	Blueprint_Manager* m_Blueprint_Manager;
+	Item_Manager* m_Item_Manager;
 
 };
 
