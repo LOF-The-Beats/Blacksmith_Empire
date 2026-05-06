@@ -1,0 +1,47 @@
+========================
+THINGS TO DO
+========================
+MAIN LOOP: WOOD -> STONE
+- Fix the current main loop.
+- Create new blueprints.
+- Create a way to upgrade blueprints.
+- Make the first few tools always appear in the same order.
+- After the fixed starter tools, let the player choose 1 blueprint from 3 options.
+- Make sure newly crafted tools can be equipped by the player.
+- Make equipped tools correctly affect player stats.
+- Add Stone resource.
+- Connect Stone to the blueprint/crafting system.
+- Make sure Stone progression works from start to finish.
+
+SAVE / LOAD / RESET
+- Add save system.
+- Add load system.
+- Add reset mechanic.
+- Decide what resets.
+- Decide what stays after reset.
+- Decide what reward the player gets from resetting.
+
+BALANCING
+- Balance Wood progression.
+- Balance Stone progression.
+- Balance blueprint costs.
+- Balance tool power.
+- Balance worker/automation speed.
+- Test full progression from new game to reset.
+
+TOOLTIPS / TUTORIAL
+- Add tooltips for resources.
+- Add tooltips for tools.
+- Add tooltips for blueprints.
+- Add basic tutorial.
+- Make sure the player understands the main loop.
+========================
+THINGS I WOULD LIKE
+========================
+- 
+
+
+========================
+IDEAS
+========================
+- 
