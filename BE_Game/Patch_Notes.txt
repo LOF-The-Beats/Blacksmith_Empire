@@ -1,0 +1,51 @@
+Patch 0.1.5
+Blueprint Drafting System
+- Added a dedicated Blueprint Draft Manager.
+- Added three-card blueprint draft selection system.
+- Added forced progression drafts:
+  - First draft unlocks Tools.
+  - Second draft unlocks Pickaxe.
+- Added blueprint draft costs.
+- Draft costs now increase by x5 after each successful blueprint unlock.
+- Added blueprint card information display.
+
+Blueprint System
+- Added blueprint order values.
+- Added sorted blueprint retrieval function.
+- Collects unlocked blueprints.
+- Sorts by order value.
+- Returns sorted blueprint list.
+- Converted blueprint UI from hardcoded entries to dynamic generation.
+- Converted blueprint button selection to dynamic logic.
+
+Resource System
+- Added resource ordering support.
+- Added sorted resource retrieval function.
+- Collects crafting resources.
+- Sorts by order value.
+- Returns sorted resource list.
+- Converted resource UI from hardcoded entries to dynamic generation.
+- Converted resource selection buttons to dynamic logic.
+
+Crafting Table
+- Converted crafting table selection system to work with any resource and blueprint combination.
+- Removed hardcoded SoftWood + Axe requirements.
+- Added dynamic item preview generation.
+- Item names are now built from:
+  Resource + Blueprint + Blueprint Level.
+- Added dynamic resource information display.
+
+Item Power & Blueprint Balancing
+- Removed dependence on Hardness / 5 * Blueprint Level.
+- Added Blueprint Conversion Rate system.
+- Item power now uses:
+  Resource Hardness x Conversion Rate.
+- Blueprint progression is now independent from blueprint level.
+- Conversion rates can be balanced separately.
+
+Worker Equipment
+- Identified equipment filtering issue.
+- Planned equip slot system for items.
+- Future filtering will only show valid tools for each worker.
+- Planned Get_Item_Sorted_By_Power_And_Slot() function.
+
