@@ -20,7 +20,7 @@ public:
 	double Sell_All_Items();
 
 	// sorter
-	vector<Item*> get_Item_Sorted_By_Power_And_Name();
+	vector<Item*> get_Item_Sorted_By_Power_And_Equip_Slot(string equip_Slot);
 
 private:
 	unordered_map<string, Item*> item;

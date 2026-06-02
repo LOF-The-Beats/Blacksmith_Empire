@@ -32,6 +32,7 @@ public:
 	void Craftingtable_1_Window(Player* player, Craftingtable_Manager* craftingtable, Window_Manager* window_Manager, Blueprint_Manager* blueprint_Manager, Resource_Manager* resource_Manager);
 	void Lumberjack_Tool_Window(Player* player, Window_Manager* window_Manager, Item_Manager* item_Manager);
 	void Blueprint_Crafting_Window(Player* player, Window_Manager* window_Manager, Item_Manager* item_Manager, Blueprint_Manager* blueprint_Manager, Draft_Manager* draft_Manager, Resource_Manager* resource_Manager);
+	void Blueprint_Upgrade_Window(Player* player, Window_Manager* window_Manager, Item_Manager* item_Manager, Blueprint_Manager* blueprint_Manager, Draft_Manager* draft_Manager, Resource_Manager* resource_Manager);
 
 
 

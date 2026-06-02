@@ -29,10 +29,9 @@ void Game::Init()
 	m_Draft_Manager = new Draft_Manager;
 
 	//Resources
-	m_Resource_Manager->Add_Resource("Thalions", 0, 0, 0, false);
+	m_Resource_Manager->Add_Resource("Thalions", 1000, 0, 0, false);
 	m_Resource_Manager->Add_Resource("SoftWood", 1000, 10, 0, true);
-	m_Resource_Manager->Add_Resource("Testing", 1000, 10, 0, true);
-	m_Resource_Manager->Add_Resource("Paper", 70, 1000, 0, false);
+	m_Resource_Manager->Add_Resource("Paper", 10000, 1000, 0, false);
 
 	//Windows / Locations
 	m_Window_Manager->add_Window("Forest", true);
@@ -43,7 +42,10 @@ void Game::Init()
 
 	m_Window_Manager->add_Window("Craftingtable 1", false);
 	m_Window_Manager->add_Window("Lumberjack Tool", false);
+	m_Window_Manager->add_Window("Crafting Tool", false);
+	m_Window_Manager->add_Window("Mining Tool", false);
 	m_Window_Manager->add_Window("Blueprint Crafting", false);
+	m_Window_Manager->add_Window("Blueprint Upgrade", false);
 
 	//Craftingtables
 	m_Craftingtable_Manager->Add_Craftingtable("Craftingtable 1");
@@ -51,6 +53,7 @@ void Game::Init()
 	//Stats
 	m_Player->Add_Stats("Lumberjack", 1);
 	m_Player->Add_Stats("Crafting", 1);
+	m_Player->Add_Stats("Mining", 1);
 	m_Player->Add_Stats("Scribe", 1);
 
 	//Blueprints

@@ -38,13 +38,15 @@ double Item_Manager::Sell_All_Items()
 	return earned_gold;
 }
 
-vector<Item*> Item_Manager::get_Item_Sorted_By_Power_And_Name()
+vector<Item*> Item_Manager::get_Item_Sorted_By_Power_And_Equip_Slot(string equip_Slot)
 {
 	vector<Item*> sorted_Items;
 
 	for (auto& [key, itemPtr] : item)
 	{
-		if (itemPtr && itemPtr->Get_Quantity() > 0)
+		if (itemPtr && 
+			itemPtr->Get_Quantity() > 0 &&
+			itemPtr->Get_Equip_Slot() == equip_Slot)
 		{
 			sorted_Items.push_back(itemPtr);
 		}

@@ -25,11 +25,14 @@ void UI::Draw_UI(Surface* screen, Resource_Manager* resource_Manager, Player* pl
 		Forge_UI(screen, resource_Manager, player, window_Manager, craftingtable, blueprint_Manager, item_Manager);
 	}
 	else if (window_Manager->get_Active_Window() == "Player" ||
-		window_Manager->get_Active_Window() == "Lumberjack Tool")
+		window_Manager->get_Active_Window() == "Lumberjack Tool" ||
+		window_Manager->get_Active_Window() == "Crafting Tool" ||
+		window_Manager->get_Active_Window() == "Mining Tool")
 	{
 		Player_UI(screen, window_Manager, item_Manager, player);
 	}
 	else if (window_Manager->get_Active_Window() == "Libary" ||
+		window_Manager->get_Active_Window() == "Blueprint Upgrade" ||
 		window_Manager->get_Active_Window() == "Blueprint Crafting")
 	{
 		Libary_UI(screen, resource_Manager, blueprint_Manager, player, window_Manager, draft_Manager);
@@ -87,8 +90,9 @@ void UI::Forest_UI(Surface* screen, Resource_Manager* resource_Manager, Player* 
 	string label = "Cost: " + std::to_string(static_cast<int>(std::round(cost))) + " " + resource_Manager->Get_Resource("Thalions")->Get_Name() + " 1 " + resource_Manager->Get_Resource("SoftWood")->Get_Worker_Tool_Equiped();
 	button_Standard("Buy Worker", label.c_str(), 160, 230, screen); // buy worker
 
-	auto sorted_Item = item_Manager->get_Item_Sorted_By_Power_And_Name();
-	if (!sorted_Item.empty())
+	auto sorted_Item = item_Manager->get_Item_Sorted_By_Power_And_Equip_Slot("Lumberjack");
+	if (!sorted_Item.empty() &&
+		sorted_Item[0]->Get_Power() > resource_Manager->Get_Resource("SoftWood")->Get_Workers_Tool_Power())
 	{
 		cost = resource_Manager->Get_Resource("SoftWood")->Get_Workers();
 		label = "Cost: " + std::to_string(static_cast<int>(std::round(cost))) + " " + sorted_Item[0]->Get_Name();
@@ -244,19 +248,70 @@ void UI::Player_UI(Surface* screen, Window_Manager* window_Manager, Item_Manager
 	if (window == "Player")
 	{
 		button_Standard("Equip: ", "Lumberjack tool", 160, 60, screen);
+		button_Standard("Equip: ", "Crafting tool", 160, 120, screen);
+		button_Standard("Equip: ", "Mining tool", 160, 180, screen);
 	}
 	else if (window == "Lumberjack Tool")
 	{
 		button_Standard_Selected("Lumberjack tool", 160, 60, screen);
+		button_Standard("Equip: ", "Crafting tool", 160, 120, screen);
+		button_Standard("Equip: ", "Mining tool", 160, 180, screen);
 
 		screen->Box(SCRWIDTH / 2, 50, SCRWIDTH - 1, SCRHEIGHT - 1, 0x00FF00);
 
-		auto sorted_Items = item_Manager->get_Item_Sorted_By_Power_And_Name();
+		auto sorted_Items = item_Manager->get_Item_Sorted_By_Power_And_Equip_Slot("Lumberjack");
 		double start_X = SCRWIDTH / 2 + 10;
 		double start_Y = 115;
 		double button_Hight = 55;
 
 		string tekst = "Tool Equiped: " + player->Get_Stats("Lumberjack")->Get_Tool_Name() + "  Tool power: " + to_string(static_cast<int>(player->Get_Stats("Lumberjack")->Get_Tool_Power()));
+		screen->Print(tekst.c_str(), start_X, start_Y - button_Hight, 0xFF00FF, 2.0F);
+
+		for (double i = 0; i < sorted_Items.size(); i++)
+		{
+			Item* item = sorted_Items[i];
+			string tekst = "power: " + to_string(static_cast<int>(item->Get_Power()));
+
+			button_Standard(item->Get_Name().c_str(), tekst.c_str(),start_X, start_Y + i * button_Hight, screen);
+		}
+	}
+	else if (window == "Crafting Tool")
+	{
+		button_Standard("Equip: ", "Lumberjack tool", 160, 60, screen);
+		button_Standard_Selected("Crafting tool", 160, 120, screen);
+		button_Standard("Equip: ", "Mining tool", 160, 180, screen);
+
+		screen->Box(SCRWIDTH / 2, 50, SCRWIDTH - 1, SCRHEIGHT - 1, 0x00FF00);
+
+		auto sorted_Items = item_Manager->get_Item_Sorted_By_Power_And_Equip_Slot("Crafting");
+		double start_X = SCRWIDTH / 2 + 10;
+		double start_Y = 115;
+		double button_Hight = 55;
+
+		string tekst = "Tool Equiped: " + player->Get_Stats("Crafting")->Get_Tool_Name() + "  Tool power: " + to_string(static_cast<int>(player->Get_Stats("Crafting")->Get_Tool_Power()));
+		screen->Print(tekst.c_str(), start_X, start_Y - button_Hight, 0xFF00FF, 2.0F);
+
+		for (double i = 0; i < sorted_Items.size(); i++)
+		{
+			Item* item = sorted_Items[i];
+			string tekst = "power: " + to_string(static_cast<int>(item->Get_Power()));
+
+			button_Standard(item->Get_Name().c_str(), tekst.c_str(),start_X, start_Y + i * button_Hight, screen);
+		}
+	}else if (window == "Mining Tool")
+	{
+		button_Standard("Equip: ", "Lumberjack tool", 160, 60, screen);
+		button_Standard("Equip: ", "Crafting tool", 160, 120, screen);
+		button_Standard_Selected("Mining Tool", 160, 180, screen);
+
+		screen->Box(SCRWIDTH / 2, 50, SCRWIDTH - 1, SCRHEIGHT - 1, 0x00FF00);
+
+		auto sorted_Items = item_Manager->get_Item_Sorted_By_Power_And_Equip_Slot("Mining");
+		double start_X = SCRWIDTH / 2 + 10;
+		double start_Y = 115;
+		double button_Hight = 55;
+
+		string tekst = "Tool Equiped: " + player->Get_Stats("Mining")->Get_Tool_Name() + "  Tool power: " + to_string(static_cast<int>(player->Get_Stats("Mining")->Get_Tool_Power()));
 		screen->Print(tekst.c_str(), start_X, start_Y - button_Hight, 0xFF00FF, 2.0F);
 
 		for (double i = 0; i < sorted_Items.size(); i++)
@@ -347,8 +402,40 @@ void UI::Libary_UI(Surface* screen, Resource_Manager* resource_Manager, Blueprin
 
 	}
 
-	
+	if (window_Manager->get_Active_Window() == "Blueprint Upgrade")
+	{
+		screen->Box(160, 160, SCRWIDTH - 50, SCRHEIGHT - 50, 0x00FF00);
+		
+		
 
+		auto sorted_Blueprints = blueprint_Manager->Get_Sorted_Blueprints_Numbers();
+		for (size_t i = 0; i < sorted_Blueprints.size(); i++)
+		{
+			auto blueprints = blueprint_Manager->Get_Blueprints(sorted_Blueprints[i]->Get_Name());
+			string test = "Name: " + blueprints->Get_Name();
+			string test2 = "Level: " + to_string(static_cast<int>( blueprints->Get_Level()));
+			string test3 = "Conversion rate: " + to_string( blueprints->Get_Conversion_Rate());
+			
+			string test4 = "Name: " + blueprints->Get_Name();
+			string test5 = "Level: " + to_string(static_cast<int>( blueprints->Get_Level() + 1));
+			string test6 = "Conversion rate: " + to_string( blueprints->Get_Conversion_Rate() + 0.1);
+
+			string cost = "Cost: " + to_string(static_cast<int>(pow(2, blueprints->Get_Level() - 1)));
+
+			int start_Y = 170;
+
+			screen->Print(test.c_str(), 170, start_Y + (i * 60), 0xFF00FF, 1.0F);
+			screen->Print(test2.c_str(), 170, start_Y + 10 + (i * 60), 0xFF00FF, 1.0F);
+			screen->Print(test3.c_str(), 170, start_Y + 20 + (i * 60), 0xFF00FF, 1.0F);
+			screen->Line(370, 195 + (i * 60), 470, 195 + (i * 60), 0xFF00FF);
+			screen->Line(470, 195 + (i * 60), 445, 170 + (i * 60), 0xFF00FF);
+			screen->Line(470, 195 + (i * 60), 445, 220 + (i * 60), 0xFF00FF);
+			screen->Print(test4.c_str(), 570, start_Y + (i * 60), 0xFF00FF, 1.0F);
+			screen->Print(test5.c_str(), 570, start_Y + 10 + (i * 60), 0xFF00FF, 1.0F);
+			screen->Print(test6.c_str(), 570, start_Y + 20 + (i * 60), 0xFF00FF, 1.0F);
+			button_Standard("Upgrade", cost.c_str(), 770, 170 + (i * 60), screen);
+		}
+	}
 }
 
 void UI::button_Standard(string name, string cost, int x1, int y1, Surface* screen)

@@ -51,13 +51,19 @@ void Game_Manager::If_Clicked(Player* player, Resource_Manager* resource_Manager
 			{
 				Craftingtable_1_Window(player, craftingtable, window_Manager, blueprint_Manager, resource_Manager);
 			}
-			else if (window_Manager->get_Active_Window() == "Lumberjack Tool")
+			else if (window_Manager->get_Active_Window() == "Lumberjack Tool" ||
+				window_Manager->get_Active_Window() == "Crafting Tool" ||
+				window_Manager->get_Active_Window() == "Mining Tool")
 			{
 				Lumberjack_Tool_Window(player, window_Manager, item_Manager);
 			}
 			else if (window_Manager->get_Active_Window() == "Blueprint Crafting")
 			{
 				Blueprint_Crafting_Window(player, window_Manager, item_Manager, blueprint_Manager, draft_Manager, resource_Manager);
+			}
+			else if (window_Manager->get_Active_Window() == "Blueprint Upgrade")
+			{
+				Blueprint_Upgrade_Window(player, window_Manager, item_Manager, blueprint_Manager, draft_Manager, resource_Manager);
 			}
 		}
 		clicked = true;
@@ -150,7 +156,7 @@ void Game_Manager::Forest_Buttons(Player* player, Resource_Manager* resource_Man
 	}
 	if (Is_Mouse_Over_Standard(player, 160, 300))
 	{
-		auto sorted_Item = item_Manager->get_Item_Sorted_By_Power_And_Name();
+		auto sorted_Item = item_Manager->get_Item_Sorted_By_Power_And_Equip_Slot("Lumberjack");
 		if (!sorted_Item.empty() &&
 			sorted_Item[0]->Get_Power() > softWood->Get_Workers_Tool_Power())
 		{
@@ -184,6 +190,14 @@ void Game_Manager::Player_Buttons(Player* player, Window_Manager* window_Manager
 	{
 		window_Manager->set_Active_Window("Lumberjack Tool");
 	}
+	if (Is_Mouse_Over_Standard(player, 160, 120))
+	{
+		window_Manager->set_Active_Window("Crafting Tool");
+	}
+	if (Is_Mouse_Over_Standard(player, 160, 180))
+	{
+		window_Manager->set_Active_Window("Mining Tool");
+	}
 }
 
 void Game_Manager::Libary_Buttons(Player* player, Window_Manager* window_Manager, Item_Manager* item_Manager, Resource_Manager* resource_Manager,Draft_Manager* draft_Manager, Blueprint_Manager* blueprint_Manager)
@@ -204,6 +218,10 @@ void Game_Manager::Libary_Buttons(Player* player, Window_Manager* window_Manager
 	{
 		window_Manager->set_Active_Window("Blueprint Crafting");
 		draft_Manager->Draft_Blueprint_Cards(blueprint_Manager);
+	}
+	if (Is_Mouse_Over_Standard(player, SCRWIDTH / 2 - 50, 160))
+	{
+		window_Manager->set_Active_Window("Blueprint Upgrade");
 	}
 
 
@@ -256,29 +274,99 @@ void Game_Manager::Craftingtable_1_Window(Player* player, Craftingtable_Manager*
 
 void Game_Manager::Lumberjack_Tool_Window(Player* player, Window_Manager* window_Manager, Item_Manager* item_Manager)
 {
-	auto sorted_Items = item_Manager->get_Item_Sorted_By_Power_And_Name();
-	double start_X = SCRWIDTH / 2 + 10;
-	double start_Y = 115;
-	double button_Hight = 55;
 
-	for (double i = 0; i < sorted_Items.size(); i++)
+	if (Is_Mouse_Over_Standard(player, 160, 60))
 	{
-		Item* item = sorted_Items[i];
-
-		if (Is_Mouse_Over_Standard(player, start_X, start_Y + i * button_Hight))
-		{
-			auto stats = player->Get_Stats("Lumberjack");
-			string old_Tool = stats->Get_Tool_Name();
-			stats->Set_Tool_Name(item->Get_Name());
-			stats->Set_Tool_Power(item->Get_Power());
-			item->Sub_Quantity(1);
-			if (old_Tool != "Hands")
-			{
-				item_Manager->Get_Item(old_Tool)->Add_Quantity(1);
-			}
-		}
-		
+		window_Manager->set_Active_Window("Lumberjack Tool");
 	}
+	if (Is_Mouse_Over_Standard(player, 160, 120))
+	{
+		window_Manager->set_Active_Window("Crafting Tool");
+	}
+	if (Is_Mouse_Over_Standard(player, 160, 180))
+	{
+		window_Manager->set_Active_Window("Mining Tool");
+	}
+
+	if (window_Manager->get_Active_Window() == "Lumberjack Tool")
+	{
+
+		auto sorted_Items = item_Manager->get_Item_Sorted_By_Power_And_Equip_Slot("Lumberjack");
+		double start_X = SCRWIDTH / 2 + 10;
+		double start_Y = 115;
+		double button_Hight = 55;
+
+		for (double i = 0; i < sorted_Items.size(); i++)
+		{
+			Item* item = sorted_Items[i];
+
+			if (Is_Mouse_Over_Standard(player, start_X, start_Y + i * button_Hight))
+			{
+				auto stats = player->Get_Stats("Lumberjack");
+				string old_Tool = stats->Get_Tool_Name();
+				stats->Set_Tool_Name(item->Get_Name());
+				stats->Set_Tool_Power(item->Get_Power());
+				item->Sub_Quantity(1);
+				if (old_Tool != "Hands")
+				{
+					item_Manager->Get_Item(old_Tool)->Add_Quantity(1);
+				}
+			}
+
+		}
+	}
+	else if (window_Manager->get_Active_Window() == "Crafting Tool")
+	{
+		auto sorted_Items = item_Manager->get_Item_Sorted_By_Power_And_Equip_Slot("Crafting");
+		double start_X = SCRWIDTH / 2 + 10;
+		double start_Y = 115;
+		double button_Hight = 55;
+
+		for (double i = 0; i < sorted_Items.size(); i++)
+		{
+			Item* item = sorted_Items[i];
+
+			if (Is_Mouse_Over_Standard(player, start_X, start_Y + i * button_Hight))
+			{
+				auto stats = player->Get_Stats("Crafting");
+				string old_Tool = stats->Get_Tool_Name();
+				stats->Set_Tool_Name(item->Get_Name());
+				stats->Set_Tool_Power(item->Get_Power());
+				item->Sub_Quantity(1);
+				if (old_Tool != "Hands")
+				{
+					item_Manager->Get_Item(old_Tool)->Add_Quantity(1);
+				}
+			}
+
+		}
+	}else if (window_Manager->get_Active_Window() == "Mining Tool")
+	{
+		auto sorted_Items = item_Manager->get_Item_Sorted_By_Power_And_Equip_Slot("Mining");
+		double start_X = SCRWIDTH / 2 + 10;
+		double start_Y = 115;
+		double button_Hight = 55;
+
+		for (double i = 0; i < sorted_Items.size(); i++)
+		{
+			Item* item = sorted_Items[i];
+
+			if (Is_Mouse_Over_Standard(player, start_X, start_Y + i * button_Hight))
+			{
+				auto stats = player->Get_Stats("Mining");
+				string old_Tool = stats->Get_Tool_Name();
+				stats->Set_Tool_Name(item->Get_Name());
+				stats->Set_Tool_Power(item->Get_Power());
+				item->Sub_Quantity(1);
+				if (old_Tool != "Hands")
+				{
+					item_Manager->Get_Item(old_Tool)->Add_Quantity(1);
+				}
+			}
+
+		}
+	}
+	
 }
 void Game_Manager::Blueprint_Crafting_Window(Player* player, Window_Manager* window_Manager, Item_Manager* item_Manager, Blueprint_Manager* blueprint_Manager, Draft_Manager* draft_Manager, Resource_Manager* resource_Manager)
 {
@@ -290,6 +378,41 @@ void Game_Manager::Blueprint_Crafting_Window(Player* player, Window_Manager* win
 		resource_Manager->Get_Resource("Paper")->Sub_Quantity(draft_Manager->Get_Cost());
 		draft_Manager->Calculate_Cost();
 	}
+	if (Is_Mouse_Over_Standard(player, 380 + 1 * (((SCRWIDTH - 60 - 170) - 20 * 2) / 3), SCRHEIGHT / 2 + 400) &&
+		resource_Manager->Get_Resource("Paper")->Get_Quantity() >= draft_Manager->Get_Cost())
+	{
+		blueprint_Manager->Get_Blueprints(draft_Manager->Get_Blueprint_Card_2())->Set_Unlocked(true);
+		draft_Manager->Draft_Blueprint_Cards(blueprint_Manager);
+		resource_Manager->Get_Resource("Paper")->Sub_Quantity(draft_Manager->Get_Cost());
+		draft_Manager->Calculate_Cost();
+	}
+	if (Is_Mouse_Over_Standard(player, 380 + 2 * (((SCRWIDTH - 60 - 170) - 20 * 2) / 3), SCRHEIGHT / 2 + 400) &&
+		resource_Manager->Get_Resource("Paper")->Get_Quantity() >= draft_Manager->Get_Cost())
+	{
+		blueprint_Manager->Get_Blueprints(draft_Manager->Get_Blueprint_Card_3())->Set_Unlocked(true);
+		draft_Manager->Draft_Blueprint_Cards(blueprint_Manager);
+		resource_Manager->Get_Resource("Paper")->Sub_Quantity(draft_Manager->Get_Cost());
+		draft_Manager->Calculate_Cost();
+	}
+}
+void Game_Manager::Blueprint_Upgrade_Window(Player* player, Window_Manager* window_Manager, Item_Manager* item_Manager, Blueprint_Manager* blueprint_Manager, Draft_Manager* draft_Manager, Resource_Manager* resource_Manager)
+{
+	auto paper = resource_Manager->Get_Resource("Paper");
+	auto sorted_Blueprints = blueprint_Manager->Get_Sorted_Blueprints_Numbers();
+	for (size_t i = 0; i < sorted_Blueprints.size(); i++)
+	{
+		if (Is_Mouse_Over_Standard(player, 770, 170 + (i * 60)))
+		{
+			auto blueprints = blueprint_Manager->Get_Blueprints(sorted_Blueprints[i]->Get_Name());
+			if (paper->Get_Quantity() >= pow(2, blueprints->Get_Level() - 1))
+			{
+				paper->Sub_Quantity(pow(2, blueprints->Get_Level() - 1));
+				blueprints->Add_Level(1);
+				blueprints->Add_Conversion_Rate(0.1);
+			}
+		}
+	}
+
 }
 
 void Game_Manager::Check_All_Updates(double deltatime, Player* player, Resource_Manager* resource_Manager, Craftingtable_Manager* craftingtable, Blueprint_Manager* blueprint_Manager, Item_Manager* item_Manager)

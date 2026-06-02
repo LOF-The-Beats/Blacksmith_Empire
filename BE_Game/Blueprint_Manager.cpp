@@ -46,7 +46,7 @@ void Blueprint_Manager::Add_Blueprints(const string name, string equip_Slot, con
 void Blueprint_Manager::Create_All_Blueprints()
 {
 	Add_Blueprints("Axe", "Lumberjack", 0.2, 0);
-	Add_Blueprints("Tools", "Smithing", 0.2, 1);
+	Add_Blueprints("Tools", "Crafting", 0.2, 1);
 	Add_Blueprints("Pickaxe", "Mining", 0.2, 2);
 
 	Get_Blueprints("Axe")->Set_Unlocked(true);

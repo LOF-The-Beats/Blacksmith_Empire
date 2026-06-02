@@ -1,3 +1,49 @@
+
+Patch 0.1.6
+Blueprint Upgrade System
+- Added Blueprint Upgrade Window.
+- Added blueprint upgrade preview system.
+- Added upgrade cost scaling (1, 2, 4, 8, 16, ...).
+- Added next-level conversion rate preview.
+- Added upgrade buttons for all unlocked blueprints.
+
+Equipment System
+- Added equip slot support to items.
+- Added slot-based equipment filtering.
+- Created get_Item_Sorted_By_Power_And_Equip_Slot().
+- Lumberjack now only sees Axes.
+- System ready for Miner, Blacksmith, Hunter and future workers.
+- Completed equipment windows using slot filtering.
+
+Crafting System
+- Dynamic resource selection completed.
+- Dynamic blueprint selection completed.
+- Dynamic item preview completed.
+- Removed hardcoded resource and blueprint UI elements.
+
+Blueprint Drafting
+- Completed forced blueprint progression.
+- Added draft cost scaling using x5 progression.
+- Draft manager fully integrated into UI.
+
+Sorting Systems
+- Added Get_Sorted_Blueprints_Numbers().
+- Added Get_Sorted_Resources_Numbers().
+- Dynamic UI now builds from sorted lists.
+- New resources and blueprints automatically appear in UI.
+
+Architecture Improvements
+- Large hardcoded UI cleanup.
+- Systems now scale automatically when new content is added.
+- Equipment, resources and blueprints now use reusable sorting/filtering systems.
+
+Development
+- Project pushed to GitHub.
+- Home environment synced.
+- Core gameplay loop confirmed functional.
+
+
+
 Patch 0.1.5
 Blueprint Drafting System
 - Added a dedicated Blueprint Draft Manager.
