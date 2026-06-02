@@ -2,17 +2,19 @@
 class Resources
 {
 public:
-	Resources(string name, double quantity, double hardness);
+	Resources(string name, double quantity, double hardness, int order, bool crafting_Resource);
 
 	//getters
 	string Get_Name() const;
 	string Get_Worker_Tool_Equiped() const;
+	int Get_Order() const;
 	double Get_Quantity() const;
 	double Get_Workers() const;
 	double Get_Workers_Tool_Power() const;
 	double Get_Worker_Cost() const;
 	double Get_Production_Rate() const;
 	double Get_Hardness() const;
+	bool Get_Crafting_Resource() const;
 
 	//setters
 	void Set_Name(string n);
@@ -43,12 +45,14 @@ public:
 private:
 	string name;
 	string worker_Tool_Equiped;
+	int order;
 	double quantity;
 	double workers;
 	double worker_Tool_Power;
 	double worker_Cost;
 	double production_Rate;
 	double hardness;
+	bool crafting_Resource;
 
 };
 

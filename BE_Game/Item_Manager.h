@@ -14,7 +14,7 @@ public:
 
 	//adder
 
-	void Add_Item(const string name, string resource, string blueprint, double level, double value, double power);
+	void Add_Item(const string name, string resource, string blueprint, string equip_Slot, double level, double value, double power);
 	
 	// sell actions
 	double Sell_All_Items();

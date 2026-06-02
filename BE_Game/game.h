@@ -12,6 +12,7 @@ class Window_Manager;
 class Craftingtable_Manager;
 class Blueprint_Manager;
 class Item_Manager;
+class Draft_Manager;
 
 
 namespace Tmpl8
@@ -42,6 +43,7 @@ public:
 	Craftingtable_Manager* m_Craftingtable_Manager;
 	Blueprint_Manager* m_Blueprint_Manager;
 	Item_Manager* m_Item_Manager;
+	Draft_Manager* m_Draft_Manager;
 
 };
 

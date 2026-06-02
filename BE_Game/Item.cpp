@@ -1,8 +1,8 @@
 #include "precomp.h"
 #include "Item.h"
 
-Item::Item(string name, string resource, string blueprint, double level, double value, double power)
-	:name(name), resource(resource), blueprint(blueprint), level(level), power(power), quantity(1.0), value(value)
+Item::Item(string name, string resource, string blueprint, string equip_Slot, double level, double value, double power)
+	:name(name), resource(resource), blueprint(blueprint), equip_Slot(equip_Slot), level(level), power(power), quantity(1.0), value(value)
 {
 }
 
@@ -19,6 +19,11 @@ string Item::Get_Resource() const
 string Item::Get_Blueprint() const
 {
 	return blueprint;
+}
+
+string Item::Get_Equip_Slot() const
+{
+	return equip_Slot;
 }
 
 double Item::Get_Level() const
@@ -56,6 +61,12 @@ void Item::Set_Resource(string n)
 void Item::Set_Blueprint(string n)
 {
 	blueprint = n;
+	return;
+}
+
+void Item::Set_Equip_Slot(string n)
+{
+	equip_Slot = n;
 	return;
 }
 

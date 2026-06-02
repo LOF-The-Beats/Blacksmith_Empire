@@ -8,6 +8,7 @@
 #include "Craftingtable_Manager.h"
 #include "Blueprint_Manager.h"
 #include "Item_Manager.h"
+#include "Draft_Manager.h"
 
 
 
@@ -25,11 +26,13 @@ void Game::Init()
 	m_Craftingtable_Manager = new Craftingtable_Manager;
 	m_Blueprint_Manager = new Blueprint_Manager;
 	m_Item_Manager = new Item_Manager;
+	m_Draft_Manager = new Draft_Manager;
 
 	//Resources
-	m_Resource_Manager->Add_Resource("Thalions", 0, 0);
-	m_Resource_Manager->Add_Resource("SoftWood", 1000, 10);
-	m_Resource_Manager->Add_Resource("Paper", 0, 1000);
+	m_Resource_Manager->Add_Resource("Thalions", 0, 0, 0, false);
+	m_Resource_Manager->Add_Resource("SoftWood", 1000, 10, 0, true);
+	m_Resource_Manager->Add_Resource("Testing", 1000, 10, 0, true);
+	m_Resource_Manager->Add_Resource("Paper", 70, 1000, 0, false);
 
 	//Windows / Locations
 	m_Window_Manager->add_Window("Forest", true);
@@ -40,6 +43,7 @@ void Game::Init()
 
 	m_Window_Manager->add_Window("Craftingtable 1", false);
 	m_Window_Manager->add_Window("Lumberjack Tool", false);
+	m_Window_Manager->add_Window("Blueprint Crafting", false);
 
 	//Craftingtables
 	m_Craftingtable_Manager->Add_Craftingtable("Craftingtable 1");
@@ -58,8 +62,8 @@ void Game::Tick(float deltaTime)
 {
 	screen->Clear(0);
 	m_Game_Manager->Update_Mouse_Pos(m_Player);
-	m_UI->Draw_UI(screen, m_Resource_Manager, m_Player, m_Window_Manager, m_Craftingtable_Manager, m_Blueprint_Manager, m_Item_Manager);
-	m_Game_Manager->If_Clicked(m_Player, m_Resource_Manager, m_Window_Manager, m_Craftingtable_Manager, m_Blueprint_Manager, m_Item_Manager);
+	m_UI->Draw_UI(screen, m_Resource_Manager, m_Player, m_Window_Manager, m_Craftingtable_Manager, m_Blueprint_Manager, m_Item_Manager, m_Draft_Manager);
+	m_Game_Manager->If_Clicked(m_Player, m_Resource_Manager, m_Window_Manager, m_Craftingtable_Manager, m_Blueprint_Manager, m_Item_Manager, m_Draft_Manager);
 
 	//update per seccond events
 	m_Game_Manager->Check_All_Updates(deltaTime, m_Player, m_Resource_Manager, m_Craftingtable_Manager, m_Blueprint_Manager ,m_Item_Manager);

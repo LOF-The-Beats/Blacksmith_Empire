@@ -1,14 +1,25 @@
 #include "precomp.h"
 #include "Blueprints.h"
 
-Blueprints::Blueprints(string name)
-	:name(name), level(1.0), cost(10.0), unlocked(false), researched(true)
+Blueprints::Blueprints(string name, string equip_Slot, double conversion_Rate, int order)
+	:name(name), equip_Slot(equip_Slot), conversion_Rate(conversion_Rate), order(order), level(1.0), cost(10.0), unlocked(false), researched(true)
 {
 }
+
 
 string Blueprints::Get_Name() const
 {
 	return name;
+}
+
+string Blueprints::Get_Equip_Slot() const
+{
+	return equip_Slot;
+}
+
+int Blueprints::Get_Order() const
+{
+	return order;
 }
 
 double Blueprints::Get_Level() const
@@ -19,6 +30,11 @@ double Blueprints::Get_Level() const
 double Blueprints::Get_Cost() const
 {
 	return cost;
+}
+
+double Blueprints::Get_Conversion_Rate() const
+{
+	return conversion_Rate;
 }
 
 bool Blueprints::Get_Unlocked() const
@@ -49,6 +65,12 @@ void Blueprints::Set_Cost(double amount)
 	return;
 }
 
+void Blueprints::Set_Conversion_Rate(double amount)
+{
+	conversion_Rate = amount;
+	return;
+}
+
 void Blueprints::Set_Unlocked(bool b)
 {
 	unlocked = b;
@@ -72,6 +94,11 @@ void Blueprints::Add_Cost(double amount)
 	cost += amount;
 	return;
 }
+void Blueprints::Add_Conversion_Rate(double amount)
+{
+	conversion_Rate += amount;
+		return;
+}
 void Blueprints::Sub_Level(double amount)
 {
 	level -= amount;
@@ -81,5 +108,11 @@ void Blueprints::Sub_Level(double amount)
 void Blueprints::Sub_Cost(double amount)
 {
 	cost -= amount;
+	return;
+}
+
+void Blueprints::Sub_Conversion_Rate(double amount)
+{
+	conversion_Rate -= amount;
 	return;
 }

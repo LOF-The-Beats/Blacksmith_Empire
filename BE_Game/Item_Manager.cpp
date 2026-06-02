@@ -15,11 +15,11 @@ Item* Item_Manager::Get_Item(const string name) const
 	return nullptr;
 }
 
-void Item_Manager::Add_Item(const string name, string resource, string blueprint, double level, double value, double power)
+void Item_Manager::Add_Item(const string name, string resource, string blueprint, string equip_Slot, double level, double value, double power)
 {
 	if (item.find(name) == item.end())
 	{
-		item[name] = new Item(name, resource, blueprint, level, value, power);
+		item[name] = new Item(name, resource, blueprint, equip_Slot, level, value, power);
 	}
 }
 

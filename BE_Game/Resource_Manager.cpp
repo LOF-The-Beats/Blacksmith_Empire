@@ -25,11 +25,31 @@ double Resource_Manager::Get_Resource_Quantity(const string name) const
 	return 0.0;
 }
 
-void Resource_Manager::Add_Resource(const string name, double quantity, double hardness)
+vector<Resources*> Resource_Manager::Get_Sorted_Resources_Numbers()
+{
+	vector<Resources*> sorted_Resources;
+
+	for (auto& resource : resources)
+	{
+		if (resource.second->Get_Crafting_Resource())
+		{
+			sorted_Resources.push_back(resource.second);
+		}
+	}
+
+	sort(sorted_Resources.begin(), sorted_Resources.end(), [](Resources* a, Resources* b)
+		{
+			return a->Get_Order() < b->Get_Order();
+		}
+	);
+	return sorted_Resources;
+}
+
+void Resource_Manager::Add_Resource(const string name, double quantity, double hardness, int order, bool crafting_Resource)
 {
 	if (resources.find(name) == resources.end())
 	{
-		resources[name] = new Resources(name, quantity, hardness);
+		resources[name] = new Resources(name, quantity, hardness, order, crafting_Resource);
 	}
 }
 

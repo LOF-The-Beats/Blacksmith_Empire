@@ -1,8 +1,8 @@
 #include "precomp.h"
 #include "Resources.h"
 
-Resources::Resources(string name, double quantity, double hardness)
-	:name(name), quantity(quantity), workers(0.0), worker_Cost(20), production_Rate(0.0), hardness(hardness), worker_Tool_Power(1.0), worker_Tool_Equiped("None")
+Resources::Resources(string name, double quantity, double hardness, int order, bool crafting_Resource)
+	:name(name), quantity(quantity), workers(0.0), worker_Cost(20), production_Rate(0.0), hardness(hardness), worker_Tool_Power(1.0), worker_Tool_Equiped("None"), order(order), crafting_Resource(crafting_Resource)
 {
 }
 
@@ -14,6 +14,11 @@ string Resources::Get_Name() const
 string Resources::Get_Worker_Tool_Equiped() const
 {
 	return worker_Tool_Equiped;
+}
+
+int Resources::Get_Order() const
+{
+	return order;
 }
 
 double Resources::Get_Quantity() const
@@ -44,6 +49,11 @@ double Resources::Get_Production_Rate() const
 double Resources::Get_Hardness() const
 {
 	return hardness;
+}
+
+bool Resources::Get_Crafting_Resource() const
+{
+	return crafting_Resource;
 }
 
 void Resources::Set_Name(string n)

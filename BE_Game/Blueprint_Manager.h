@@ -8,14 +8,18 @@ public:
 
 	//getters
 	Blueprints* Get_Blueprints(const string name) const;
+	vector<Blueprints*> Get_Sorted_Blueprints_Numbers();
+
 
 	//adders
-	void Add_Blueprints(const string name);
-	
+	void Add_Blueprints(const string name, string equip_Slot, const double conversion_Rate, int order);
+
 	//creator
 	void Create_All_Blueprints();
+
 
 private:
 	unordered_map<string, Blueprints*> blueprints;
 };
+
 

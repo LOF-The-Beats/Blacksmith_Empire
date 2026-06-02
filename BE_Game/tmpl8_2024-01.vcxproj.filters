@@ -36,6 +36,7 @@
     <ClCompile Include="Blueprint_Manager.cpp" />
     <ClCompile Include="Item.cpp" />
     <ClCompile Include="Item_Manager.cpp" />
+    <ClCompile Include="Draft_Manager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="game.h" />
@@ -79,6 +80,7 @@
     <ClInclude Include="Blueprint_Manager.h" />
     <ClInclude Include="Item.h" />
     <ClInclude Include="Item_Manager.h" />
+    <ClInclude Include="Draft_Manager.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="README.md">

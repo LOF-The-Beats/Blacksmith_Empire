@@ -2,12 +2,13 @@
 class Item
 {
 public:
-	Item(string name, string resource, string blueprint, double level, double value, double power);
+	Item(string name, string resource, string blueprint, string equip_Slot, double level, double value, double power);
 
 	//getters
 	string Get_Name() const;
 	string Get_Resource() const;
 	string Get_Blueprint() const;
+	string Get_Equip_Slot() const;
 	double Get_Level() const;
 	double Get_Power() const;
 	double Get_Quantity() const;
@@ -17,6 +18,7 @@ public:
 	void Set_Name(string n);
 	void Set_Resource(string n);
 	void Set_Blueprint(string n);
+	void Set_Equip_Slot(string n);
 	void Set_Level(double amount);
 	void Set_Power(double amount);
 	void Set_Quantity(double amount);
@@ -35,7 +37,7 @@ public:
 
 private:
 
-	string name , resource, blueprint;
+	string name , resource, blueprint, equip_Slot;
 	double level, power, quantity, value;
 };
 

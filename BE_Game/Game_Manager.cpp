@@ -6,6 +6,7 @@
 #include "Craftingtable_Manager.h"
 #include "Blueprint_Manager.h"
 #include "Item_Manager.h"
+#include "Draft_Manager.h"
 
 extern GLFWwindow* window;
 
@@ -22,7 +23,7 @@ void Game_Manager::Update_Mouse_Pos(Player* player)
 	return;
 }
 
-void Game_Manager::If_Clicked(Player* player, Resource_Manager* resource_Manager, Window_Manager* window_Manager, Craftingtable_Manager* craftingtable, Blueprint_Manager* blueprint_Manager, Item_Manager* item_Manager)
+void Game_Manager::If_Clicked(Player* player, Resource_Manager* resource_Manager, Window_Manager* window_Manager, Craftingtable_Manager* craftingtable, Blueprint_Manager* blueprint_Manager, Item_Manager* item_Manager, Draft_Manager* draft_Manager)
 {
 	if (glfwGetMouseButton(window, 0) == GLFW_PRESS)
 	{
@@ -43,7 +44,7 @@ void Game_Manager::If_Clicked(Player* player, Resource_Manager* resource_Manager
 			}
 			else if (window_Manager->get_Active_Window() == "Libary")
 			{
-				Libary_Buttons(player, window_Manager, item_Manager, resource_Manager);
+				Libary_Buttons(player, window_Manager, item_Manager, resource_Manager, draft_Manager, blueprint_Manager);
 			}
 
 			if (window_Manager->get_Active_Window() == "Craftingtable 1")
@@ -53,6 +54,10 @@ void Game_Manager::If_Clicked(Player* player, Resource_Manager* resource_Manager
 			else if (window_Manager->get_Active_Window() == "Lumberjack Tool")
 			{
 				Lumberjack_Tool_Window(player, window_Manager, item_Manager);
+			}
+			else if (window_Manager->get_Active_Window() == "Blueprint Crafting")
+			{
+				Blueprint_Crafting_Window(player, window_Manager, item_Manager, blueprint_Manager, draft_Manager, resource_Manager);
 			}
 		}
 		clicked = true;
@@ -181,7 +186,7 @@ void Game_Manager::Player_Buttons(Player* player, Window_Manager* window_Manager
 	}
 }
 
-void Game_Manager::Libary_Buttons(Player* player, Window_Manager* window_Manager, Item_Manager* item_Manager, Resource_Manager* resource_Manager)
+void Game_Manager::Libary_Buttons(Player* player, Window_Manager* window_Manager, Item_Manager* item_Manager, Resource_Manager* resource_Manager,Draft_Manager* draft_Manager, Blueprint_Manager* blueprint_Manager)
 {
 	if (Is_Mouse_Over_Standard(player, 160, 160))
 	{
@@ -195,20 +200,40 @@ void Game_Manager::Libary_Buttons(Player* player, Window_Manager* window_Manager
 		}
 	}
 
+	if (Is_Mouse_Over_Standard(player, SCRWIDTH / 2 + 80, 160))
+	{
+		window_Manager->set_Active_Window("Blueprint Crafting");
+		draft_Manager->Draft_Blueprint_Cards(blueprint_Manager);
+	}
+
 
 
 }
 
 void Game_Manager::Craftingtable_1_Window(Player* player, Craftingtable_Manager* craftingtable, Window_Manager* window_Manager, Blueprint_Manager* blueprint_Manager, Resource_Manager* resource_Manager)
 {
-	if (Is_Mouse_Over_Standard(player, SCRWIDTH / 3 * 1 - 120, 160))
+
+	auto sorted_Resources = resource_Manager->Get_Sorted_Resources_Numbers();
+	for (size_t i = 0; i < sorted_Resources.size(); i++)
 	{
-		craftingtable->get_Craftingtable("Craftingtable 1")->Set_Resource("SoftWood");
+		int start_Y = 160;
+		if (Is_Mouse_Over_Standard(player, SCRWIDTH / 3 * 1 - 120, start_Y + (i * 50)))
+		{
+			craftingtable->get_Craftingtable("Craftingtable 1")->Set_Resource(sorted_Resources[i]->Get_Name());
+		}
 	}
-	if (Is_Mouse_Over_Standard(player, SCRWIDTH / 3 * 2 + 10, 160))
+	auto sorted_Blueprints = blueprint_Manager->Get_Sorted_Blueprints_Numbers();
+	for (size_t i = 0; i < sorted_Blueprints.size(); i++)
 	{
-		craftingtable->get_Craftingtable("Craftingtable 1")->Set_Blueprint("Axe");
+		int start_Y = 160;
+		if (Is_Mouse_Over_Standard(player, SCRWIDTH / 3 * 2 + 10, start_Y + (i * 50)))
+		{
+			craftingtable->get_Craftingtable("Craftingtable 1")->Set_Blueprint(sorted_Blueprints[i]->Get_Name());
+		}
 	}
+
+	
+	
 	if (Is_Mouse_Over_Standard(player, SCRWIDTH / 2 - 50, 160))
 	{
 		window_Manager->set_Active_Window("Forge");
@@ -255,6 +280,17 @@ void Game_Manager::Lumberjack_Tool_Window(Player* player, Window_Manager* window
 		
 	}
 }
+void Game_Manager::Blueprint_Crafting_Window(Player* player, Window_Manager* window_Manager, Item_Manager* item_Manager, Blueprint_Manager* blueprint_Manager, Draft_Manager* draft_Manager, Resource_Manager* resource_Manager)
+{
+	if (Is_Mouse_Over_Standard(player, 380 + 0 * (((SCRWIDTH - 60 - 170) - 20 * 2) / 3), SCRHEIGHT / 2 + 400) &&
+		resource_Manager->Get_Resource("Paper")->Get_Quantity() >= draft_Manager->Get_Cost())
+	{
+		blueprint_Manager->Get_Blueprints(draft_Manager->Get_Blueprint_Card_1())->Set_Unlocked(true);
+		draft_Manager->Draft_Blueprint_Cards(blueprint_Manager);
+		resource_Manager->Get_Resource("Paper")->Sub_Quantity(draft_Manager->Get_Cost());
+		draft_Manager->Calculate_Cost();
+	}
+}
 
 void Game_Manager::Check_All_Updates(double deltatime, Player* player, Resource_Manager* resource_Manager, Craftingtable_Manager* craftingtable, Blueprint_Manager* blueprint_Manager, Item_Manager* item_Manager)
 {
@@ -274,24 +310,31 @@ void Game_Manager::Update_All_Per_Seccond_Events(double deltaTime, Player* playe
 
 void Game_Manager::Check_Level_Up(Player* player)
 {
-	if (player->Get_Stats("Lumberjack")->Get_Exp() >= player->Get_Stats("Lumberjack")->Get_Exp_Needed())
+
+	auto lumberjack = player->Get_Stats("Lumberjack");
+	auto crafting = player->Get_Stats("Crafting");
+
+	if (lumberjack->Get_Exp() >= lumberjack->Get_Exp_Needed())
 	{
-		player->Get_Stats("Lumberjack")->Add_Level(1);
-		player->Get_Stats("Lumberjack")->Add_Exp_Needed(50);
-		player->Get_Stats("Lumberjack")->Set_Exp(0);
+		lumberjack->Add_Level(1);
+		lumberjack->Add_Exp_Needed(50);
+		lumberjack->Set_Exp(0);
 	}
-	if (player->Get_Stats("Crafting")->Get_Exp() >= player->Get_Stats("Crafting")->Get_Exp_Needed())
+	if (crafting->Get_Exp() >= crafting->Get_Exp_Needed())
 	{
-		player->Get_Stats("Crafting")->Add_Level(1);
-		player->Get_Stats("Crafting")->Add_Exp_Needed(50);
-		player->Get_Stats("Crafting")->Set_Exp(0);
+		crafting->Add_Level(1);
+		crafting->Add_Exp_Needed(50);
+		crafting->Set_Exp(0);
 	}
 }
 
 void Game_Manager::Check_Player_Stats(Player* player)
 {
-	player->Get_Stats("Lumberjack")->Set_Power(player->Get_Stats("Lumberjack")->Get_Level() * player->Get_Stats("Lumberjack")->Get_Tool_Power());
-	player->Get_Stats("Crafting")->Set_Power(player->Get_Stats("Crafting")->Get_Level());
+	auto lumberjack = player->Get_Stats("Lumberjack");
+	auto crafting = player->Get_Stats("Crafting");
+
+	lumberjack->Set_Power(lumberjack->Get_Level() * lumberjack->Get_Tool_Power());
+	crafting->Set_Power(crafting->Get_Level());
 }
 
 void Game_Manager::Check_Craftingtable_Progress(Resource_Manager* resource_Manager, Craftingtable_Manager* craftingtable, Blueprint_Manager* blueprint_Manager, Item_Manager* item_Manager)
@@ -313,7 +356,7 @@ void Game_Manager::Check_Craftingtable_Progress(Resource_Manager* resource_Manag
 		}
 		else
 		{
-			item_Manager->Add_Item(combined_Name, table->Get_Resource(), table->Get_Blueprint(), blueprint->Get_Level(), resource->Get_Hardness() * blueprint->Get_Level(), resource->Get_Hardness() / 5 * blueprint->Get_Level());
+			item_Manager->Add_Item(combined_Name, table->Get_Resource(), table->Get_Blueprint(), blueprint->Get_Equip_Slot(), blueprint->Get_Level(), resource->Get_Hardness() * blueprint->Get_Level(), resource->Get_Hardness() * blueprint->Get_Conversion_Rate());
 			table->Set_In_Use(false);
 		}
 	}
