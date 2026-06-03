@@ -7,6 +7,8 @@
 #include "Blueprint_Manager.h"
 #include "Item_Manager.h"
 #include "Draft_Manager.h"
+#include "Unlock_Manager.h"
+#include "Tutorial.h"
 
 extern GLFWwindow* window;
 
@@ -23,13 +25,14 @@ void Game_Manager::Update_Mouse_Pos(Player* player)
 	return;
 }
 
-void Game_Manager::If_Clicked(Player* player, Resource_Manager* resource_Manager, Window_Manager* window_Manager, Craftingtable_Manager* craftingtable, Blueprint_Manager* blueprint_Manager, Item_Manager* item_Manager, Draft_Manager* draft_Manager)
+void Game_Manager::If_Clicked(Player* player, Resource_Manager* resource_Manager, Window_Manager* window_Manager, Craftingtable_Manager* craftingtable, Blueprint_Manager* blueprint_Manager, Item_Manager* item_Manager, Draft_Manager* draft_Manager, Unlock_Manager* unlock_Manager, Tutorial* tutorial)
 {
 	if (glfwGetMouseButton(window, 0) == GLFW_PRESS)
 	{
 		if (!clicked)
 		{
-			Location_Buttons_Pressed(player, window_Manager);
+			Location_Buttons_Pressed(player, window_Manager, unlock_Manager);
+			tutorial->Tutorial_Buttons(this, player, resource_Manager, craftingtable, unlock_Manager);
 			if (window_Manager->get_Active_Window() == "Forest")
 			{
 				Forest_Buttons(player, resource_Manager, item_Manager);
@@ -99,21 +102,25 @@ bool Game_Manager::Is_Mouse_Over_Location(Player* player, double x, double y, do
 }
 
 
-void Game_Manager::Location_Buttons_Pressed(Player* player, Window_Manager* window_Manager)
+void Game_Manager::Location_Buttons_Pressed(Player* player, Window_Manager* window_Manager, Unlock_Manager* unlock_Manager)
 {
-	if (Is_Mouse_Over_Location(player, 0, 0, 0))
+	if (unlock_Manager->Get_Unlocked("Forest")->Get_Unlocked() &&
+		Is_Mouse_Over_Location(player, 0, 0, 0))
 	{
 		window_Manager->set_Active_Window("Forest");
 	}
-	else if (Is_Mouse_Over_Location(player, 0, 0, 1))
+	else if (unlock_Manager->Get_Unlocked("Forge")->Get_Unlocked() &&
+		Is_Mouse_Over_Location(player, 0, 0, 1))
 	{
 		window_Manager->set_Active_Window("Forge");
 	}
-	else if (Is_Mouse_Over_Location(player, 0, 0, 2))
+	else if (unlock_Manager->Get_Unlocked("Player")->Get_Unlocked() &&
+		Is_Mouse_Over_Location(player, 0, 0, 2))
 	{
 		window_Manager->set_Active_Window("Player");
 	}
-	else if (Is_Mouse_Over_Location(player, 0, 0, 3))
+	else if (unlock_Manager->Get_Unlocked("Libary")->Get_Unlocked() &&
+		Is_Mouse_Over_Location(player, 0, 0, 3))
 	{
 		window_Manager->set_Active_Window("Libary");
 	}
@@ -415,12 +422,14 @@ void Game_Manager::Blueprint_Upgrade_Window(Player* player, Window_Manager* wind
 
 }
 
-void Game_Manager::Check_All_Updates(double deltatime, Player* player, Resource_Manager* resource_Manager, Craftingtable_Manager* craftingtable, Blueprint_Manager* blueprint_Manager, Item_Manager* item_Manager)
+void Game_Manager::Check_All_Updates(double deltatime, Player* player, Resource_Manager* resource_Manager, Craftingtable_Manager* craftingtable, Blueprint_Manager* blueprint_Manager, Item_Manager* item_Manager, Unlock_Manager* unlock_Manger)
 {
 	Update_All_Per_Seccond_Events(deltatime, player, resource_Manager);
 	Check_Level_Up(player);
 	Check_Player_Stats(player);
 	Check_Craftingtable_Progress(resource_Manager, craftingtable, blueprint_Manager, item_Manager);
+	unlock_Manger->Check_Unlock(resource_Manager, player);
+
 }
 
 void Game_Manager::Update_All_Per_Seccond_Events(double deltaTime, Player* player, Resource_Manager* resource_Manager)

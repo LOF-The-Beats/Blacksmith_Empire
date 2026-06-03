@@ -7,6 +7,8 @@ class Craftingtable_Manager;
 class Blueprint_Manager;
 class Item_Manager;
 class Draft_Manager;
+class Unlock_Manager;
+class Tutorial;
 
 class Game_Manager
 {
@@ -14,10 +16,10 @@ public:
 	Game_Manager();
 
 	void Update_Mouse_Pos(Player* player);
-	void If_Clicked(Player* player, Resource_Manager* resource_Manager, Window_Manager* window_Manager, Craftingtable_Manager* craftingtable, Blueprint_Manager* blueprint_Manager, Item_Manager* item_Manager, Draft_Manager* draft_Manager);
+	void If_Clicked(Player* player, Resource_Manager* resource_Manager, Window_Manager* window_Manager, Craftingtable_Manager* craftingtable, Blueprint_Manager* blueprint_Manager, Item_Manager* item_Manager, Draft_Manager* draft_Manager, Unlock_Manager* unlcok_Manager, Tutorial* tutorial);
 	bool Is_Mouse_Over_Standard(Player* player, double x, double y);
 	bool Is_Mouse_Over_Location(Player* player, double x, double y, double z);
-	void Location_Buttons_Pressed(Player* player, Window_Manager* window_Manager);
+	void Location_Buttons_Pressed(Player* player, Window_Manager* window_Manager, Unlock_Manager* unlock_Manger);
 
 
 	// Location buttons
@@ -36,7 +38,7 @@ public:
 
 
 
-	void Check_All_Updates(double deltatime, Player* player, Resource_Manager* resource_Manager, Craftingtable_Manager* craftingtable, Blueprint_Manager* blueprint_Manager, Item_Manager* item_Manager);
+	void Check_All_Updates(double deltatime, Player* player, Resource_Manager* resource_Manager, Craftingtable_Manager* craftingtable, Blueprint_Manager* blueprint_Manager, Item_Manager* item_Manager, Unlock_Manager* unlock_Manager);
 	void Update_All_Per_Seccond_Events(double deltatime, Player* player, Resource_Manager* resource_Manager);
 	void Check_Level_Up(Player* player);
 	void Check_Player_Stats(Player* player);

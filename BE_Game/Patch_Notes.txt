@@ -1,4 +1,24 @@
 
+patch 0.1.7
+Tutorial System
+- Added Tutorial_Manager.
+- Added multi-page tutorial support.
+- Added guided tutorial progression.
+- Added tutorial arrows highlighting important UI elements.
+- Added context-sensitive tutorial progression based on player actions.
+- Tutorial now teaches gathering, crafting, selling, and workers step-by-step.
+
+Unlock System
+- Added Unlock_Manager.
+- Added centralized unlock registration system.
+- Added unlock state tracking for tabs, windows, and future systems.
+- Unlocks can now be managed without adding new variables for every feature.
+
+Tutorial / Unlock Integration
+- Began linking tutorial progression to unlock progression.
+- Features are introduced gradually instead of all at once.
+- Improved onboarding for new players.
+
 Patch 0.1.6
 Blueprint Upgrade System
 - Added Blueprint Upgrade Window.

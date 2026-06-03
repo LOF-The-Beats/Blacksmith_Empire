@@ -9,6 +9,8 @@
 #include "Blueprint_Manager.h"
 #include "Item_Manager.h"
 #include "Draft_Manager.h"
+#include "Unlock_Manager.h"
+#include "Tutorial.h"
 
 
 
@@ -27,11 +29,13 @@ void Game::Init()
 	m_Blueprint_Manager = new Blueprint_Manager;
 	m_Item_Manager = new Item_Manager;
 	m_Draft_Manager = new Draft_Manager;
+	m_Unlock_Manager = new Unlock_Manager;
+	m_Tutorial = new Tutorial;
 
 	//Resources
-	m_Resource_Manager->Add_Resource("Thalions", 1000, 0, 0, false);
-	m_Resource_Manager->Add_Resource("SoftWood", 1000, 10, 0, true);
-	m_Resource_Manager->Add_Resource("Paper", 10000, 1000, 0, false);
+	m_Resource_Manager->Add_Resource("Thalions", 0, 0, 0, false);
+	m_Resource_Manager->Add_Resource("SoftWood", 0, 10, 0, true);
+	m_Resource_Manager->Add_Resource("Paper", 0, 1000, 0, false);
 
 	//Windows / Locations
 	m_Window_Manager->add_Window("Forest", true);
@@ -58,6 +62,9 @@ void Game::Init()
 
 	//Blueprints
 	m_Blueprint_Manager->Create_All_Blueprints();
+
+	// all unlocks
+	m_Unlock_Manager->Create_All_Unlocks();
 }
 
 
@@ -65,11 +72,11 @@ void Game::Tick(float deltaTime)
 {
 	screen->Clear(0);
 	m_Game_Manager->Update_Mouse_Pos(m_Player);
-	m_UI->Draw_UI(screen, m_Resource_Manager, m_Player, m_Window_Manager, m_Craftingtable_Manager, m_Blueprint_Manager, m_Item_Manager, m_Draft_Manager);
-	m_Game_Manager->If_Clicked(m_Player, m_Resource_Manager, m_Window_Manager, m_Craftingtable_Manager, m_Blueprint_Manager, m_Item_Manager, m_Draft_Manager);
+	m_UI->Draw_UI(screen, m_Resource_Manager, m_Player, m_Window_Manager, m_Craftingtable_Manager, m_Blueprint_Manager, m_Item_Manager, m_Draft_Manager, m_Unlock_Manager, m_Tutorial);
+	m_Game_Manager->If_Clicked(m_Player, m_Resource_Manager, m_Window_Manager, m_Craftingtable_Manager, m_Blueprint_Manager, m_Item_Manager, m_Draft_Manager, m_Unlock_Manager, m_Tutorial);
 
 	//update per seccond events
-	m_Game_Manager->Check_All_Updates(deltaTime, m_Player, m_Resource_Manager, m_Craftingtable_Manager, m_Blueprint_Manager ,m_Item_Manager);
+	m_Game_Manager->Check_All_Updates(deltaTime, m_Player, m_Resource_Manager, m_Craftingtable_Manager, m_Blueprint_Manager ,m_Item_Manager, m_Unlock_Manager);
 
 
 	//testing

@@ -7,20 +7,25 @@
 #include "Blueprint_Manager.h"
 #include "Item_Manager.h"
 #include "Draft_Manager.h"
+#include "Unlock_Manager.h"
+#include "Tutorial.h"
 
 UI::UI()
 {
 }
 
-void UI::Draw_UI(Surface* screen, Resource_Manager* resource_Manager, Player* player, Window_Manager* window_Manager, Craftingtable_Manager* craftingtable, Blueprint_Manager* blueprint_Manager, Item_Manager* item_Manager, Draft_Manager* draft_Manager)
+void UI::Draw_UI(Surface* screen, Resource_Manager* resource_Manager, Player* player, Window_Manager* window_Manager, Craftingtable_Manager* craftingtable, Blueprint_Manager* blueprint_Manager, Item_Manager* item_Manager, Draft_Manager* draft_Manager, Unlock_Manager* unlock_Manager, Tutorial* tutorial)
 {
-	UI_Layout(screen, resource_Manager);
-	if (window_Manager->get_Active_Window() == "Forest")
+	UI_Layout(screen, resource_Manager, unlock_Manager);
+	tutorial->Draw_Tutorial_UI(screen, this);
+	if (unlock_Manager->Get_Unlocked("Forest")->Get_Unlocked() &&
+		window_Manager->get_Active_Window() == "Forest")
 	{
 		Forest_UI(screen, resource_Manager, player, item_Manager);
 	}
-	else if (window_Manager->get_Active_Window() == "Forge" ||
-		window_Manager->get_Active_Window() == "Craftingtable 1")
+	else if (
+		(window_Manager->get_Active_Window() == "Forge" ||
+		window_Manager->get_Active_Window() == "Craftingtable 1"))
 	{
 		Forge_UI(screen, resource_Manager, player, window_Manager, craftingtable, blueprint_Manager, item_Manager);
 	}
@@ -40,7 +45,7 @@ void UI::Draw_UI(Surface* screen, Resource_Manager* resource_Manager, Player* pl
 
 }
 
-void UI::UI_Layout(Surface* screen, Resource_Manager* resource_Manager)
+void UI::UI_Layout(Surface* screen, Resource_Manager* resource_Manager, Unlock_Manager* unlock_Manager)
 {
 	screen->Line(0, 50, SCRWIDTH, 50, 0xFF00FF);
 	screen->Line(SCRWIDTH / 3 * 1, 0, SCRWIDTH / 3 * 1, 50, 0xFF00FF);
@@ -63,9 +68,18 @@ void UI::UI_Layout(Surface* screen, Resource_Manager* resource_Manager)
 	screen->Box(0, 50, 150, SCRHEIGHT / 10 * 8 + 50, 0xFF00FF);
 
 	screen->Print("Forest", 50, SCRHEIGHT / 10 * 1, 0xFF00FF);
-	screen->Print("Forge", 50, SCRHEIGHT / 10 * 2, 0xFF00FF);
-	screen->Print("Player", 50, SCRHEIGHT / 10 * 3, 0xFF00FF);
-	screen->Print("Libary", 50, SCRHEIGHT / 10 * 4, 0xFF00FF);
+	if (unlock_Manager->Get_Unlocked("Forge")->Get_Unlocked())
+	{
+		screen->Print("Forge", 50, SCRHEIGHT / 10 * 2, 0xFF00FF);
+	}
+	if (unlock_Manager->Get_Unlocked("Player")->Get_Unlocked())
+	{
+		screen->Print("Player", 50, SCRHEIGHT / 10 * 3, 0xFF00FF);
+	}
+	if (unlock_Manager->Get_Unlocked("Libary")->Get_Unlocked())
+	{
+		screen->Print("Libary", 50, SCRHEIGHT / 10 * 4, 0xFF00FF);
+	}
 }
 
 void UI::Forest_UI(Surface* screen, Resource_Manager* resource_Manager, Player* player, Item_Manager* item_Manager)
@@ -449,6 +463,34 @@ void UI::button_Standard_Selected(string name, int x1, int y1, Surface* screen)
 {
 	screen->Bar(x1, y1, x1 + 110, y1 + 50, 0xFF00FF);
 	screen->Print(name.c_str(), x1 + 20, y1 + 22, 0xFFFFFF);
+}
+
+void UI::Arrow_Up(Surface* screen, int x1, int y1)
+{
+	screen->Line(x1, y1, x1, y1 + 50, 0xF0F0F0);
+	screen->Line(x1, y1, x1 + 25, y1 + 25, 0xF0F0F0);
+	screen->Line(x1, y1, x1 - 25, y1 + 25, 0xF0F0F0);
+}
+
+void UI::Arrow_Down(Surface* screen, int x1, int y1)
+{
+	screen->Line(x1, y1, x1, y1 - 50, 0xF0F0F0);
+	screen->Line(x1, y1, x1 + 25, y1 - 25, 0xF0F0F0);
+	screen->Line(x1, y1, x1 - 25, y1 - 25, 0xF0F0F0);
+}
+
+void UI::Arrow_Left(Surface* screen, int x1, int y1)
+{
+	screen->Line(x1, y1, x1 + 100, y1, 0xF0F0F0);
+	screen->Line(x1, y1, x1 + 50, y1 - 25, 0xF0F0F0);
+	screen->Line(x1, y1, x1 +50, y1 + 25, 0xF0F0F0);
+}
+
+void UI::Arrow_Right(Surface* screen, int x1, int y1)
+{
+	screen->Line(x1, y1, x1 - 100, y1, 0xF0F0F0);
+	screen->Line(x1, y1, x1 - 50, y1 - 25, 0xF0F0F0);
+	screen->Line(x1, y1, x1 - 50, y1 + 25, 0xF0F0F0);
 }
 
 

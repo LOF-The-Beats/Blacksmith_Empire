@@ -149,7 +149,10 @@
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">precomp.h</PrecompiledHeaderFile>
     </ClCompile>
     <ClCompile Include="template\tmpl8math.cpp" />
+    <ClCompile Include="Tutorial.cpp" />
     <ClCompile Include="UI.cpp" />
+    <ClCompile Include="Unlocker.cpp" />
+    <ClCompile Include="Unlock_Manager.cpp" />
     <ClCompile Include="Window_Manager.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -175,7 +178,10 @@
     <ClInclude Include="template\sprite.h" />
     <ClInclude Include="template\surface.h" />
     <ClInclude Include="template\tmpl8math.h" />
+    <ClInclude Include="Tutorial.h" />
     <ClInclude Include="UI.h" />
+    <ClInclude Include="Unlocker.h" />
+    <ClInclude Include="Unlock_Manager.h" />
     <ClInclude Include="Window_Manager.h" />
   </ItemGroup>
   <ItemGroup>
