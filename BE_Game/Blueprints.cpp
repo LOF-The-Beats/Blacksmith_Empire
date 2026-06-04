@@ -37,6 +37,11 @@ double Blueprints::Get_Conversion_Rate() const
 	return conversion_Rate;
 }
 
+double Blueprints::Get_Base_Conversion_Rate() const
+{
+	return base_Conversion_Rate;
+}
+
 bool Blueprints::Get_Unlocked() const
 {
 	return unlocked;
@@ -68,6 +73,12 @@ void Blueprints::Set_Cost(double amount)
 void Blueprints::Set_Conversion_Rate(double amount)
 {
 	conversion_Rate = amount;
+	return;
+}
+
+void Blueprints::Set_Base_Conversion_Rate(double amount)
+{
+	base_Conversion_Rate = amount;
 	return;
 }
 

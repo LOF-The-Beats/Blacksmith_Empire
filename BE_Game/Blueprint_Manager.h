@@ -9,6 +9,7 @@ public:
 	//getters
 	Blueprints* Get_Blueprints(const string name) const;
 	vector<Blueprints*> Get_Sorted_Blueprints_Numbers();
+	vector<Blueprints*> Get_All_Blueprints();
 
 
 	//adders

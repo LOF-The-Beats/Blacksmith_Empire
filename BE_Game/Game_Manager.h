@@ -9,6 +9,7 @@ class Item_Manager;
 class Draft_Manager;
 class Unlock_Manager;
 class Tutorial;
+class Ascension_Manager;
 
 class Game_Manager
 {
@@ -27,6 +28,7 @@ public:
 	void Forge_Buttons(Player* player, Resource_Manager* resource_Manager, Window_Manager* window_Manager, Item_Manager* item_Manager);
 	void Player_Buttons(Player* player, Window_Manager* window_Manager, Item_Manager* item_Manager);
 	void Libary_Buttons(Player* player, Window_Manager* window_Manager, Item_Manager* item_Manager, Resource_Manager* resource_Manager, Draft_Manager* draft_Manager, Blueprint_Manager* blueprint_Manager);
+	void Witch_Hut_Buttons(Player* player, Window_Manager* window_Manager, Item_Manager* item_Manager, Resource_Manager* resource_Manager, Draft_Manager* draft_Manager, Blueprint_Manager* blueprint_Manager);
 
 
 
@@ -38,7 +40,7 @@ public:
 
 
 
-	void Check_All_Updates(double deltatime, Player* player, Resource_Manager* resource_Manager, Craftingtable_Manager* craftingtable, Blueprint_Manager* blueprint_Manager, Item_Manager* item_Manager, Unlock_Manager* unlock_Manager);
+	void Check_All_Updates(double deltatime, Player* player, Resource_Manager* resource_Manager, Craftingtable_Manager* craftingtable, Blueprint_Manager* blueprint_Manager, Item_Manager* item_Manager, Unlock_Manager* unlock_Manager, Ascension_Manager* ascension_Manager);
 	void Update_All_Per_Seccond_Events(double deltatime, Player* player, Resource_Manager* resource_Manager);
 	void Check_Level_Up(Player* player);
 	void Check_Player_Stats(Player* player);

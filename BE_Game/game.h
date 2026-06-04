@@ -15,6 +15,7 @@ class Item_Manager;
 class Draft_Manager;
 class Unlock_Manager;
 class Tutorial;
+class Ascension_Manager;
 
 
 namespace Tmpl8
@@ -48,6 +49,7 @@ public:
 	Draft_Manager* m_Draft_Manager;
 	Unlock_Manager* m_Unlock_Manager;
 	Tutorial* m_Tutorial;
+	Ascension_Manager* m_Ascension_Manger;
 
 };
 

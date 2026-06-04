@@ -45,6 +45,18 @@ vector<Resources*> Resource_Manager::Get_Sorted_Resources_Numbers()
 	return sorted_Resources;
 }
 
+vector<Resources*> Resource_Manager::Get_All_Resources()
+{
+	vector<Resources*> all_Resources;
+
+	for (auto& resource : resources)
+	{
+		all_Resources.push_back(resource.second);
+	}
+
+	return all_Resources;
+}
+
 void Resource_Manager::Add_Resource(const string name, double quantity, double hardness, int order, bool crafting_Resource)
 {
 	if (resources.find(name) == resources.end())

@@ -40,6 +40,7 @@
     <ClCompile Include="Unlock_Manager.cpp" />
     <ClCompile Include="Unlocker.cpp" />
     <ClCompile Include="Tutorial.cpp" />
+    <ClCompile Include="Ascension_Manager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="game.h" />
@@ -87,6 +88,7 @@
     <ClInclude Include="Unlock_Manager.h" />
     <ClInclude Include="Unlocker.h" />
     <ClInclude Include="Tutorial.h" />
+    <ClInclude Include="Ascension_Manager.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="README.md">

@@ -9,6 +9,7 @@
 #include "Draft_Manager.h"
 #include "Unlock_Manager.h"
 #include "Tutorial.h"
+#include "Ascension_Manager.h"
 
 extern GLFWwindow* window;
 
@@ -48,6 +49,10 @@ void Game_Manager::If_Clicked(Player* player, Resource_Manager* resource_Manager
 			else if (window_Manager->get_Active_Window() == "Libary")
 			{
 				Libary_Buttons(player, window_Manager, item_Manager, resource_Manager, draft_Manager, blueprint_Manager);
+			}
+			else if (window_Manager->get_Active_Window() == "Witch Hut")
+			{
+				Witch_Hut_Buttons(player, window_Manager, item_Manager, resource_Manager, draft_Manager, blueprint_Manager);
 			}
 
 			if (window_Manager->get_Active_Window() == "Craftingtable 1")
@@ -123,6 +128,11 @@ void Game_Manager::Location_Buttons_Pressed(Player* player, Window_Manager* wind
 		Is_Mouse_Over_Location(player, 0, 0, 3))
 	{
 		window_Manager->set_Active_Window("Libary");
+	}
+	else if (unlock_Manager->Get_Unlocked("Witch Hut")->Get_Unlocked() &&
+		Is_Mouse_Over_Location(player, 0, 0, 4))
+	{
+		window_Manager->set_Active_Window("Witch Hut");
 	}
 }
 
@@ -233,6 +243,10 @@ void Game_Manager::Libary_Buttons(Player* player, Window_Manager* window_Manager
 
 
 
+}
+
+void Game_Manager::Witch_Hut_Buttons(Player* player, Window_Manager* window_Manager, Item_Manager* item_Manager, Resource_Manager* resource_Manager, Draft_Manager* draft_Manager, Blueprint_Manager* blueprint_Manager)
+{
 }
 
 void Game_Manager::Craftingtable_1_Window(Player* player, Craftingtable_Manager* craftingtable, Window_Manager* window_Manager, Blueprint_Manager* blueprint_Manager, Resource_Manager* resource_Manager)
@@ -422,13 +436,14 @@ void Game_Manager::Blueprint_Upgrade_Window(Player* player, Window_Manager* wind
 
 }
 
-void Game_Manager::Check_All_Updates(double deltatime, Player* player, Resource_Manager* resource_Manager, Craftingtable_Manager* craftingtable, Blueprint_Manager* blueprint_Manager, Item_Manager* item_Manager, Unlock_Manager* unlock_Manger)
+void Game_Manager::Check_All_Updates(double deltatime, Player* player, Resource_Manager* resource_Manager, Craftingtable_Manager* craftingtable, Blueprint_Manager* blueprint_Manager, Item_Manager* item_Manager, Unlock_Manager* unlock_Manger, Ascension_Manager* ascension_Manager)
 {
 	Update_All_Per_Seccond_Events(deltatime, player, resource_Manager);
 	Check_Level_Up(player);
 	Check_Player_Stats(player);
 	Check_Craftingtable_Progress(resource_Manager, craftingtable, blueprint_Manager, item_Manager);
 	unlock_Manger->Check_Unlock(resource_Manager, player);
+	ascension_Manager->Update_Gain_On_Reset(resource_Manager);
 
 }
 

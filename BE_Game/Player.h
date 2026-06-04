@@ -10,6 +10,7 @@ public:
 	double Get_Player_X() const;
 	double Get_Player_Y() const;
 	Stats* Get_Stats(const string name) const;
+	vector<Stats*> Get_All_Stats() const;
 
 	//setters
 

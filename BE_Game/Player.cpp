@@ -26,6 +26,18 @@ Stats* Player::Get_Stats(const string name) const
 	return nullptr;
 }
 
+vector<Stats*> Player::Get_All_Stats() const
+{
+	vector<Stats*> all_Stats;
+
+	for (auto& stat : stats)
+	{
+		all_Stats.push_back(stat.second);
+	}
+
+	return all_Stats;
+}
+
 void Player::Set_Player_Pos(double x, double y)
 {
 	player_X = x;

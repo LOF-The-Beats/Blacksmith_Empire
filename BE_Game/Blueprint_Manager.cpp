@@ -35,6 +35,18 @@ vector<Blueprints*> Blueprint_Manager::Get_Sorted_Blueprints_Numbers()
 	return sorted_Blueprints;
 }
 
+vector<Blueprints*> Blueprint_Manager::Get_All_Blueprints()
+{
+	vector<Blueprints*> all_Blueprints;
+
+	for (auto& blueprint : blueprints)
+	{
+		all_Blueprints.push_back(blueprint.second);
+	}
+
+	return all_Blueprints;
+}
+
 void Blueprint_Manager::Add_Blueprints(const string name, string equip_Slot, const double conversion_Rate, int order)
 {
 	if (blueprints.find(name) == blueprints.end())

@@ -11,6 +11,7 @@ public:
 	double Get_Level() const;
 	double Get_Cost() const;
 	double Get_Conversion_Rate() const;
+	double Get_Base_Conversion_Rate() const;
 	bool Get_Unlocked() const;
 	bool Get_Researched() const;
 
@@ -19,6 +20,7 @@ public:
 	void Set_Level(double amount);
 	void Set_Cost(double amount);
 	void Set_Conversion_Rate(double amount);
+	void Set_Base_Conversion_Rate(double amount);
 	void Set_Unlocked(bool b);
 	void Set_Researched(bool b);
 
@@ -42,6 +44,7 @@ private:
 	double level;
 	double cost;
 	double conversion_Rate;
+	double base_Conversion_Rate;
 	bool unlocked;
 	bool researched;
 

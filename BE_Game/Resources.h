@@ -9,6 +9,7 @@ public:
 	string Get_Worker_Tool_Equiped() const;
 	int Get_Order() const;
 	double Get_Quantity() const;
+	double Get_Gain_On_Reset() const;
 	double Get_Workers() const;
 	double Get_Workers_Tool_Power() const;
 	double Get_Worker_Cost() const;
@@ -20,6 +21,7 @@ public:
 	void Set_Name(string n);
 	void Set_Worker_Tool_Equiped(string n);
 	void Set_Quantity(double d);
+	void Set_Gain_On_Reset(double d);
 	void Set_Workers(double d);
 	void Set_Workers_Tool_Power(double d);
 	void Set_Worker_Cost(double d);
@@ -47,6 +49,7 @@ private:
 	string worker_Tool_Equiped;
 	int order;
 	double quantity;
+	double gain_On_Reset;
 	double workers;
 	double worker_Tool_Power;
 	double worker_Cost;

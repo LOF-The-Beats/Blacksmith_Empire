@@ -31,9 +31,11 @@ void Unlock_Manager::Create_All_Unlocks()
 	Add_Unlocked("Forge");
 	Add_Unlocked("Player");
 	Add_Unlocked("Libary");
+	Add_Unlocked("Witch Hut");
 
 
 	Get_Unlocked("Forest")->Set_Unlocked(true);
+
 }
 
 void Unlock_Manager::Check_Unlock(Resource_Manager* resource_Manager, Player* player)
@@ -52,6 +54,11 @@ void Unlock_Manager::Check_Unlock(Resource_Manager* resource_Manager, Player* pl
 		!Get_Unlocked("Libary")->Get_Unlocked())
 	{
 		Get_Unlocked("Libary")->Set_Unlocked(true);
+	}
+	if (resource_Manager->Get_Resource("Hourglass")->Get_Gain_On_Reset() >= 1 &&
+		!Get_Unlocked("Witch Hut")->Get_Unlocked())
+	{
+		Get_Unlocked("Witch Hut")->Set_Unlocked(true);
 	}
 
 }

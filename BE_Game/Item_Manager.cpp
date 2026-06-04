@@ -23,6 +23,16 @@ void Item_Manager::Add_Item(const string name, string resource, string blueprint
 	}
 }
 
+void Item_Manager::Delete_All_Items()
+{
+	for (auto& items : item)
+	{
+		delete items.second;
+	}
+	item.clear();
+	return;
+}
+
 double Item_Manager::Sell_All_Items()
 {
 	double earned_gold = 0;

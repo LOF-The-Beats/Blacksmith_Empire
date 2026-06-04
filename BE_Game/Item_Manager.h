@@ -15,6 +15,10 @@ public:
 	//adder
 
 	void Add_Item(const string name, string resource, string blueprint, string equip_Slot, double level, double value, double power);
+
+	//Deleter
+
+	void Delete_All_Items();
 	
 	// sell actions
 	double Sell_All_Items();

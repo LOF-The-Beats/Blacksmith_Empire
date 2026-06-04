@@ -9,9 +9,12 @@ public:
 
 	//getters
 	Craftingtable* get_Craftingtable(const string name) const;
+	vector<Craftingtable*> Get_All_Craftingtables() const;
 
 	//adders
 	void Add_Craftingtable(const string name);
+
+	
 
 
 private:

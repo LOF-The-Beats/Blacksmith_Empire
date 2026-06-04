@@ -121,6 +121,7 @@
   </ItemDefinitionGroup>
   <!-- END Custom section -->
   <ItemGroup>
+    <ClCompile Include="Ascension_Manager.cpp" />
     <ClCompile Include="Blueprints.cpp" />
     <ClCompile Include="Blueprint_Manager.cpp" />
     <ClCompile Include="Craftingtable.cpp" />
@@ -156,6 +157,7 @@
     <ClCompile Include="Window_Manager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Ascension_Manager.h" />
     <ClInclude Include="Blueprints.h" />
     <ClInclude Include="Blueprint_Manager.h" />
     <ClInclude Include="cl\tools.cl" />

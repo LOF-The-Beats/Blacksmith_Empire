@@ -42,6 +42,10 @@ void UI::Draw_UI(Surface* screen, Resource_Manager* resource_Manager, Player* pl
 	{
 		Libary_UI(screen, resource_Manager, blueprint_Manager, player, window_Manager, draft_Manager);
 	}
+	else if (window_Manager->get_Active_Window() == "Witch Hut")
+	{
+		Witch_Hut_UI(screen, resource_Manager, blueprint_Manager, player, window_Manager, draft_Manager);
+	}
 
 }
 
@@ -51,9 +55,16 @@ void UI::UI_Layout(Surface* screen, Resource_Manager* resource_Manager, Unlock_M
 	screen->Line(SCRWIDTH / 3 * 1, 0, SCRWIDTH / 3 * 1, 50, 0xFF00FF);
 	screen->Line(SCRWIDTH / 3 * 2, 0, SCRWIDTH / 3 * 2, 50, 0xFF00FF);
 	// top tekst
-	auto resource = resource_Manager->Get_Resource("Thalions");
-	string tekst = "Thalions : " + to_string(static_cast<int>(round(resource->Get_Quantity())));
-	screen->Print(tekst.c_str(), 10, 20, 0xFF00FF, 2.5F);
+	auto thalions = resource_Manager->Get_Resource("Thalions");
+	auto hourglass = resource_Manager->Get_Resource("Hourglass");
+
+	string tekst = "Thalions : " + to_string(static_cast<int>(round(thalions->Get_Quantity())));
+	screen->Print(tekst.c_str(), (SCRWIDTH * 0 / 3) + 10, 20, 0xFF00FF, 2.5F);
+	if (unlock_Manager->Get_Unlocked("Witch Hut")->Get_Unlocked())
+	{
+		tekst = "Hourglasses: " + to_string(static_cast<int>(round(hourglass->Get_Quantity()))) + "(" + to_string(static_cast<int>(round(hourglass->Get_Gain_On_Reset()))) + ")";
+		screen->Print(tekst.c_str(), (SCRWIDTH * 1 / 3) + 10, 20, 0xFF00FF, 2.5F);
+	}
 
 	// left bar
 	screen->Line(150, 50, 150, SCRHEIGHT, 0xFF00FF);
@@ -79,6 +90,10 @@ void UI::UI_Layout(Surface* screen, Resource_Manager* resource_Manager, Unlock_M
 	if (unlock_Manager->Get_Unlocked("Libary")->Get_Unlocked())
 	{
 		screen->Print("Libary", 50, SCRHEIGHT / 10 * 4, 0xFF00FF);
+	}
+	if (unlock_Manager->Get_Unlocked("Witch Hut")->Get_Unlocked())
+	{
+		screen->Print("Witch Hut", 50, SCRHEIGHT / 10 * 5, 0xFF00FF);
 	}
 }
 
@@ -120,6 +135,27 @@ void UI::Forest_UI(Surface* screen, Resource_Manager* resource_Manager, Player* 
 
 
 	screen->Print((string(resource_Manager->Get_Resource("SoftWood")->Get_Name()) + ": " + to_string(static_cast<int>(std::round(resource_Manager->Get_Resource("SoftWood")->Get_Quantity())))).c_str(), 180, SCRHEIGHT / 30 * 1 + 35, 0xFF00FF, 1.5);
+
+	// info tekst
+	string test = "Click Gather amount: " + to_string(static_cast<int>(player->Get_Stats("Lumberjack")->Get_Power()));
+	string test2 = "Total workers " + to_string(static_cast<int>(resource_Manager->Get_Resource("SoftWood")->Get_Workers()));
+	string test3 = "";
+	string test4 = "Workers gather total: " + to_string(static_cast<int>(resource_Manager->Get_Resource("SoftWood")->Get_Production_Rate()));
+
+	if (resource_Manager->Get_Resource("SoftWood")->Get_Workers() >= 1)
+	{
+		test3 = "One Workers gathers: " + to_string(static_cast<int>(resource_Manager->Get_Resource("SoftWood")->Get_Production_Rate() / resource_Manager->Get_Resource("SoftWood")->Get_Workers()));
+	}
+	else
+	{
+		test3 = "One Workers gathers: 0";
+	}
+
+	screen->Print(test.c_str(), 360, 160, 0xFF00FF, 1.0F);
+	screen->Print(test2.c_str(), 360, 170, 0xFF00FF, 1.0F);
+	screen->Print(test3.c_str(), 360, 180, 0xFF00FF, 1.0F);
+	screen->Print(test4.c_str(), 360, 190, 0xFF00FF, 1.0F);
+
 
 }
 
@@ -450,6 +486,11 @@ void UI::Libary_UI(Surface* screen, Resource_Manager* resource_Manager, Blueprin
 			button_Standard("Upgrade", cost.c_str(), 770, 170 + (i * 60), screen);
 		}
 	}
+}
+
+void UI::Witch_Hut_UI(Surface* screen, Resource_Manager* resource_Manager, Blueprint_Manager* blueprint_Manager, Player* player, Window_Manager* window_Manager, Draft_Manager* Draft_Manager)
+{
+	screen->Print("Test", 500, 500, 0xFF00FF, 1.0F);
 }
 
 void UI::button_Standard(string name, string cost, int x1, int y1, Surface* screen)
