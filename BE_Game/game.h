@@ -16,6 +16,7 @@ class Draft_Manager;
 class Unlock_Manager;
 class Tutorial;
 class Ascension_Manager;
+class Ascension_Upgrade_Screen;
 
 
 namespace Tmpl8
@@ -50,6 +51,7 @@ public:
 	Unlock_Manager* m_Unlock_Manager;
 	Tutorial* m_Tutorial;
 	Ascension_Manager* m_Ascension_Manger;
+	Ascension_Upgrade_Screen* m_Ascension_Upgrade_Screen;
 
 };
 

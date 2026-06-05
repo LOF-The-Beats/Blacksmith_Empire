@@ -12,6 +12,7 @@
 #include "Unlock_Manager.h"
 #include "Tutorial.h"
 #include "Ascension_Manager.h"
+#include "Ascension_Upgrade_Screen.h"
 
 
 
@@ -33,13 +34,14 @@ void Game::Init()
 	m_Unlock_Manager = new Unlock_Manager;
 	m_Tutorial = new Tutorial;
 	m_Ascension_Manger = new Ascension_Manager;
+	m_Ascension_Upgrade_Screen = new Ascension_Upgrade_Screen;
 
 	//Resources
-	m_Resource_Manager->Add_Resource("Thalions", 10000, 0, 0, false);
-	m_Resource_Manager->Add_Resource("Hourglass", 1000, 0, 0, false);
-	m_Resource_Manager->Add_Resource("Paper", 1000, 1000, 0, false);
+	m_Resource_Manager->Add_Resource("Thalions", 0, 0, 0, false);
+	m_Resource_Manager->Add_Resource("Hourglass", 0, 0, 0, false);
+	m_Resource_Manager->Add_Resource("Paper", 0, 1000, 0, false);
 
-	m_Resource_Manager->Add_Resource("SoftWood", 1000, 10, 0, true);
+	m_Resource_Manager->Add_Resource("SoftWood", 0, 10, 0, true);
 
 
 	//Windows / Locations
@@ -56,6 +58,7 @@ void Game::Init()
 	m_Window_Manager->add_Window("Mining Tool", false);
 	m_Window_Manager->add_Window("Blueprint Crafting", false);
 	m_Window_Manager->add_Window("Blueprint Upgrade", false);
+	m_Window_Manager->add_Window("Ascension Upgrade", false);
 
 	//Craftingtables
 	m_Craftingtable_Manager->Add_Craftingtable("Craftingtable 1");
@@ -71,6 +74,9 @@ void Game::Init()
 
 	// all unlocks
 	m_Unlock_Manager->Create_All_Unlocks();
+
+	// all upgrades
+	m_Ascension_Manger->Create_Upgrades();
 }
 
 
@@ -78,8 +84,8 @@ void Game::Tick(float deltaTime)
 {
 	screen->Clear(0);
 	m_Game_Manager->Update_Mouse_Pos(m_Player);
-	m_UI->Draw_UI(screen, m_Resource_Manager, m_Player, m_Window_Manager, m_Craftingtable_Manager, m_Blueprint_Manager, m_Item_Manager, m_Draft_Manager, m_Unlock_Manager, m_Tutorial);
-	m_Game_Manager->If_Clicked(m_Player, m_Resource_Manager, m_Window_Manager, m_Craftingtable_Manager, m_Blueprint_Manager, m_Item_Manager, m_Draft_Manager, m_Unlock_Manager, m_Tutorial);
+	m_UI->Draw_UI(screen, m_Resource_Manager, m_Player, m_Window_Manager, m_Craftingtable_Manager, m_Blueprint_Manager, m_Item_Manager, m_Draft_Manager, m_Unlock_Manager, m_Tutorial, m_Ascension_Upgrade_Screen, m_Ascension_Manger);
+	m_Game_Manager->If_Clicked(m_Player, m_Resource_Manager, m_Window_Manager, m_Craftingtable_Manager, m_Blueprint_Manager, m_Item_Manager, m_Draft_Manager, m_Unlock_Manager, m_Tutorial, m_Ascension_Manger, m_Ascension_Upgrade_Screen);
 
 	//update per seccond events
 	m_Game_Manager->Check_All_Updates(deltaTime, m_Player, m_Resource_Manager, m_Craftingtable_Manager, m_Blueprint_Manager ,m_Item_Manager, m_Unlock_Manager, m_Ascension_Manger);

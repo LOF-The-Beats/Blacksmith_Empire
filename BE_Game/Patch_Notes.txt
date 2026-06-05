@@ -1,4 +1,204 @@
 
+patch 0.1.8
+
+
+### Added Ascension Manager
+
+* Created `Ascension_Manager`
+* Added Hourglass gain calculation based on current Thallions
+* Added `Gain_On_Reset` support
+
+### Added Ascension Reset
+
+Implemented `Ascend_Run()` which now resets:
+
+#### Resources
+
+* Quantity
+* Workers
+* Worker Tool Power
+* Worker Cost
+* Worker Tool Equipped
+
+#### Blueprints
+
+* Level
+* Conversion Rate
+* Unlocked Status
+
+Special:
+
+* Axe blueprint remains unlocked after Ascension
+
+#### Player Stats
+
+* EXP
+* EXP Needed
+* Level
+* Tool Name
+* Tool Power
+
+#### Crafting Tables
+
+* Blueprint
+* Resource
+* In Use
+* Progress
+
+#### Draft Manager
+
+* Blueprint Card 1
+* Blueprint Card 2
+* Blueprint Card 3
+* Draft Cost
+
+#### Items
+
+* Added complete item deletion during Ascension
+* Clears all existing crafted items
+
+### Fixed Bugs
+
+* Fixed `base_Conversion_Rate` not being initialized
+* Fixed crafted item power becoming invalid after Ascension
+* Fixed upgrade lookup issues
+
+---
+
+## Ascension Upgrade Screen
+
+### Created Ascension Upgrade Screen Class
+
+Added support for:
+
+* Camera Position
+* Mouse Dragging
+* Last Mouse Position Tracking
+* Viewport System
+
+### Implemented Draggable Upgrade Tree
+
+Features:
+
+* Drag starts only inside the upgrade viewport
+* Drag continues outside viewport while holding mouse
+* Camera movement system
+* World Position → Screen Position conversion
+
+### Added Viewport System
+
+Upgrade tree is now contained inside a dedicated area.
+
+Current viewport:
+
+* X: 150
+* Y: 50
+* Width: `SCRWIDTH / 3 * 2 - 150`
+* Height: `950`
+
+### Added Upgrade Clipping
+
+* Upgrade buttons disappear when leaving the viewport
+* Entire button must remain inside viewport
+* Fixed button width calculation (110px)
+
+### Fixed Camera Issues
+
+* Camera now resets correctly when opening the upgrade screen
+* Added camera centering functionality
+* Removed random starting positions
+
+---
+
+## Ascension Upgrades
+
+### Created Ascension Upgrade Class
+
+Added support for:
+
+* Name
+* Description
+* Level
+* Max Level
+* Cost
+* World Position X
+* World Position Y
+* Unlocked Status
+
+### Created Upgrade Storage System
+
+Added to `Ascension_Manager`:
+
+* `Add_Upgrade()`
+* `Get_Upgrade()`
+* `Get_All_Upgrades()`
+* `Create_Upgrades()`
+
+### First Test Upgrades Added
+
+#### Stone
+
+* Unlock the Stone Resource
+
+#### Test
+
+* Test upgrade for UI and clicking functionality
+
+---
+
+## Upgrade Tree UI
+
+### Added Dynamic Upgrade Drawing
+
+Upgrade tree now:
+
+* Retrieves all upgrades from Ascension Manager
+* Converts world coordinates to screen coordinates
+* Applies camera offset
+* Checks viewport visibility
+* Draws upgrade buttons automatically
+
+### Added Upgrade Clicking
+
+Current implementation:
+
+* Clicking an upgrade increases its level
+* Used for testing the upgrade system
+* Foundation for future Hourglass spending
+
+---
+
+## Current State
+
+### Completed
+
+* Ascension Reset System
+* Hourglass Gain System
+* Upgrade Tree Camera
+* Upgrade Tree Viewport
+* Upgrade Storage
+* Upgrade Drawing
+* Upgrade Clicking
+
+### Next Session Goals
+
+1. Add upgrade hover tooltips
+2. Display:
+
+   * Name
+   * Description
+   * Cost
+   * Level
+   * Max Level
+3. Add Hourglass spending
+4. Add max level checks
+5. Implement actual upgrade effects
+6. Add upgrade connections/arrows
+7. Implement Stone Unlock upgrade
+8. Connect upgrades to game systems
+
+
+
 patch 0.1.7
 Tutorial System
 - Added Tutorial_Manager.

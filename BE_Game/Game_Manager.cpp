@@ -10,6 +10,8 @@
 #include "Unlock_Manager.h"
 #include "Tutorial.h"
 #include "Ascension_Manager.h"
+#include "Ascension_Upgrade_Screen.h"
+#include "Ascension_Upgrades.h"
 
 extern GLFWwindow* window;
 
@@ -26,7 +28,7 @@ void Game_Manager::Update_Mouse_Pos(Player* player)
 	return;
 }
 
-void Game_Manager::If_Clicked(Player* player, Resource_Manager* resource_Manager, Window_Manager* window_Manager, Craftingtable_Manager* craftingtable, Blueprint_Manager* blueprint_Manager, Item_Manager* item_Manager, Draft_Manager* draft_Manager, Unlock_Manager* unlock_Manager, Tutorial* tutorial)
+void Game_Manager::If_Clicked(Player* player, Resource_Manager* resource_Manager, Window_Manager* window_Manager, Craftingtable_Manager* craftingtable, Blueprint_Manager* blueprint_Manager, Item_Manager* item_Manager, Draft_Manager* draft_Manager, Unlock_Manager* unlock_Manager, Tutorial* tutorial, Ascension_Manager* ascension_Manager, Ascension_Upgrade_Screen* ascension_Upgrade_Screen)
 {
 	if (glfwGetMouseButton(window, 0) == GLFW_PRESS)
 	{
@@ -52,7 +54,7 @@ void Game_Manager::If_Clicked(Player* player, Resource_Manager* resource_Manager
 			}
 			else if (window_Manager->get_Active_Window() == "Witch Hut")
 			{
-				Witch_Hut_Buttons(player, window_Manager, item_Manager, resource_Manager, draft_Manager, blueprint_Manager);
+				Witch_Hut_Buttons(player, window_Manager, item_Manager, resource_Manager, craftingtable, draft_Manager, blueprint_Manager, ascension_Manager, ascension_Upgrade_Screen);
 			}
 
 			if (window_Manager->get_Active_Window() == "Craftingtable 1")
@@ -72,6 +74,10 @@ void Game_Manager::If_Clicked(Player* player, Resource_Manager* resource_Manager
 			else if (window_Manager->get_Active_Window() == "Blueprint Upgrade")
 			{
 				Blueprint_Upgrade_Window(player, window_Manager, item_Manager, blueprint_Manager, draft_Manager, resource_Manager);
+			}
+			else if (window_Manager->get_Active_Window() == "Ascension Upgrade")
+			{
+				Ascension_Upgrade_Window(player, window_Manager, item_Manager, blueprint_Manager, draft_Manager, resource_Manager, ascension_Upgrade_Screen, ascension_Manager);
 			}
 		}
 		clicked = true;
@@ -245,8 +251,20 @@ void Game_Manager::Libary_Buttons(Player* player, Window_Manager* window_Manager
 
 }
 
-void Game_Manager::Witch_Hut_Buttons(Player* player, Window_Manager* window_Manager, Item_Manager* item_Manager, Resource_Manager* resource_Manager, Draft_Manager* draft_Manager, Blueprint_Manager* blueprint_Manager)
+void Game_Manager::Witch_Hut_Buttons(Player* player, Window_Manager* window_Manager, Item_Manager* item_Manager, Resource_Manager* resource_Manager, Craftingtable_Manager* craftingtable_Manager, Draft_Manager* draft_Manager, Blueprint_Manager* blueprint_Manager, Ascension_Manager* ascension_Manager, Ascension_Upgrade_Screen* ascension_Upgrade_Screen)
 {
+	if (Is_Mouse_Over_Standard(player, 160, 160))
+	{
+		ascension_Manager->Ascend_Run(resource_Manager, blueprint_Manager, item_Manager, player, craftingtable_Manager, draft_Manager);
+	}
+	if (Is_Mouse_Over_Standard(player, 160, 220))
+	{
+		window_Manager->set_Active_Window("Ascension Upgrade");
+		ascension_Upgrade_Screen->Set_Dragging(false);
+		ascension_Upgrade_Screen->Set_Last_Mouse_X(player->Get_Player_X());
+		ascension_Upgrade_Screen->Set_Last_Mouse_Y(player->Get_Player_Y());
+		ascension_Upgrade_Screen->Center_On(500, 500);
+	}
 }
 
 void Game_Manager::Craftingtable_1_Window(Player* player, Craftingtable_Manager* craftingtable, Window_Manager* window_Manager, Blueprint_Manager* blueprint_Manager, Resource_Manager* resource_Manager)
@@ -434,6 +452,29 @@ void Game_Manager::Blueprint_Upgrade_Window(Player* player, Window_Manager* wind
 		}
 	}
 
+}
+
+void Game_Manager::Ascension_Upgrade_Window(Player* player, Window_Manager* window_Manager, Item_Manager* item_Manager, Blueprint_Manager* blueprint_Manager, Draft_Manager* draft_Manager, Resource_Manager* resource_Manager, Ascension_Upgrade_Screen* ascension_Upgrade_Screen, Ascension_Manager* ascension_Manager)
+{
+	ascension_Upgrade_Screen->Update_Drag(player);
+	auto all_Upgrades = ascension_Manager->Get_All_Upgrades();
+
+	for (size_t i = 0; i < all_Upgrades.size(); i++)
+	{
+		double world_X = all_Upgrades[i]->Get_World_X();
+		double world_Y = all_Upgrades[i]->Get_World_Y();
+
+		double screen_X = world_X - ascension_Upgrade_Screen->Get_Camera_X();
+		double screen_Y = world_Y - ascension_Upgrade_Screen->Get_Camera_Y();
+
+		if (ascension_Upgrade_Screen->Is_In_View(screen_X, screen_Y, 150, 50, SCRWIDTH / 3 * 2 - 150, 950))
+		{
+			if (Is_Mouse_Over_Standard(player, screen_X, screen_Y))
+			{
+				resource_Manager->Get_Resource("Hourglass")->Add_Quantity(1);
+			}
+		}
+	}
 }
 
 void Game_Manager::Check_All_Updates(double deltatime, Player* player, Resource_Manager* resource_Manager, Craftingtable_Manager* craftingtable, Blueprint_Manager* blueprint_Manager, Item_Manager* item_Manager, Unlock_Manager* unlock_Manger, Ascension_Manager* ascension_Manager)

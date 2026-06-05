@@ -5,6 +5,9 @@
 #include "Item_Manager.h"
 #include "Player.h"
 #include "Craftingtable_Manager.h"
+#include "Draft_Manager.h"
+#include "Ascension_Upgrades.h"
+
 
 Ascension_Manager::Ascension_Manager()
 	:base_Cost(10000)
@@ -16,10 +19,28 @@ double Ascension_Manager::Get_Base_Cost() const
 	return base_Cost;
 }
 
+Ascension_Upgrades* Ascension_Manager::Get_Upgrade(string name)
+{
+	auto upgrade = upgrades.find(name);
+	if (upgrade != upgrades.end())
+	{
+		return upgrade->second;
+	}
+	return nullptr;
+}
+
 void Ascension_Manager::Set_Base_Cost(double amount)
 {
 	base_Cost = amount;
 	return;
+}
+
+void Ascension_Manager::Add_Upgrade(string name, string description, double max_Level, double cost, double world_X, double world_Y)
+{
+	if (upgrades.find(name) == upgrades.end())
+	{
+		upgrades[name] = new Ascension_Upgrades(name ,description, max_Level, cost, world_X, world_Y);
+	}
 }
 
 void Ascension_Manager::Update_Gain_On_Reset(Resource_Manager* resource_Manager)
@@ -38,7 +59,7 @@ void Ascension_Manager::Update_Gain_On_Reset(Resource_Manager* resource_Manager)
 	hourglasses->Set_Gain_On_Reset(gain);
 }
 
-void Ascension_Manager::Ascend_Run(Resource_Manager* resource_Manager, Blueprint_Manager* blueprint_Manager, Item_Manager* item_Manager, Player* player, Craftingtable_Manager* craftingtable_Manager)
+void Ascension_Manager::Ascend_Run(Resource_Manager* resource_Manager, Blueprint_Manager* blueprint_Manager, Item_Manager* item_Manager, Player* player, Craftingtable_Manager* craftingtable_Manager, Draft_Manager* draft_Manager)
 {
 	auto all_Resources = resource_Manager->Get_All_Resources();
 	auto all_Blueprints = blueprint_Manager->Get_All_Blueprints();
@@ -50,6 +71,7 @@ void Ascension_Manager::Ascend_Run(Resource_Manager* resource_Manager, Blueprint
 		if (all_Resources[i]->Get_Name() == "Hourglass")
 		{
 			all_Resources[i]->Add_Quantity(all_Resources[i]->Get_Gain_On_Reset());
+			all_Resources[i]->Set_Gain_On_Reset(0);
 		}
 		else
 		{
@@ -86,4 +108,32 @@ void Ascension_Manager::Ascend_Run(Resource_Manager* resource_Manager, Blueprint
 		all_Craftingtables[i]->Set_Progress(0);
 	}
 
+	draft_Manager->Set_Blueprint_Card_1("None");
+	draft_Manager->Set_Blueprint_Card_2("None");
+	draft_Manager->Set_Blueprint_Card_3("None");
+	draft_Manager->Set_Cost(10);
+
+	item_Manager->Delete_All_Items();
+
+}
+
+vector<Ascension_Upgrades*> Ascension_Manager::Get_All_Upgrades()
+{
+	vector<Ascension_Upgrades*> all_Upgrades;
+	for (auto& upgrade : upgrades)
+	{
+		all_Upgrades.push_back(upgrade.second);
+	}
+
+	return all_Upgrades;
+}
+
+void Ascension_Manager::Create_Upgrades()
+{
+	Add_Upgrade("Stone", 
+		"Unlock the Stone resource", 
+		1, 0, 500, 500);
+	Add_Upgrade("test", 
+		"This is a test to see if it works", 
+		5, 1, 500, 400);
 }

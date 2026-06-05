@@ -9,12 +9,15 @@
 #include "Draft_Manager.h"
 #include "Unlock_Manager.h"
 #include "Tutorial.h"
+#include "Ascension_Upgrade_Screen.h"
+#include "Ascension_Manager.h"
+#include "Ascension_Upgrades.h"
 
 UI::UI()
 {
 }
 
-void UI::Draw_UI(Surface* screen, Resource_Manager* resource_Manager, Player* player, Window_Manager* window_Manager, Craftingtable_Manager* craftingtable, Blueprint_Manager* blueprint_Manager, Item_Manager* item_Manager, Draft_Manager* draft_Manager, Unlock_Manager* unlock_Manager, Tutorial* tutorial)
+void UI::Draw_UI(Surface* screen, Resource_Manager* resource_Manager, Player* player, Window_Manager* window_Manager, Craftingtable_Manager* craftingtable, Blueprint_Manager* blueprint_Manager, Item_Manager* item_Manager, Draft_Manager* draft_Manager, Unlock_Manager* unlock_Manager, Tutorial* tutorial, Ascension_Upgrade_Screen* ascension_Upgrade_Screen, Ascension_Manager* ascension_Manager)
 {
 	UI_Layout(screen, resource_Manager, unlock_Manager);
 	tutorial->Draw_Tutorial_UI(screen, this);
@@ -42,9 +45,10 @@ void UI::Draw_UI(Surface* screen, Resource_Manager* resource_Manager, Player* pl
 	{
 		Libary_UI(screen, resource_Manager, blueprint_Manager, player, window_Manager, draft_Manager);
 	}
-	else if (window_Manager->get_Active_Window() == "Witch Hut")
+	else if (window_Manager->get_Active_Window() == "Witch Hut" ||
+		window_Manager->get_Active_Window() == "Ascension Upgrade")
 	{
-		Witch_Hut_UI(screen, resource_Manager, blueprint_Manager, player, window_Manager, draft_Manager);
+		Witch_Hut_UI(screen, resource_Manager, blueprint_Manager, player, window_Manager, draft_Manager, ascension_Upgrade_Screen, ascension_Manager);
 	}
 
 }
@@ -237,7 +241,7 @@ void UI::Forge_UI(Surface* screen, Resource_Manager* resource_Manager, Player* p
 
 		//resource selected show 
 		auto table = craftingtable->get_Craftingtable("Craftingtable 1")->Get_Resource();
-		if (table != "none")
+		if (table != "None")
 		{
 			screen->Print((string(resource_Manager->Get_Resource(table)->Get_Name()) + ": " + to_string(static_cast<int>(std::round(resource_Manager->Get_Resource(table)->Get_Quantity())))).c_str(), 180, SCRHEIGHT / 30 * 1 + 35, 0xFF00FF, 1.5);
 		}
@@ -246,8 +250,8 @@ void UI::Forge_UI(Surface* screen, Resource_Manager* resource_Manager, Player* p
 		button_Standard("Close", "Craftingtable", SCRWIDTH / 2 - 50, 160, screen);
 		
 
-		if (craftingtable->get_Craftingtable("Craftingtable 1")->Get_Resource() != "none" &&
-			craftingtable->get_Craftingtable("Craftingtable 1")->Get_Blueprint() != "none")
+		if (craftingtable->get_Craftingtable("Craftingtable 1")->Get_Resource() != "None" &&
+			craftingtable->get_Craftingtable("Craftingtable 1")->Get_Blueprint() != "None")
 		{
 			auto table = craftingtable->get_Craftingtable("Craftingtable 1");
 			auto blueprint = blueprint_Manager->Get_Blueprints(table->Get_Blueprint());
@@ -281,8 +285,8 @@ void UI::Forge_UI(Surface* screen, Resource_Manager* resource_Manager, Player* p
 			
 		}
 		
-		if (craftingtable->get_Craftingtable("Craftingtable 1")->Get_Resource() != "none" &&
-			craftingtable->get_Craftingtable("Craftingtable 1")->Get_Blueprint() != "none")
+		if (craftingtable->get_Craftingtable("Craftingtable 1")->Get_Resource() != "None" &&
+			craftingtable->get_Craftingtable("Craftingtable 1")->Get_Blueprint() != "None")
 		{
 			screen->Bar(SCRWIDTH / 2 - 50, SCRHEIGHT / 10 * 8 - 50, SCRWIDTH / 2 - 50 + (craftingtable->get_Craftingtable("Craftingtable 1")->Get_Progress() / resource_Manager->Get_Resource(craftingtable->get_Craftingtable("Craftingtable 1")->Get_Resource())->Get_Hardness() * 110), SCRHEIGHT / 10 * 8, 0x00FF00);
 			button_Standard("Craft", "", SCRWIDTH / 2 - 50, SCRHEIGHT / 10 * 8 - 50, screen);
@@ -488,9 +492,23 @@ void UI::Libary_UI(Surface* screen, Resource_Manager* resource_Manager, Blueprin
 	}
 }
 
-void UI::Witch_Hut_UI(Surface* screen, Resource_Manager* resource_Manager, Blueprint_Manager* blueprint_Manager, Player* player, Window_Manager* window_Manager, Draft_Manager* Draft_Manager)
+void UI::Witch_Hut_UI(Surface* screen, Resource_Manager* resource_Manager, Blueprint_Manager* blueprint_Manager, Player* player, Window_Manager* window_Manager, Draft_Manager* Draft_Manager, Ascension_Upgrade_Screen* ascension_Upgrade_Screen, Ascension_Manager* ascension_Manager)
 {
-	screen->Print("Test", 500, 500, 0xFF00FF, 1.0F);
+
+	if (window_Manager->get_Active_Window() == "Witch Hut")
+	{
+		button_Standard("Ascend", "", 160, 160, screen);
+		button_Standard("Upgrades", "", 160, 220, screen);
+	}
+	
+	if (window_Manager->get_Active_Window() == "Ascension Upgrade")
+	{
+		screen->Box(150, 50, SCRWIDTH / 3 * 2, 1000, 0xFF00FF);
+		screen->Line(SCRWIDTH / 3 * 2 , 1000, SCRWIDTH, 1000, 0xFF00FF);
+
+		ascension_Upgrade_Screen->Update_Drag(player);
+		draw_Ascension_Upgrades(screen, ascension_Manager, ascension_Upgrade_Screen);
+	}
 }
 
 void UI::button_Standard(string name, string cost, int x1, int y1, Surface* screen)
@@ -532,6 +550,27 @@ void UI::Arrow_Right(Surface* screen, int x1, int y1)
 	screen->Line(x1, y1, x1 - 100, y1, 0xF0F0F0);
 	screen->Line(x1, y1, x1 - 50, y1 - 25, 0xF0F0F0);
 	screen->Line(x1, y1, x1 - 50, y1 + 25, 0xF0F0F0);
+}
+
+void UI::draw_Ascension_Upgrades(Surface* screen, Ascension_Manager* ascension_Manager, Ascension_Upgrade_Screen* ascension_Upgrade_Screen)
+{
+	auto all_Upgrades = ascension_Manager->Get_All_Upgrades();
+
+	for (size_t i = 0; i < all_Upgrades.size(); i++)
+	{
+		double world_X = all_Upgrades[i]->Get_World_X();
+		double world_Y = all_Upgrades[i]->Get_World_Y();
+
+		double screen_X = world_X - ascension_Upgrade_Screen->Get_Camera_X();
+		double screen_Y = world_Y - ascension_Upgrade_Screen->Get_Camera_Y();
+
+		if (ascension_Upgrade_Screen->Is_In_View(screen_X, screen_Y, 150, 50, SCRWIDTH / 3 * 2 - 150, 950))
+		{
+			string name = all_Upgrades[i]->Get_Name();
+			button_Standard(name.c_str(), "", screen_X, screen_Y, screen);
+		}
+
+	}
 }
 
 

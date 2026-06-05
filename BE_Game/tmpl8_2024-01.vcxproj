@@ -122,6 +122,8 @@
   <!-- END Custom section -->
   <ItemGroup>
     <ClCompile Include="Ascension_Manager.cpp" />
+    <ClCompile Include="Ascension_Upgrades.cpp" />
+    <ClCompile Include="Ascension_Upgrade_Screen.cpp" />
     <ClCompile Include="Blueprints.cpp" />
     <ClCompile Include="Blueprint_Manager.cpp" />
     <ClCompile Include="Craftingtable.cpp" />
@@ -158,6 +160,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Ascension_Manager.h" />
+    <ClInclude Include="Ascension_Upgrades.h" />
+    <ClInclude Include="Ascension_Upgrade_Screen.h" />
     <ClInclude Include="Blueprints.h" />
     <ClInclude Include="Blueprint_Manager.h" />
     <ClInclude Include="cl\tools.cl" />

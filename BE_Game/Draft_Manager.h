@@ -16,6 +16,7 @@ public:
 	void Set_Blueprint_Card_1(string n);
 	void Set_Blueprint_Card_2(string n);
 	void Set_Blueprint_Card_3(string n);
+	void Set_Cost(double amount);
 	
 
 

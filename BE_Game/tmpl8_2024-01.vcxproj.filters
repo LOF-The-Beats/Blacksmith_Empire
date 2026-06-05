@@ -41,6 +41,8 @@
     <ClCompile Include="Unlocker.cpp" />
     <ClCompile Include="Tutorial.cpp" />
     <ClCompile Include="Ascension_Manager.cpp" />
+    <ClCompile Include="Ascension_Upgrade_Screen.cpp" />
+    <ClCompile Include="Ascension_Upgrades.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="game.h" />
@@ -89,6 +91,8 @@
     <ClInclude Include="Unlocker.h" />
     <ClInclude Include="Tutorial.h" />
     <ClInclude Include="Ascension_Manager.h" />
+    <ClInclude Include="Ascension_Upgrade_Screen.h" />
+    <ClInclude Include="Ascension_Upgrades.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="README.md">

@@ -43,6 +43,12 @@ void Draft_Manager::Set_Blueprint_Card_3(string n)
 	return;
 }
 
+void Draft_Manager::Set_Cost(double amount)
+{
+	cost = amount;
+	return;
+}
+
 void Draft_Manager::Calculate_Cost()
 {
 	cost *= 5;
