@@ -52,6 +52,7 @@ public:
 	Tutorial* m_Tutorial;
 	Ascension_Manager* m_Ascension_Manger;
 	Ascension_Upgrade_Screen* m_Ascension_Upgrade_Screen;
+	Surface* m_Resource_Icon_Sheet;
 
 };
 

@@ -95,6 +95,44 @@ void Surface::Bar( int x1, int y1, int x2, int y2, uint c )
 	}
 }
 
+void Tmpl8::Surface::Copy_Region_To(Surface* dst, int src_X, int src_Y, int region_W, int region_H, int dst_X, int dst_Y, int scale)
+{
+	if (!pixels || !dst || !dst->pixels) return;
+
+	for (int y = 0; y < region_H; y++)
+	{
+		for (int x = 0; x < region_W; x++)
+		{
+			int source_X = src_X + x;
+			int source_Y = src_Y + y;
+
+			if (source_X < 0 || source_Y < 0 || source_X >= width || source_Y >= height)
+			{
+				continue;
+			}
+
+			uint color = pixels[source_X + source_Y * width];
+
+			if (color == 0x000000)
+			{
+				continue;
+			}
+
+			for (int sy = 0; sy < scale; sy++)
+			{
+				for (int sx = 0; sx < scale; sx++)
+				{
+					dst->Plot(
+						dst_X + x * scale + sx,
+						dst_Y + y * scale + sy,
+						color
+					);
+				}
+			}
+		}
+	}
+}
+
 void Surface::Print(const char* s, int x1, int y1, uint c, float scale)
 {
 	if (!fontInitialized) { InitCharset(); fontInitialized = true; }

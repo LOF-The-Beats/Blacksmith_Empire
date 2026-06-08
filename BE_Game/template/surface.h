@@ -66,6 +66,7 @@ public:
 	void CopyTo( Surface* dst, int x, int y );
 	void Box( int x1, int y1, int x2, int y2, uint color );
 	void Bar( int x1, int y1, int x2, int y2, uint color );
+	void Copy_Region_To(Surface* dst, int src_X, int src_Y, int region_W, int region_H, int dst_X, int dst_Y, int scale);
 	// attributes
 	uint* pixels = 0;
 	int width = 0, height = 0;

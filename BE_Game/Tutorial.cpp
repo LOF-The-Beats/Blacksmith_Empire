@@ -6,6 +6,7 @@
 #include "Resource_Manager.h"
 #include "Craftingtable_Manager.h"
 #include "Unlock_Manager.h"
+#include "Window_Manager.h"
 
 Tutorial::Tutorial()
 	:enabled(true), tutorial_Step(0), page(0)
@@ -45,7 +46,7 @@ void Tutorial::SetPage(int amount)
 	return;
 }
 
-void Tutorial::Draw_Tutorial_UI(Surface* screen, UI* ui)
+void Tutorial::Draw_Tutorial_UI(Surface* screen, UI* ui, Player* player, Window_Manager* window_Manager)
 {
 	if (enabled)
 	{
@@ -58,7 +59,7 @@ void Tutorial::Draw_Tutorial_UI(Surface* screen, UI* ui)
 				screen->Print("In this Game you gather resources to grow your empire", 710,730, 0xF0F0F0, 2.0F);
 				screen->Print("Lets start with the basics.", 710,750, 0xF0F0F0, 2.0F);
 
-				ui->button_Standard("Continue", "", 750, 780, screen);
+				ui->button_Standard("Continue", "", "", 750, 780, screen, window_Manager, player);
 
 
 			}

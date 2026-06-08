@@ -77,14 +77,33 @@ void Game::Init()
 
 	// all upgrades
 	m_Ascension_Manger->Create_Upgrades();
-}
 
+	// Icons
+	m_Resource_Icon_Sheet = new Surface("Assets/Crafting Materials Icons.png");
+
+
+	// testing things
+	if (true)
+	{
+		vector all_Resources = m_Resource_Manager->Get_All_Resources();
+		m_Unlock_Manager->Get_Unlocked("Forest")->Set_Unlocked(true);
+		m_Unlock_Manager->Get_Unlocked("Forge")->Set_Unlocked(true);
+		m_Unlock_Manager->Get_Unlocked("Player")->Set_Unlocked(true);
+		m_Unlock_Manager->Get_Unlocked("Libary")->Set_Unlocked(true);
+		m_Unlock_Manager->Get_Unlocked("Witch Hut")->Set_Unlocked(true);
+
+		for (size_t i = 0; i < all_Resources.size(); i++)
+		{
+			all_Resources[i]->Set_Quantity(1000);
+		}
+	}
+}
 
 void Game::Tick(float deltaTime)
 {
 	screen->Clear(0);
 	m_Game_Manager->Update_Mouse_Pos(m_Player);
-	m_UI->Draw_UI(screen, m_Resource_Manager, m_Player, m_Window_Manager, m_Craftingtable_Manager, m_Blueprint_Manager, m_Item_Manager, m_Draft_Manager, m_Unlock_Manager, m_Tutorial, m_Ascension_Upgrade_Screen, m_Ascension_Manger);
+	m_UI->Draw_UI(screen, m_Resource_Icon_Sheet, m_Resource_Manager, m_Player, m_Window_Manager, m_Craftingtable_Manager, m_Blueprint_Manager, m_Item_Manager, m_Draft_Manager, m_Unlock_Manager, m_Tutorial, m_Ascension_Upgrade_Screen, m_Ascension_Manger);
 	m_Game_Manager->If_Clicked(m_Player, m_Resource_Manager, m_Window_Manager, m_Craftingtable_Manager, m_Blueprint_Manager, m_Item_Manager, m_Draft_Manager, m_Unlock_Manager, m_Tutorial, m_Ascension_Manger, m_Ascension_Upgrade_Screen);
 
 	//update per seccond events
