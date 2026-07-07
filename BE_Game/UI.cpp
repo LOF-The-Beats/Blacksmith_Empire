@@ -187,7 +187,9 @@ void UI::Forge_UI(Surface* screen, Resource_Manager* resource_Manager, Player* p
 	if (window_Manager->get_Active_Window() == "Forge")
 	{
 		button_Standard("Crafting table", "", "", 160, 160, screen, window_Manager, player);
-		button_Standard("Sell all items", "", "", 160, 300, screen, window_Manager, player);
+		button_Standard("Buy Worker", "", "", 160, 230, screen, window_Manager, player);
+		button_Standard("Upgrade Tools", "", "", 160, 300, screen, window_Manager, player);
+		button_Standard("Sell all items", "", "", 160, 600, screen, window_Manager, player);
 	}
 	if (window_Manager->get_Active_Window() == "Craftingtable 1")
 	{

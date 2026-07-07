@@ -29,7 +29,9 @@ public:
 	void Update_Gain_On_Reset(Resource_Manager* resource_Manager);
 	void Ascend_Run(Resource_Manager* resource_Manager, Blueprint_Manager* blueprint_Manager, Item_Manager* item_Manager, Player* player, Craftingtable_Manager* craftingtable_Manager, Draft_Manager* draft_Manager);
 	vector<Ascension_Upgrades*> Get_All_Upgrades();
+	void Buy_Upgrades(string name, Resource_Manager* resource_Manager, Player* player);
 	void Create_Upgrades();
+	void Apply_Upgrade(string name, Resource_Manager* resource_Manager, Player* player);
 
 private:
 

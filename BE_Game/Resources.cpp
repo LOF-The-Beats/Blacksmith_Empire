@@ -2,7 +2,7 @@
 #include "Resources.h"
 
 Resources::Resources(string name, double quantity, double hardness, int order, bool crafting_Resource)
-	:name(name), quantity(quantity), gain_On_Reset(0.0), workers(0.0), worker_Cost(20), production_Rate(0.0), hardness(hardness), worker_Tool_Power(1.0), worker_Tool_Equiped("None"), order(order), crafting_Resource(crafting_Resource)
+	:name(name), quantity(quantity), gain_On_Reset(0.0), workers(0.0), worker_Cost(20), production_Rate(0.0), hardness(hardness), worker_Tool_Power(1.0), worker_Ascension_Power(0), worker_Tool_Equiped("None"), order(order), crafting_Resource(crafting_Resource)
 {
 }
 
@@ -39,6 +39,11 @@ double Resources::Get_Workers() const
 double Resources::Get_Workers_Tool_Power() const
 {
 	return worker_Tool_Power;
+}
+
+double Resources::Get_Workers_Ascension_Power() const
+{
+	return worker_Ascension_Power;
 }
 
 double Resources::Get_Worker_Cost() const
@@ -97,6 +102,12 @@ void Resources::Set_Workers_Tool_Power(double d)
 	return;
 }
 
+void Resources::Set_Workers_Ascension_Power(double d)
+{
+	worker_Ascension_Power = d;
+	return;
+}
+
 void Resources::Set_Worker_Cost(double d)
 {
 	worker_Cost = d;
@@ -127,6 +138,12 @@ void Resources::Add_Workers_Tool_Power(double d)
 	return;
 }
 
+void Resources::Add_Workers_Ascension_Power(double d)
+{
+	worker_Ascension_Power += d;
+	return;
+}
+
 void Resources::Add_Worker_Cost(double d)
 {
 	worker_Cost += d;
@@ -153,5 +170,5 @@ void Resources::Sub_Hardness(double d)
 
 void Resources::Update_Production_Rate()
 {
-	production_Rate = workers * worker_Tool_Power;
+	production_Rate = (workers + worker_Ascension_Power) * worker_Tool_Power;
 }

@@ -42,7 +42,7 @@ void Game_Manager::If_Clicked(Player* player, Resource_Manager* resource_Manager
 			}
 			else if (window_Manager->get_Active_Window() == "Forge")
 			{
-				Forge_Buttons(player, resource_Manager, window_Manager, item_Manager);
+				Forge_Buttons(player, resource_Manager, window_Manager, item_Manager, craftingtable);
 			}
 			else if (window_Manager->get_Active_Window() == "Player")
 			{
@@ -194,14 +194,49 @@ void Game_Manager::Forest_Buttons(Player* player, Resource_Manager* resource_Man
 	}
 }
 
-void Game_Manager::Forge_Buttons(Player* player, Resource_Manager* resource_Manager, Window_Manager* window_Manager, Item_Manager* item_Manager)
+void Game_Manager::Forge_Buttons(Player* player, Resource_Manager* resource_Manager, Window_Manager* window_Manager, Item_Manager* item_Manager, Craftingtable_Manager* craftingtable_Manager)
 {
+
+	auto craftingtable = craftingtable_Manager->get_Craftingtable("Craftingtable 1");
+	auto thalions = resource_Manager->Get_Resource("Thalions");
+	auto item = item_Manager->Get_Item(craftingtable->Get_Worker_Tool_Equiped());
 	if (Is_Mouse_Over_Standard(player, 160, 160))
 	{
 		window_Manager->set_Active_Window("Craftingtable 1");
 	}
 
+	if (Is_Mouse_Over_Standard(player, 160, 230) &&
+		craftingtable->Get_Worker_Cost() <= thalions->Get_Quantity())
+	{
+		
+		if (craftingtable->Get_Worker_Tool_Equiped() != "None" &&
+			item->Get_Quantity() >= 1)
+		{
+
+			craftingtable->Add_Worker(1);
+			craftingtable->Update_Production_Rate();
+			thalions->Sub_Quantity(craftingtable->Get_Worker_Cost());
+			craftingtable->Set_Worker_Cost(craftingtable->Get_Worker_Cost() * 1.2);
+
+			item->Sub_Quantity(1);
+		}
+		else if (craftingtable->Get_Worker_Tool_Equiped() == "None")
+		{
+			craftingtable->Add_Worker(1);
+			craftingtable->Update_Production_Rate();
+			thalions->Sub_Quantity(craftingtable->Get_Worker_Cost());
+			craftingtable->Set_Worker_Cost(craftingtable->Get_Worker_Cost() * 1.2);
+		}
+	}
+
+	
+
 	if (Is_Mouse_Over_Standard(player, 160, 300))
+	{
+		
+	}
+
+	if (Is_Mouse_Over_Standard(player, 160, 600))
 	{
 		resource_Manager->Get_Resource("Thalions")->Add_Quantity(item_Manager->Sell_All_Items());
 	}
@@ -471,7 +506,7 @@ void Game_Manager::Ascension_Upgrade_Window(Player* player, Window_Manager* wind
 		{
 			if (Is_Mouse_Over_Standard(player, screen_X, screen_Y))
 			{
-				resource_Manager->Get_Resource("Hourglass")->Add_Quantity(1);
+				ascension_Manager->Buy_Upgrades(all_Upgrades[i]->Get_Name(),resource_Manager, player);
 			}
 		}
 	}
@@ -479,7 +514,7 @@ void Game_Manager::Ascension_Upgrade_Window(Player* player, Window_Manager* wind
 
 void Game_Manager::Check_All_Updates(double deltatime, Player* player, Resource_Manager* resource_Manager, Craftingtable_Manager* craftingtable, Blueprint_Manager* blueprint_Manager, Item_Manager* item_Manager, Unlock_Manager* unlock_Manger, Ascension_Manager* ascension_Manager)
 {
-	Update_All_Per_Seccond_Events(deltatime, player, resource_Manager);
+	Update_All_Per_Seccond_Events(deltatime, player, resource_Manager, craftingtable, blueprint_Manager);
 	Check_Level_Up(player);
 	Check_Player_Stats(player);
 	Check_Craftingtable_Progress(resource_Manager, craftingtable, blueprint_Manager, item_Manager);
@@ -488,11 +523,20 @@ void Game_Manager::Check_All_Updates(double deltatime, Player* player, Resource_
 
 }
 
-void Game_Manager::Update_All_Per_Seccond_Events(double deltaTime, Player* player, Resource_Manager* resource_Manager)
+void Game_Manager::Update_All_Per_Seccond_Events(double deltaTime, Player* player, Resource_Manager* resource_Manager, Craftingtable_Manager* craftingtable_Manager, Blueprint_Manager* blueprint_Manager)
 {
-	auto resource = resource_Manager->Get_Resource("SoftWood");
-	resource->Update_Production_Rate();
-	resource->Add_Quantity(resource->Get_Production_Rate() * (deltaTime / 1000));
+	auto softwood = resource_Manager->Get_Resource("SoftWood");
+	softwood->Update_Production_Rate();
+	softwood->Add_Quantity(softwood->Get_Production_Rate() * (deltaTime / 1000));
+
+	auto craftingtable = craftingtable_Manager->get_Craftingtable("Craftingtable 1");
+	auto blueprint = blueprint_Manager->Get_Blueprints(craftingtable->Get_Blueprint());
+	auto resource = resource_Manager->Get_Resource(craftingtable->Get_Resource());
+	craftingtable->Update_Production_Rate();
+	if (blueprint && resource)
+	{
+		craftingtable->Add_Progress(craftingtable->Get_Production_Rate() * (deltaTime / 1000));
+	}
 	
 }
 
@@ -520,9 +564,11 @@ void Game_Manager::Check_Player_Stats(Player* player)
 {
 	auto lumberjack = player->Get_Stats("Lumberjack");
 	auto crafting = player->Get_Stats("Crafting");
+	auto mining = player->Get_Stats("Mining");
 
-	lumberjack->Set_Power(lumberjack->Get_Level() * lumberjack->Get_Tool_Power());
-	crafting->Set_Power(crafting->Get_Level());
+	lumberjack->Set_Power((lumberjack->Get_Level() + lumberjack->Get_Ascension_Power()) * lumberjack->Get_Tool_Power());
+	crafting->Set_Power((crafting->Get_Level() + crafting->Get_Ascension_Power()) * crafting->Get_Tool_Power());
+	mining->Set_Power((mining->Get_Level() + mining->Get_Ascension_Power()) * mining->Get_Tool_Power());
 }
 
 void Game_Manager::Check_Craftingtable_Progress(Resource_Manager* resource_Manager, Craftingtable_Manager* craftingtable, Blueprint_Manager* blueprint_Manager, Item_Manager* item_Manager)

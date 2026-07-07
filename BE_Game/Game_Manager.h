@@ -26,7 +26,7 @@ public:
 
 	// Location buttons
 	void Forest_Buttons(Player* player, Resource_Manager* resource_Manager, Item_Manager* item_Manager);
-	void Forge_Buttons(Player* player, Resource_Manager* resource_Manager, Window_Manager* window_Manager, Item_Manager* item_Manager);
+	void Forge_Buttons(Player* player, Resource_Manager* resource_Manager, Window_Manager* window_Manager, Item_Manager* item_Manager, Craftingtable_Manager* craftingtable_Manager);
 	void Player_Buttons(Player* player, Window_Manager* window_Manager, Item_Manager* item_Manager);
 	void Libary_Buttons(Player* player, Window_Manager* window_Manager, Item_Manager* item_Manager, Resource_Manager* resource_Manager, Draft_Manager* draft_Manager, Blueprint_Manager* blueprint_Manager);
 	void Witch_Hut_Buttons(Player* player, Window_Manager* window_Manager, Item_Manager* item_Manager, Resource_Manager* resource_Manager, Craftingtable_Manager* craftingtable_Manager, Draft_Manager* draft_Manager, Blueprint_Manager* blueprint_Manager, Ascension_Manager* ascension_Manager, Ascension_Upgrade_Screen* ascension_Upgrade_Screen);
@@ -43,7 +43,7 @@ public:
 
 
 	void Check_All_Updates(double deltatime, Player* player, Resource_Manager* resource_Manager, Craftingtable_Manager* craftingtable, Blueprint_Manager* blueprint_Manager, Item_Manager* item_Manager, Unlock_Manager* unlock_Manager, Ascension_Manager* ascension_Manager);
-	void Update_All_Per_Seccond_Events(double deltatime, Player* player, Resource_Manager* resource_Manager);
+	void Update_All_Per_Seccond_Events(double deltaTime, Player* player, Resource_Manager* resource_Manager, Craftingtable_Manager* craftingtable_Manager, Blueprint_Manager* blueprint_Manager);
 	void Check_Level_Up(Player* player);
 	void Check_Player_Stats(Player* player);
 	void Check_Craftingtable_Progress(Resource_Manager* resource_Manager, Craftingtable_Manager* craftingtable, Blueprint_Manager* blueprint_Manager, Item_Manager* item_Manager);

@@ -94,7 +94,7 @@ void Game::Init()
 
 		for (size_t i = 0; i < all_Resources.size(); i++)
 		{
-			all_Resources[i]->Set_Quantity(1000);
+			all_Resources[i]->Set_Quantity(10000);
 		}
 	}
 }

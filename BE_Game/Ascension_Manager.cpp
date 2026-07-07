@@ -128,12 +128,70 @@ vector<Ascension_Upgrades*> Ascension_Manager::Get_All_Upgrades()
 	return all_Upgrades;
 }
 
+
+void Ascension_Manager::Buy_Upgrades(string name, Resource_Manager* resource_Manager, Player* player)
+{
+	auto upgrade = Get_Upgrade(name);
+	auto hourglass = resource_Manager->Get_Resource("Hourglass");
+
+	if (!upgrade)
+	{
+		return;
+	}
+
+	if (upgrade->Get_Level() >= upgrade->Get_Max_Level())
+	{
+		return;
+	}
+
+	if (hourglass->Get_Quantity() < upgrade->Get_Cost())
+	{
+		return;
+	}
+
+	hourglass->Sub_Quantity(upgrade->Get_Cost());
+	upgrade->Set_Level(upgrade->Get_Level() + 1);
+	upgrade->Set_Cost(upgrade->Get_Cost() * 2);
+
+	Apply_Upgrade(name, resource_Manager, player);
+}
+
 void Ascension_Manager::Create_Upgrades()
 {
-	Add_Upgrade("Stone", 
-		"Unlock the Stone resource", 
-		1, 0, 500, 500);
-	Add_Upgrade("test", 
-		"This is a test to see if it works", 
-		5, 1, 500, 400);
+	Add_Upgrade("Stone", "Unlock the Stone resource", 1, 1, 500, 500);
+	Add_Upgrade("Lumberjack", "Increase Lumberjack power by 1", 10, 1, 500, 400);
+	Add_Upgrade("Crafting", "Increase Crafting power by 1", 10, 1, 680, 400);
+	Add_Upgrade("Mining", "Increase Mining power by 1", 10, 1, 320, 400);
+	Add_Upgrade("Workers Lumberjack", "Increase Worker Lumberjack power by 1", 10, 1, 500, 600);
+
+}
+
+void Ascension_Manager::Apply_Upgrade(string name, Resource_Manager* resource_Manager, Player* player)
+{
+	if (name == "Stone")
+	{
+		resource_Manager->Add_Resource("Stone", 0, 25, 0, true);
+	}
+
+	else if (name == "Lumberjack")
+	{
+		player->Get_Stats("Lumberjack")->Add_Ascension_Power(1);
+	}
+
+	else if (name == "Crafting")
+	{
+		player->Get_Stats("Crafting")->Add_Ascension_Power(1);
+	}
+
+	else if (name == "Mining")
+	{
+		player->Get_Stats("Mining")->Add_Ascension_Power(1);
+	}
+
+	else if (name == "Workers Lumberjack")
+	{
+		resource_Manager->Get_Resource("SoftWood")->Add_Workers_Ascension_Power(1);
+	}
+
+
 }

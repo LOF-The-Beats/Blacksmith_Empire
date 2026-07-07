@@ -8,6 +8,7 @@ public:
 	string Get_Name() const;
 	string Get_Tool_Name() const;
 	double Get_Power() const;
+	double Get_Ascension_Power() const;
 	double Get_Tool_Power() const;
 	double Get_Exp() const;
 	double Get_Exp_Needed() const;
@@ -17,6 +18,7 @@ public:
 	void Set_Name(string n);
 	void Set_Tool_Name(string n);
 	void Set_Power(double amount);
+	void Set_Ascension_Power(double amount);
 	void Set_Tool_Power(double amount);
 	void Set_Exp(double amount);
 	void Set_Exp_Needed(double amount);
@@ -24,6 +26,7 @@ public:
 
 	// adders
 	void Add_Power(double amount);
+	void Add_Ascension_Power(double amount);
 	void Add_Exp(double amount);
 	void Add_Exp_Needed(double amount);
 	void Add_Level(double amount);
@@ -40,6 +43,7 @@ private:
 	string name;
 	string tool_Name;
 	double power;
+	double ascension_Power;
 	double tool_Power;
 	double exp;
 	double exp_Needed;

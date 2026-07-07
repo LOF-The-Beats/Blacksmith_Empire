@@ -12,6 +12,7 @@ public:
 	double Get_Gain_On_Reset() const;
 	double Get_Workers() const;
 	double Get_Workers_Tool_Power() const;
+	double Get_Workers_Ascension_Power() const;
 	double Get_Worker_Cost() const;
 	double Get_Production_Rate() const;
 	double Get_Hardness() const;
@@ -24,6 +25,7 @@ public:
 	void Set_Gain_On_Reset(double d);
 	void Set_Workers(double d);
 	void Set_Workers_Tool_Power(double d);
+	void Set_Workers_Ascension_Power(double d);
 	void Set_Worker_Cost(double d);
 	void Set_Hardness(double d);
 
@@ -32,6 +34,7 @@ public:
 	void Add_Quantity(double d);
 	void Add_Workers(double d);
 	void Add_Workers_Tool_Power(double d);
+	void Add_Workers_Ascension_Power(double d);
 	void Add_Worker_Cost(double d);
 	void Add_Hardness(double d);
 
@@ -52,6 +55,7 @@ private:
 	double gain_On_Reset;
 	double workers;
 	double worker_Tool_Power;
+	double worker_Ascension_Power;
 	double worker_Cost;
 	double production_Rate;
 	double hardness;
