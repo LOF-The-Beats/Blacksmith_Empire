@@ -2,6 +2,7 @@
 #include "Craftingtable_Manager.h"
 
 Craftingtable_Manager::Craftingtable_Manager()
+:active_Table("Craftingtable 1")
 {
 }
 
@@ -27,10 +28,21 @@ vector<Craftingtable*> Craftingtable_Manager::Get_All_Craftingtables() const
 	return all_Craftingtables;
 }
 
+string Craftingtable_Manager::Get_Active_Table() const
+{
+	return active_Table;
+}
+
 void Craftingtable_Manager::Add_Craftingtable(const string name)
 {
 	if (craftingtable.find(name) == craftingtable.end())
 	{
 		craftingtable[name] = new Craftingtable(name);
 	}
+}
+
+void Craftingtable_Manager::Set_Active_Table(string name)
+{
+	active_Table = name;
+	return;
 }

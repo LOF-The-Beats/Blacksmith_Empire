@@ -20,6 +20,9 @@ public:
 	//adders
 	void Add_Stats(const string name, double power);
 
+	// Checkers
+	
+
 private:
 	//mouse positions
 	double player_X;

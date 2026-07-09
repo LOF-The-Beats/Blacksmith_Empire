@@ -129,7 +129,7 @@ vector<Ascension_Upgrades*> Ascension_Manager::Get_All_Upgrades()
 }
 
 
-void Ascension_Manager::Buy_Upgrades(string name, Resource_Manager* resource_Manager, Player* player)
+void Ascension_Manager::Buy_Upgrades(string name, Resource_Manager* resource_Manager, Player* player, Craftingtable_Manager* craftingtable_Manager)
 {
 	auto upgrade = Get_Upgrade(name);
 	auto hourglass = resource_Manager->Get_Resource("Hourglass");
@@ -153,7 +153,7 @@ void Ascension_Manager::Buy_Upgrades(string name, Resource_Manager* resource_Man
 	upgrade->Set_Level(upgrade->Get_Level() + 1);
 	upgrade->Set_Cost(upgrade->Get_Cost() * 2);
 
-	Apply_Upgrade(name, resource_Manager, player);
+	Apply_Upgrade(name, resource_Manager, player, craftingtable_Manager);
 }
 
 void Ascension_Manager::Create_Upgrades()
@@ -163,11 +163,23 @@ void Ascension_Manager::Create_Upgrades()
 	Add_Upgrade("Crafting", "Increase Crafting power by 1", 10, 1, 680, 400);
 	Add_Upgrade("Mining", "Increase Mining power by 1", 10, 1, 320, 400);
 	Add_Upgrade("Workers Lumberjack", "Increase Worker Lumberjack power by 1", 10, 1, 500, 600);
+	Add_Upgrade("Workers Craftingtable", "Increase Worker craftingtable power by 1", 10, 1, 680, 600);
+	Add_Upgrade("Lumberjack Crit Chance", "Increase Lumberjack crit chance by 1%", 5, 10, 500, 300);
+	Add_Upgrade("Lumberjack Knowledge", "Increase Lumberjack XP gain by 1", 1, 100, 680, 300);
+	Add_Upgrade("Lumberjack Crit Power", "Increase Lumberjack crit power by 10%", 5, 100, 500, 200);
+	Add_Upgrade("Lumberjack Growth", "Increase lumberjack strength gain after level up by 1", 1, 1000, 680, 200);
+	Add_Upgrade("Crafting Knowledge", "Increase Crafting XP gain by 1", 1, 100, 860, 300);
+	Add_Upgrade("Crafting Growth", "Increase Crafting strength gain after level up by 1", 1, 1000, 860, 200);
+	Add_Upgrade("Crafting Unlock table", "Unlock extra Craftingtable", 1, 1000, 1040, 200);
+	Add_Upgrade("Crafting Mass Production", "Can craft more items at a time", 1, 1000, 1040, 300);
 
 }
 
-void Ascension_Manager::Apply_Upgrade(string name, Resource_Manager* resource_Manager, Player* player)
+void Ascension_Manager::Apply_Upgrade(string name, Resource_Manager* resource_Manager, Player* player, Craftingtable_Manager* craftingtable_Manager)
 {
+	auto lumberjack = player->Get_Stats("Lumberjack");
+	auto crafting = player->Get_Stats("Crafting");
+
 	if (name == "Stone")
 	{
 		resource_Manager->Add_Resource("Stone", 0, 25, 0, true);
@@ -175,12 +187,12 @@ void Ascension_Manager::Apply_Upgrade(string name, Resource_Manager* resource_Ma
 
 	else if (name == "Lumberjack")
 	{
-		player->Get_Stats("Lumberjack")->Add_Ascension_Power(1);
+		lumberjack->Add_Ascension_Power(1);
 	}
 
 	else if (name == "Crafting")
 	{
-		player->Get_Stats("Crafting")->Add_Ascension_Power(1);
+		crafting->Add_Ascension_Power(1);
 	}
 
 	else if (name == "Mining")
@@ -193,5 +205,50 @@ void Ascension_Manager::Apply_Upgrade(string name, Resource_Manager* resource_Ma
 		resource_Manager->Get_Resource("SoftWood")->Add_Workers_Ascension_Power(1);
 	}
 
+	else if (name == "Workers Craftingtable")
+	{
+		craftingtable_Manager->get_Craftingtable("Craftingtable 1")->Add_Worker_Ascension_Power(1);
+	}
 
+	else if (name == "Lumberjack Crit Chance")
+	{
+		lumberjack->Add_Crit_Chance(1);
+	}
+	
+	else if (name == "Lumberjack Knowledge")
+	{
+		lumberjack->Add_Exp_Gain(1);
+	}
+	
+	else if (name == "Lumberjack Crit Power")
+	{
+		lumberjack->Add_Crit_Power(0.1);
+	}
+	
+	else if (name == "Lumberjack Growth")
+	{
+		lumberjack->Add_Growth(1);
+		lumberjack->Set_Level(lumberjack->Get_Level() * lumberjack->Get_Growth() - 1);
+	}
+
+	else if (name == "Crafting Knowledge")
+	{
+		crafting->Add_Exp_Gain(1);
+	}
+
+	else if (name == "Crafting Growth")
+	{
+		crafting->Add_Growth(1);
+		crafting->Set_Level(crafting->Get_Level() * crafting->Get_Growth() - 1);
+	}
+
+	else if (name == "Crafting Mass Production")
+	{
+		craftingtable_Manager->get_Craftingtable("Master Craftingtable")->Set_Mass_Production(true);
+	}
+
+	else if (name == "Crafting Unlock table")
+	{
+		craftingtable_Manager->get_Craftingtable("Craftingtable 2")->Set_Unlocked(true);
+	}
 }

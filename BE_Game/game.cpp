@@ -52,7 +52,7 @@ void Game::Init()
 	m_Window_Manager->add_Window("Witch Hut", false);
 
 
-	m_Window_Manager->add_Window("Craftingtable 1", false);
+	m_Window_Manager->add_Window("Craftingtable", false);
 	m_Window_Manager->add_Window("Lumberjack Tool", false);
 	m_Window_Manager->add_Window("Crafting Tool", false);
 	m_Window_Manager->add_Window("Mining Tool", false);
@@ -61,7 +61,11 @@ void Game::Init()
 	m_Window_Manager->add_Window("Ascension Upgrade", false);
 
 	//Craftingtables
+	m_Craftingtable_Manager->Add_Craftingtable("Master Craftingtable");
 	m_Craftingtable_Manager->Add_Craftingtable("Craftingtable 1");
+	m_Craftingtable_Manager->Add_Craftingtable("Craftingtable 2");
+
+	m_Craftingtable_Manager->get_Craftingtable("Craftingtable 1")->Set_Unlocked(true);
 
 	//Stats
 	m_Player->Add_Stats("Lumberjack", 1);
@@ -97,6 +101,7 @@ void Game::Init()
 			all_Resources[i]->Set_Quantity(10000);
 		}
 	}
+	m_Tutorial->Set_Enabled(false);
 }
 
 void Game::Tick(float deltaTime)

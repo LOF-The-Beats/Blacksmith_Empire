@@ -170,5 +170,8 @@ void Resources::Sub_Hardness(double d)
 
 void Resources::Update_Production_Rate()
 {
-	production_Rate = (workers + worker_Ascension_Power) * worker_Tool_Power;
+	if (workers > 0)
+	{
+		production_Rate = (workers + worker_Ascension_Power) * worker_Tool_Power;
+	}
 }

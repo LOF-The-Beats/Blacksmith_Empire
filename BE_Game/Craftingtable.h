@@ -9,6 +9,8 @@ public:
 	string Get_Blueprint() const;
 	string Get_Worker_Tool_Equiped() const;
 	bool Get_In_Use() const;
+	bool Get_Mass_Production() const;
+	bool Get_Unlocked() const;
 	double Get_Progress() const;
 	double Get_Worker() const;
 	double Get_Worker_Tool_Power() const;
@@ -22,6 +24,8 @@ public:
 	void Set_Blueprint(string name);
 	void Set_Worker_Tool_Equiped(string name);
 	void Set_In_Use(bool b);
+	void Set_Mass_Production(bool b);
+	void Set_Unlocked(bool b);
 	void Set_Progress(double amount);
 	void Set_Worker(double amount);
 	void Set_Worker_Tool_Power(double amount);
@@ -45,6 +49,8 @@ private:
 	string blueprint;
 	bool in_Use;
 	double progress;
+	bool Mass_Production;
+	bool unlocked;
 
 	string worker_Tool_Equiped;
 	double workers;

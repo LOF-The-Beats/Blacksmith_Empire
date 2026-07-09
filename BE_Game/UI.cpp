@@ -30,7 +30,7 @@ void UI::Draw_UI(Surface* screen,Surface* resource_Icon_Sheet, Resource_Manager*
 	}
 	else if (
 		(window_Manager->get_Active_Window() == "Forge" ||
-		window_Manager->get_Active_Window() == "Craftingtable 1"))
+		window_Manager->get_Active_Window() == "Craftingtable"))
 	{
 		Forge_UI(screen, resource_Manager, player, window_Manager, craftingtable, blueprint_Manager, item_Manager);
 	}
@@ -186,12 +186,21 @@ void UI::Forge_UI(Surface* screen, Resource_Manager* resource_Manager, Player* p
 
 	if (window_Manager->get_Active_Window() == "Forge")
 	{
+		auto craftingtable1 = craftingtable->get_Craftingtable("Craftingtable 1");
+		double cost = round(craftingtable1->Get_Worker_Cost());
+		string label = "Cost: " + std::to_string(static_cast<int>(std::round(cost))) + " " + resource_Manager->Get_Resource("Thalions")->Get_Name() + " 1 " + craftingtable1->Get_Worker_Tool_Equiped();
+
 		button_Standard("Crafting table", "", "", 160, 160, screen, window_Manager, player);
-		button_Standard("Buy Worker", "", "", 160, 230, screen, window_Manager, player);
+		button_Standard("Buy Worker", label.c_str(), "", 160, 230, screen, window_Manager, player);
 		button_Standard("Upgrade Tools", "", "", 160, 300, screen, window_Manager, player);
 		button_Standard("Sell all items", "", "", 160, 600, screen, window_Manager, player);
+
+		if (craftingtable->get_Craftingtable("Craftingtable 2")->Get_Unlocked())
+		{
+			button_Standard("Crafting table 2", "", "", 340, 160, screen, window_Manager, player);
+		}
 	}
-	if (window_Manager->get_Active_Window() == "Craftingtable 1")
+	if (window_Manager->get_Active_Window() == "Craftingtable")
 	{
 		// layout of craftingtable
 		screen->Line(SCRWIDTH / 3 * 1, 150, SCRWIDTH / 3 * 1, SCRHEIGHT, 0xFF00FF);
@@ -205,7 +214,7 @@ void UI::Forge_UI(Surface* screen, Resource_Manager* resource_Manager, Player* p
 		for (size_t i = 0; i < Sorted_Blueprints.size(); i++)
 		{
 			int start_Y = 160;
-			if (craftingtable->get_Craftingtable("Craftingtable 1")->Get_Blueprint() == Sorted_Blueprints[i]->Get_Name())
+			if (craftingtable->get_Craftingtable(craftingtable->Get_Active_Table())->Get_Blueprint() == Sorted_Blueprints[i]->Get_Name())
 			{
 				button_Standard_Selected(Sorted_Blueprints[i]->Get_Name(), SCRWIDTH / 3 * 2 + 10, start_Y + (i * 60), window_Manager, screen);
 				double number;
@@ -229,7 +238,7 @@ void UI::Forge_UI(Surface* screen, Resource_Manager* resource_Manager, Player* p
 		for (size_t i = 0; i < sorted_Resources.size(); i++)
 		{
 			int start_Y = 160;
-			if (craftingtable->get_Craftingtable("Craftingtable 1")->Get_Resource() == sorted_Resources[i]->Get_Name())
+			if (craftingtable->get_Craftingtable(craftingtable->Get_Active_Table())->Get_Resource() == sorted_Resources[i]->Get_Name())
 			{
 				button_Standard_Selected(sorted_Resources[i]->Get_Name(), SCRWIDTH / 3 * 1 - 120, start_Y + (i * 60), window_Manager, screen);
 				double number;
@@ -249,7 +258,7 @@ void UI::Forge_UI(Surface* screen, Resource_Manager* resource_Manager, Player* p
 		
 
 		//resource selected show 
-		auto table = craftingtable->get_Craftingtable("Craftingtable 1")->Get_Resource();
+		auto table = craftingtable->get_Craftingtable(craftingtable->Get_Active_Table())->Get_Resource();
 		if (table != "None")
 		{
 			screen->Print((string(resource_Manager->Get_Resource(table)->Get_Name()) + ": " + to_string(static_cast<int>(std::round(resource_Manager->Get_Resource(table)->Get_Quantity())))).c_str(), 180, SCRHEIGHT / 30 * 1 + 35, 0xFF00FF, 1.5);
@@ -259,10 +268,10 @@ void UI::Forge_UI(Surface* screen, Resource_Manager* resource_Manager, Player* p
 		button_Standard("Close", "", "", SCRWIDTH / 2 - 50, 160, screen, window_Manager, player);
 		
 
-		if (craftingtable->get_Craftingtable("Craftingtable 1")->Get_Resource() != "None" &&
-			craftingtable->get_Craftingtable("Craftingtable 1")->Get_Blueprint() != "None")
+		if (craftingtable->get_Craftingtable(craftingtable->Get_Active_Table())->Get_Resource() != "None" &&
+			craftingtable->get_Craftingtable(craftingtable->Get_Active_Table())->Get_Blueprint() != "None")
 		{
-			auto table = craftingtable->get_Craftingtable("Craftingtable 1");
+			auto table = craftingtable->get_Craftingtable(craftingtable->Get_Active_Table());
 			auto blueprint = blueprint_Manager->Get_Blueprints(table->Get_Blueprint());
 			auto resource = resource_Manager->Get_Resource(table->Get_Resource());
 			string combined_Name = table->Get_Resource() + " " + table->Get_Blueprint() + " " + to_string(static_cast<int>(blueprint->Get_Level()));
@@ -294,10 +303,10 @@ void UI::Forge_UI(Surface* screen, Resource_Manager* resource_Manager, Player* p
 			
 		}
 		
-		if (craftingtable->get_Craftingtable("Craftingtable 1")->Get_Resource() != "None" &&
-			craftingtable->get_Craftingtable("Craftingtable 1")->Get_Blueprint() != "None")
+		if (craftingtable->get_Craftingtable(craftingtable->Get_Active_Table())->Get_Resource() != "None" &&
+			craftingtable->get_Craftingtable(craftingtable->Get_Active_Table())->Get_Blueprint() != "None")
 		{
-			screen->Bar(SCRWIDTH / 2 - 50, SCRHEIGHT / 10 * 8 - 50, SCRWIDTH / 2 - 50 + (craftingtable->get_Craftingtable("Craftingtable 1")->Get_Progress() / resource_Manager->Get_Resource(craftingtable->get_Craftingtable("Craftingtable 1")->Get_Resource())->Get_Hardness() * 110), SCRHEIGHT / 10 * 8, 0x00FF00);
+			screen->Bar(SCRWIDTH / 2 - 50, SCRHEIGHT / 10 * 8 - 50, SCRWIDTH / 2 - 50 + (craftingtable->get_Craftingtable(craftingtable->Get_Active_Table())->Get_Progress() / resource_Manager->Get_Resource(craftingtable->get_Craftingtable(craftingtable->Get_Active_Table())->Get_Resource())->Get_Hardness() * 110), SCRHEIGHT / 10 * 8, 0x00FF00);
 			button_Standard("Craft", "", "", SCRWIDTH / 2 - 50, SCRHEIGHT / 10 * 8 - 50, screen, window_Manager, player);
 			
 		}
@@ -560,7 +569,7 @@ void UI::button_Standard(string name, string cost, string description, int x1, i
 		pressed_Inner = 0x1F6B42;
 	}
 	else if (window_Manager->get_Active_Window() == "Forge" ||
-		window_Manager->get_Active_Window() == "Craftingtable 1")
+		window_Manager->get_Active_Window() == "Craftingtable")
 	{
 		outer_Border = 0x3A1200;
 		accent_Color = 0xFF6600;
@@ -693,7 +702,7 @@ void UI::button_Standard_Selected(string name, int x1, int y1, Window_Manager* w
 	}
 	else if (
 		(window_Manager->get_Active_Window() == "Forge" ||
-			window_Manager->get_Active_Window() == "Craftingtable 1"))
+			window_Manager->get_Active_Window() == "Craftingtable"))
 	{
 		outer_Border = 0x3A1200;
 		accent_Color = 0xFF6600;
@@ -983,7 +992,7 @@ void UI::draw_Hover_Info(
 		title_Color = 0xFFFFFF;
 	}
 	else if (window_Manager->get_Active_Window() == "Forge" ||
-		window_Manager->get_Active_Window() == "Craftingtable 1")
+		window_Manager->get_Active_Window() == "Craftingtable")
 	{
 		outer_Border = 0x3A1200;
 		accent_Color = 0xFF6600;

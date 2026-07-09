@@ -52,3 +52,4 @@ void Player::Add_Stats(const string name, double power)
 		stats[name] = new Stats(name, power);
 	}
 }
+
