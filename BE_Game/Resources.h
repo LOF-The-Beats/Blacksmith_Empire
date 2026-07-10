@@ -27,6 +27,7 @@ public:
 	void Set_Workers_Tool_Power(double d);
 	void Set_Workers_Ascension_Power(double d);
 	void Set_Worker_Cost(double d);
+	void Set_Production_Rate(double d);
 	void Set_Hardness(double d);
 
 

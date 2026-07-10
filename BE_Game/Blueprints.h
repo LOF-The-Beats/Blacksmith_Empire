@@ -2,7 +2,8 @@
 class Blueprints
 {
 public:
-	Blueprints(string name, string equip_Slot, double conversion_Rate, int order);
+
+	Blueprints(string name, string equip_Slot, double base_Conversion_Rate, double cost, int order);
 
 	// getters
 	string Get_Name() const;

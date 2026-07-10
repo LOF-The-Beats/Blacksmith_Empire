@@ -80,6 +80,7 @@ void Ascension_Manager::Ascend_Run(Resource_Manager* resource_Manager, Blueprint
 			all_Resources[i]->Set_Workers_Tool_Power(1);
 			all_Resources[i]->Set_Worker_Cost(20);
 			all_Resources[i]->Set_Worker_Tool_Equiped("None");
+			all_Resources[i]->Set_Production_Rate(0);
 		}
 	}
 
@@ -106,6 +107,11 @@ void Ascension_Manager::Ascend_Run(Resource_Manager* resource_Manager, Blueprint
 		all_Craftingtables[i]->Set_Resource("None");
 		all_Craftingtables[i]->Set_In_Use(false);
 		all_Craftingtables[i]->Set_Progress(0);
+		all_Craftingtables[i]->Set_Worker(0);
+		all_Craftingtables[i]->Set_Worker_Tool_Power(1);
+		all_Craftingtables[i]->Set_Worker_Cost(20);
+		all_Craftingtables[i]->Set_Worker_Tool_Equiped("None");
+		all_Craftingtables[i]->Set_Production_Rate(0);
 	}
 
 	draft_Manager->Set_Blueprint_Card_1("None");
@@ -172,6 +178,8 @@ void Ascension_Manager::Create_Upgrades()
 	Add_Upgrade("Crafting Growth", "Increase Crafting strength gain after level up by 1", 1, 1000, 860, 200);
 	Add_Upgrade("Crafting Unlock table", "Unlock extra Craftingtable", 1, 1000, 1040, 200);
 	Add_Upgrade("Crafting Mass Production", "Can craft more items at a time", 1, 1000, 1040, 300);
+	Add_Upgrade("Workers Idle", "Increase idle multiplier by 10%", 10, 10, 500, 700);
+	Add_Upgrade("Workers Deep Idle", "Increase deep idle multiplier by 10%", 10, 25, 680, 700);
 
 }
 
@@ -250,5 +258,15 @@ void Ascension_Manager::Apply_Upgrade(string name, Resource_Manager* resource_Ma
 	else if (name == "Crafting Unlock table")
 	{
 		craftingtable_Manager->get_Craftingtable("Craftingtable 2")->Set_Unlocked(true);
+	}
+
+	else if (name == "Workers Idle")
+	{
+		player->Add_Idle_Multiplier(0.1);
+	}
+
+	else if (name == "Workers Deep Idle")
+	{
+		player->Add_Idle_Deep_Multiplier(0.1);
 	}
 }

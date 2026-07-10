@@ -10,10 +10,12 @@ public:
 	Blueprints* Get_Blueprints(const string name) const;
 	vector<Blueprints*> Get_Sorted_Blueprints_Numbers();
 	vector<Blueprints*> Get_All_Blueprints();
+	vector<Blueprints*> Get_All_Unlocked_Blueprints();
+
 
 
 	//adders
-	void Add_Blueprints(const string name, string equip_Slot, const double conversion_Rate, int order);
+	void Add_Blueprints(const string name, string equip_Slot, const double conversion_Rate, double cost, int order);
 
 	//creator
 	void Create_All_Blueprints();

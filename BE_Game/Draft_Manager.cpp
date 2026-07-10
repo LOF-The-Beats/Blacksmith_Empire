@@ -67,23 +67,53 @@ void Draft_Manager::Open_Draft_Screen(Blueprint_Manager* blueprint_Manager)
 
 void Draft_Manager::Draft_Blueprint_Cards(Blueprint_Manager* blueprint_Manager)
 {
+	
 	if (!blueprint_Manager->Get_Blueprints("Tools")->Get_Unlocked())
 	{
 		blueprint_Card_1 = "Tools";
 		blueprint_Card_2 = "Tools";
 		blueprint_Card_3 = "Tools";
+		return;
 	}
 	else if (!blueprint_Manager->Get_Blueprints("Pickaxe")->Get_Unlocked())
 	{
 		blueprint_Card_1 = "Pickaxe";
 		blueprint_Card_2 = "Pickaxe";
 		blueprint_Card_3 = "Pickaxe";
+		return;
 	}
-	else if (true)
+	auto all_Blueprints = blueprint_Manager->Get_All_Unlocked_Blueprints();
+	int num = 0;
+	srand(time(0));
+	if (!all_Blueprints.empty())
 	{
-		blueprint_Card_1 = "Axe";
-		blueprint_Card_2 = "Axe";
-		blueprint_Card_3 = "Axe";
+		while (num < 3)
+		{
+			double roll = rand() % all_Blueprints.size();
+			if (num == 0)
+			{
+				blueprint_Card_1 = all_Blueprints[roll]->Get_Name();
+				num++;
+			}
+
+			else if (num == 1)
+			{
+				blueprint_Card_2 = all_Blueprints[roll]->Get_Name();
+				num++;
+			}
+
+			else if (num == 2)
+			{
+				blueprint_Card_3 = all_Blueprints[roll]->Get_Name();
+				num++;
+			}
+		}
+	}
+	else
+	{
+		blueprint_Card_1 = "";
+		blueprint_Card_2 = "";
+		blueprint_Card_3 = "";
 	}
 }
 

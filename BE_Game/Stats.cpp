@@ -215,7 +215,7 @@ void Stats::Sub_Level(double amount)
 
 bool Stats::is_Crit()
 {
-	double roll = rand() % 100 + 1; // 1 - 100
+	double roll = (rand() % 100) + 1; // 1 - 100
 
 	return roll <= crit_Chance;
 }

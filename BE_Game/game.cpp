@@ -98,7 +98,7 @@ void Game::Init()
 
 		for (size_t i = 0; i < all_Resources.size(); i++)
 		{
-			all_Resources[i]->Set_Quantity(10000);
+			all_Resources[i]->Set_Quantity(100000);
 		}
 	}
 	m_Tutorial->Set_Enabled(false);
@@ -108,7 +108,7 @@ void Game::Tick(float deltaTime)
 {
 	screen->Clear(0);
 	m_Game_Manager->Update_Mouse_Pos(m_Player);
-	m_UI->Draw_UI(screen, m_Resource_Icon_Sheet, m_Resource_Manager, m_Player, m_Window_Manager, m_Craftingtable_Manager, m_Blueprint_Manager, m_Item_Manager, m_Draft_Manager, m_Unlock_Manager, m_Tutorial, m_Ascension_Upgrade_Screen, m_Ascension_Manger);
+	m_UI->Draw_UI(deltaTime ,screen, m_Resource_Icon_Sheet, m_Resource_Manager, m_Player, m_Window_Manager, m_Craftingtable_Manager, m_Blueprint_Manager, m_Item_Manager, m_Draft_Manager, m_Unlock_Manager, m_Tutorial, m_Ascension_Upgrade_Screen, m_Ascension_Manger);
 	m_Game_Manager->If_Clicked(m_Player, m_Resource_Manager, m_Window_Manager, m_Craftingtable_Manager, m_Blueprint_Manager, m_Item_Manager, m_Draft_Manager, m_Unlock_Manager, m_Tutorial, m_Ascension_Manger, m_Ascension_Upgrade_Screen);
 
 	//update per seccond events

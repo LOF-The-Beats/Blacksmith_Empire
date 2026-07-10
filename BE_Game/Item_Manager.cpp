@@ -41,7 +41,7 @@ double Item_Manager::Sell_All_Items()
 	{
 		if (item_Pointer) // always good to be safe
 		{
-			earned_gold = item_Pointer->Get_Quantity() * item_Pointer->Get_Value();
+			earned_gold += item_Pointer->Get_Quantity() * item_Pointer->Get_Value();
 			item_Pointer->Set_Quantity(0);
 		}
 	}

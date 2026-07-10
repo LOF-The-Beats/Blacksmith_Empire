@@ -19,14 +19,14 @@ UI::UI()
 {
 }
 
-void UI::Draw_UI(Surface* screen,Surface* resource_Icon_Sheet, Resource_Manager* resource_Manager, Player* player, Window_Manager* window_Manager, Craftingtable_Manager* craftingtable, Blueprint_Manager* blueprint_Manager, Item_Manager* item_Manager, Draft_Manager* draft_Manager, Unlock_Manager* unlock_Manager, Tutorial* tutorial, Ascension_Upgrade_Screen* ascension_Upgrade_Screen, Ascension_Manager* ascension_Manager)
+void UI::Draw_UI(float deltaTime,Surface* screen,Surface* resource_Icon_Sheet, Resource_Manager* resource_Manager, Player* player, Window_Manager* window_Manager, Craftingtable_Manager* craftingtable, Blueprint_Manager* blueprint_Manager, Item_Manager* item_Manager, Draft_Manager* draft_Manager, Unlock_Manager* unlock_Manager, Tutorial* tutorial, Ascension_Upgrade_Screen* ascension_Upgrade_Screen, Ascension_Manager* ascension_Manager)
 {
-	UI_Layout(screen, resource_Icon_Sheet, resource_Manager, unlock_Manager, window_Manager);
+	UI_Layout(screen, resource_Icon_Sheet, resource_Manager, unlock_Manager, window_Manager, player);
 	tutorial->Draw_Tutorial_UI(screen, this, player, window_Manager);
 	if (unlock_Manager->Get_Unlocked("Forest")->Get_Unlocked() &&
 		window_Manager->get_Active_Window() == "Forest")
 	{
-		Forest_UI(screen, resource_Icon_Sheet, resource_Manager, player, item_Manager, window_Manager);
+		Forest_UI(deltaTime, screen, resource_Icon_Sheet, resource_Manager, player, item_Manager, window_Manager);
 	}
 	else if (
 		(window_Manager->get_Active_Window() == "Forge" ||
@@ -55,7 +55,7 @@ void UI::Draw_UI(Surface* screen,Surface* resource_Icon_Sheet, Resource_Manager*
 
 }
 
-void UI::UI_Layout(Surface* screen,Surface* resource_Icon_Sheet, Resource_Manager* resource_Manager, Unlock_Manager* unlock_Manager, Window_Manager* window_Manager)
+void UI::UI_Layout(Surface* screen,Surface* resource_Icon_Sheet, Resource_Manager* resource_Manager, Unlock_Manager* unlock_Manager, Window_Manager* window_Manager, Player* player)
 {
 	screen->Bar(0, 0, SCRWIDTH, 50, 0x120018);
 	screen->Line(0, 50, SCRWIDTH, 50, 0x6A0DAD);
@@ -73,6 +73,8 @@ void UI::UI_Layout(Surface* screen,Surface* resource_Icon_Sheet, Resource_Manage
 		tekst = "Hourglasses: " + to_string(static_cast<int>(round(hourglass->Get_Quantity()))) + "(" + to_string(static_cast<int>(round(hourglass->Get_Gain_On_Reset()))) + ")";
 		screen->Print(tekst.c_str(), (SCRWIDTH * 1 / 3) + 10, 20, 0xFF00FF, 2.5F);
 	}
+	tekst = "Timer idle: " + to_string(static_cast<int>(round(player->Get_Timer())));
+	screen->Print(tekst.c_str(), (SCRWIDTH * 2 / 3) + 30, 20, 0xFF00FF, 2.5F);
 
 	// left bar background
 	screen->Bar(0, 50, 150, SCRHEIGHT -1, 0x0A0710);
@@ -120,9 +122,9 @@ void UI::UI_Layout(Surface* screen,Surface* resource_Icon_Sheet, Resource_Manage
 	}
 }
 
-void UI::Forest_UI(Surface* screen, Surface* resource_Icon_Sheet, Resource_Manager* resource_Manager, Player* player, Item_Manager* item_Manager, Window_Manager* window_Manager)
+void UI::Forest_UI(float deltaTime, Surface* screen, Surface* resource_Icon_Sheet, Resource_Manager* resource_Manager, Player* player, Item_Manager* item_Manager, Window_Manager* window_Manager)
 {
-
+	auto softwood = resource_Manager->Get_Resource("SoftWood");
 	// draws the level progress bar
 	{
 		double level_Indicator = 150 + (player->Get_Stats("Lumberjack")->Get_Exp() / player->Get_Stats("Lumberjack")->Get_Exp_Needed() * (SCRWIDTH - 150));
@@ -147,6 +149,21 @@ void UI::Forest_UI(Surface* screen, Surface* resource_Icon_Sheet, Resource_Manag
 
 	draw_Resource_Icons(screen, "SoftWood", 180, SCRHEIGHT / 30 * 1 + 35, 1, resource_Icon_Sheet);
 	screen->Print((string(resource_Manager->Get_Resource("SoftWood")->Get_Name()) + ": " + to_string(static_cast<int>(std::round(resource_Manager->Get_Resource("SoftWood")->Get_Quantity())))).c_str(), 180, SCRHEIGHT / 30 * 1 + 35, 0xFF00FF, 1.5);
+	if (player->Get_Timer() >= player->Get_Idle_Deep_Timer())
+	{
+		cost = softwood->Get_Production_Rate() * player->Get_Idle_Deep_Multiplier() * player->Get_Idle_Multiplier();
+	}
+	else if (player->Get_Timer() >= player->Get_Idle_Timer())
+	{
+		cost = softwood->Get_Production_Rate() * player->Get_Idle_Multiplier();
+	}
+	else
+	{
+		cost = softwood->Get_Production_Rate();
+	}
+	
+	label = "SoftWood Gain = " + to_string(static_cast<int>(std::round(cost)));
+	screen->Print(label.c_str(), 180, SCRHEIGHT / 30 * 1 + 50, 0xFF00FF, 1.5);
 
 	// info tekst
 	
@@ -187,6 +204,7 @@ void UI::Forge_UI(Surface* screen, Resource_Manager* resource_Manager, Player* p
 	if (window_Manager->get_Active_Window() == "Forge")
 	{
 		auto craftingtable1 = craftingtable->get_Craftingtable("Craftingtable 1");
+		auto craftingtable2 = craftingtable->get_Craftingtable("Craftingtable 2");
 		double cost = round(craftingtable1->Get_Worker_Cost());
 		string label = "Cost: " + std::to_string(static_cast<int>(std::round(cost))) + " " + resource_Manager->Get_Resource("Thalions")->Get_Name() + " 1 " + craftingtable1->Get_Worker_Tool_Equiped();
 
@@ -197,7 +215,12 @@ void UI::Forge_UI(Surface* screen, Resource_Manager* resource_Manager, Player* p
 
 		if (craftingtable->get_Craftingtable("Craftingtable 2")->Get_Unlocked())
 		{
+			double cost = round(craftingtable2->Get_Worker_Cost());
+			string label = "Cost: " + std::to_string(static_cast<int>(std::round(cost))) + " " + resource_Manager->Get_Resource("Thalions")->Get_Name() + " 1 " + craftingtable2->Get_Worker_Tool_Equiped();
+
 			button_Standard("Crafting table 2", "", "", 340, 160, screen, window_Manager, player);
+			button_Standard("Buy Worker", label.c_str(), "", 340, 230, screen, window_Manager, player);
+			button_Standard("Upgrade Tools", "", "", 340, 300, screen, window_Manager, player);
 		}
 	}
 	if (window_Manager->get_Active_Window() == "Craftingtable")
@@ -467,9 +490,11 @@ void UI::Libary_UI(Surface* screen, Resource_Manager* resource_Manager, Blueprin
 		screen->Print(card3_Conversion.c_str(), 180 + 2 * ((((SCRWIDTH - 60 - 170) - 20 * 2) / 3) + 20), SCRHEIGHT / 2 + 100, 0xFF00FF, 2.0F);
 		screen->Print(card3_Cost.c_str(), 180 + 2 * ((((SCRWIDTH - 60 - 170) - 20 * 2) / 3) + 20), SCRHEIGHT / 2 + 150, 0xFF00FF, 2.0F);
 
-		button_Standard("Unlock", "", "", 380 + 0 * ((((SCRWIDTH - 60 - 170) - 20 * 2) / 3)), SCRHEIGHT / 2 + 400, screen, window_Manager, player);
-		button_Standard("Unlock", "", "", 380 + 1 * ((((SCRWIDTH - 60 - 170) - 20 * 2) / 3)), SCRHEIGHT / 2 + 400, screen, window_Manager, player);
-		button_Standard("Unlock", "", "", 380 + 2 * ((((SCRWIDTH - 60 - 170) - 20 * 2) / 3)), SCRHEIGHT / 2 + 400, screen, window_Manager, player);
+		string cost = to_string(static_cast<int>(draft_Manager->Get_Cost()));
+
+		button_Standard("Unlock", cost.c_str(), "", 380 + 0 * ((((SCRWIDTH - 60 - 170) - 20 * 2) / 3)), SCRHEIGHT / 2 + 400, screen, window_Manager, player);
+		button_Standard("Unlock", cost.c_str(), "", 380 + 1 * ((((SCRWIDTH - 60 - 170) - 20 * 2) / 3)), SCRHEIGHT / 2 + 400, screen, window_Manager, player);
+		button_Standard("Unlock", cost.c_str(), "", 380 + 2 * ((((SCRWIDTH - 60 - 170) - 20 * 2) / 3)), SCRHEIGHT / 2 + 400, screen, window_Manager, player);
 
 
 	}
@@ -505,7 +530,7 @@ void UI::Libary_UI(Surface* screen, Resource_Manager* resource_Manager, Blueprin
 			screen->Print(test4.c_str(), 570, start_Y + (i * 60), 0xFF00FF, 1.0F);
 			screen->Print(test5.c_str(), 570, start_Y + 10 + (i * 60), 0xFF00FF, 1.0F);
 			screen->Print(test6.c_str(), 570, start_Y + 20 + (i * 60), 0xFF00FF, 1.0F);
-			button_Standard("Upgrade", "", "", 770, 170 + (i * 60), screen, window_Manager, player);
+			button_Standard("Upgrade", cost.c_str(), "", 770, 170 + (i * 60), screen, window_Manager, player);
 		}
 	}
 }

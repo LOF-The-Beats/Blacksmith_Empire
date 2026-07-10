@@ -1,8 +1,8 @@
 #include "precomp.h"
 #include "Blueprints.h"
 
-Blueprints::Blueprints(string name, string equip_Slot, double conversion_Rate, int order)
-	:name(name), equip_Slot(equip_Slot), conversion_Rate(conversion_Rate), base_Conversion_Rate(0.2), order(order), level(1.0), cost(10.0), unlocked(false), researched(true)
+Blueprints::Blueprints(string name, string equip_Slot, double base_Conversion_Rate, double cost,  int order)
+	:name(name), equip_Slot(equip_Slot), conversion_Rate(base_Conversion_Rate), base_Conversion_Rate(base_Conversion_Rate), order(order), level(1.0), cost(cost), unlocked(false), researched(true)
 {
 }
 

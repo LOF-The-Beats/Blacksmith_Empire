@@ -114,6 +114,12 @@ void Resources::Set_Worker_Cost(double d)
 	return;
 }
 
+void Resources::Set_Production_Rate(double d)
+{
+	production_Rate = d;
+	return;
+}
+
 void Resources::Set_Hardness(double d)
 {
 	hardness = d;

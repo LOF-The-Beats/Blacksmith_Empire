@@ -47,19 +47,38 @@ vector<Blueprints*> Blueprint_Manager::Get_All_Blueprints()
 	return all_Blueprints;
 }
 
-void Blueprint_Manager::Add_Blueprints(const string name, string equip_Slot, const double conversion_Rate, int order)
+vector<Blueprints*> Blueprint_Manager::Get_All_Unlocked_Blueprints()
+{
+	vector<Blueprints*> all_Blueprints;
+
+	for (auto& blueprint : blueprints)
+	{
+		if (!blueprint.second->Get_Unlocked())
+		{
+			all_Blueprints.push_back(blueprint.second);
+		}
+	}
+
+	return all_Blueprints;
+}
+
+void Blueprint_Manager::Add_Blueprints(const string name, string equip_Slot, const double conversion_Rate, double cost, int order)
 {
 	if (blueprints.find(name) == blueprints.end())
 	{
-		blueprints[name] = new Blueprints(name, equip_Slot,conversion_Rate, order);
+		blueprints[name] = new Blueprints(name, equip_Slot,conversion_Rate, cost, order);
 	}
 }
 
 void Blueprint_Manager::Create_All_Blueprints()
 {
-	Add_Blueprints("Axe", "Lumberjack", 0.2, 0);
-	Add_Blueprints("Tools", "Crafting", 0.2, 1);
-	Add_Blueprints("Pickaxe", "Mining", 0.2, 2);
+	Add_Blueprints("Axe", "Lumberjack", 0.2, 10, 0);
+	Add_Blueprints("Tools", "Crafting", 0.2, 10, 1);
+	Add_Blueprints("Pickaxe", "Mining", 0.2, 10, 2);
+	Add_Blueprints("Short Sword", "Mining", 0.3, 15, 3);
+	Add_Blueprints("Shield", "Mining", 0.3, 15, 4);
+	Add_Blueprints("Long Sword", "Mining", 0.3, 15, 5);
+	Add_Blueprints("Rapier", "Mining", 0.4, 20,6);
 
 	Get_Blueprints("Axe")->Set_Unlocked(true);
 }
