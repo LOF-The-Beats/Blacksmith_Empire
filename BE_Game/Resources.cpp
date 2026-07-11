@@ -1,8 +1,8 @@
 #include "precomp.h"
 #include "Resources.h"
 
-Resources::Resources(string name, double quantity, double hardness, int order, bool crafting_Resource)
-	:name(name), quantity(quantity), mined(0.0), depth (1.0), gain_On_Reset(0.0), workers(0.0), worker_Cost(20), production_Rate(0.0), hardness(hardness), worker_Tool_Power(1.0), worker_Ascension_Power(0), worker_Tool_Equiped("None"), order(order), crafting_Resource(crafting_Resource)
+Resources::Resources(string name, string gathering_Destination, double quantity, double hardness, double worker_Cost, int order, bool crafting_Resource)
+	:name(name), gathering_Destination(gathering_Destination), quantity(quantity), mined(0.0), depth (1.0), depth_Cost(1000), gain_On_Reset(0.0), workers(0.0), worker_Cost(worker_Cost), production_Rate(0.0), hardness(hardness), worker_Tool_Power(1.0), worker_Ascension_Power(0), worker_Tool_Equiped("None"), order(order), crafting_Resource(crafting_Resource)
 {
 }
 
@@ -14,6 +14,11 @@ string Resources::Get_Name() const
 string Resources::Get_Worker_Tool_Equiped() const
 {
 	return worker_Tool_Equiped;
+}
+
+string Resources::Get_Gathering_Destination() const
+{
+	return gathering_Destination;
 }
 
 int Resources::Get_Order() const
@@ -34,6 +39,11 @@ double Resources::Get_Mined() const
 double Resources::Get_Depth() const
 {
 	return depth;
+}
+
+double Resources::Get_Depth_Cost() const
+{
+	return depth_Cost;
 }
 
 double Resources::Get_Gain_On_Reset() const
@@ -88,6 +98,12 @@ void Resources::Set_Worker_Tool_Equiped(string n)
 	return;
 }
 
+void Resources::Set_Gathering_Destination(string n)
+{
+	gathering_Destination = n;
+	return;
+}
+
 void Resources::Set_Quantity(double d)
 {
 	quantity = d;
@@ -103,6 +119,12 @@ void Resources::Set_Mined(double d)
 void Resources::Set_Depth(double d)
 {
 	depth = d;
+	return;
+}
+
+void Resources::Set_Depth_Cost(double d)
+{
+	depth_Cost = d;
 	return;
 }
 

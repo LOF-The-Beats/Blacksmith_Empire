@@ -61,7 +61,8 @@ void Unlock_Manager::Check_Unlock(Resource_Manager* resource_Manager, Player* pl
 	{
 		Get_Unlocked("Witch Hut")->Set_Unlocked(true);
 	}
-	if (!Get_Unlocked("Mine")->Get_Unlocked())
+	if (resource_Manager->Get_Resource("Stone") &&
+		!Get_Unlocked("Mine")->Get_Unlocked())
 	{
 		Get_Unlocked("Mine")->Set_Unlocked(true);
 	}

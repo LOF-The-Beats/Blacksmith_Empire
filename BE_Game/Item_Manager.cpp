@@ -15,6 +15,18 @@ Item* Item_Manager::Get_Item(const string name) const
 	return nullptr;
 }
 
+vector<Item*> Item_Manager::Get_All_Items()
+{
+	vector<Item*> all_Items;
+
+	for (auto& items : item)
+	{
+		all_Items.push_back(items.second);
+	}
+
+	return all_Items;
+}
+
 void Item_Manager::Add_Item(const string name, string resource, string blueprint, string equip_Slot, double level, double value, double power)
 {
 	if (item.find(name) == item.end())

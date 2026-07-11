@@ -54,7 +54,7 @@ void UI::Draw_UI(float deltaTime,Surface* screen,Surface* resource_Icon_Sheet, R
 	}
 	else if (window_Manager->get_Active_Window() == "Mine")
 	{
-		Mine_UI(screen, window_Manager, player, resource_Manager);
+		Mine_UI(screen, window_Manager, player, resource_Manager, item_Manager);
 	}
 
 }
@@ -157,7 +157,19 @@ void UI::Forest_UI(float deltaTime, Surface* screen, Surface* resource_Icon_Shee
 	string label = "Cost: " + std::to_string(static_cast<int>(std::round(cost))) + " " + resource_Manager->Get_Resource("Thalions")->Get_Name() + " 1 " + resource_Manager->Get_Resource("SoftWood")->Get_Worker_Tool_Equiped();
 	button_Standard("Buy Worker", label.c_str(), "", 160, 230, screen, window_Manager, player); // buy worker
 
-	button_Standard("Upgrade tools", "", "", 160, 300, screen, window_Manager, player); // upgrade tools
+	auto sorted_Item = item_Manager->get_Item_Sorted_By_Power_And_Equip_Slot("Lumberjack");
+	auto softWood = resource_Manager->Get_Resource("SoftWood");
+	if (!sorted_Item.empty() &&
+		sorted_Item[0]->Get_Power() > softWood->Get_Workers_Tool_Power())
+	{
+		cost = round(softWood->Get_Workers());
+		label = "Cost: " + to_string(static_cast<int>(std::round(cost))) + " " + sorted_Item[0]->Get_Name();
+		button_Standard("Upgrade tools", label.c_str(), "", 160, 300, screen, window_Manager, player); // upgrade tools
+	}
+	else
+	{
+		button_Standard("Upgrade tools", "No Upgrades Available", "", 160, 300, screen, window_Manager, player); // upgrade tools
+	}
 
 	draw_Resource_Icons(screen, "SoftWood", 180, SCRHEIGHT / 30 * 1 + 35, 1, resource_Icon_Sheet);
 	screen->Print((string(resource_Manager->Get_Resource("SoftWood")->Get_Name()) + ": " + to_string(static_cast<int>(std::round(resource_Manager->Get_Resource("SoftWood")->Get_Quantity())))).c_str(), 180, SCRHEIGHT / 30 * 1 + 35, 0xFF00FF, 1.5);
@@ -215,24 +227,68 @@ void UI::Forge_UI(Surface* screen, Resource_Manager* resource_Manager, Player* p
 
 	if (window_Manager->get_Active_Window() == "Forge")
 	{
+		auto sorted_Item = item_Manager->get_Item_Sorted_By_Power_And_Equip_Slot("Crafting");
 		auto craftingtable1 = craftingtable->get_Craftingtable("Craftingtable 1");
 		auto craftingtable2 = craftingtable->get_Craftingtable("Craftingtable 2");
 		double cost = round(craftingtable1->Get_Worker_Cost());
 		string label = "Cost: " + std::to_string(static_cast<int>(std::round(cost))) + " " + resource_Manager->Get_Resource("Thalions")->Get_Name() + " 1 " + craftingtable1->Get_Worker_Tool_Equiped();
 
 		button_Standard("Crafting table", "", "", 160, 160, screen, window_Manager, player);
+
+		if (craftingtable1->Get_Resource() != "None")
+		{
+			screen->Bar(160, 215, 160 + (craftingtable1)->Get_Progress() / resource_Manager->Get_Resource(craftingtable1->Get_Resource())->Get_Hardness() * 110, 225, 0x00FF00);
+		}
 		button_Standard("Buy Worker", label.c_str(), "", 160, 230, screen, window_Manager, player);
-		button_Standard("Upgrade Tools", "", "", 160, 300, screen, window_Manager, player);
-		button_Standard("Sell all items", "", "", 160, 600, screen, window_Manager, player);
+
+		if (!sorted_Item.empty() &&
+			sorted_Item[0]->Get_Power() > craftingtable1->Get_Worker_Tool_Power())
+		{
+			cost = round(craftingtable1->Get_Worker());
+			label = "Cost: " + to_string(static_cast<int>(std::round(cost))) + " " + sorted_Item[0]->Get_Name();
+			button_Standard("Upgrade tools", label.c_str(), "", 160, 300, screen, window_Manager, player); // upgrade tools
+		}
+		else
+		{
+			button_Standard("Upgrade tools", "No Upgrades Available", "", 160, 300, screen, window_Manager, player); // upgrade tools
+		}
+
+		double earned_gold = 0;
+		auto all_Items = item_Manager->Get_All_Items();
+		
+		for (size_t i = 0; i < all_Items.size(); i++)
+		{
+			earned_gold += all_Items[i]->Get_Quantity() * all_Items[i]->Get_Value();
+		}
+
+		cost = earned_gold;
+		label = "Gain: " + to_string(static_cast<int>(std::round(cost))); +" " + resource_Manager->Get_Resource("Thalions")->Get_Name();
+		button_Standard("Sell all items", label.c_str(), "", 160, 600, screen, window_Manager, player);
 
 		if (craftingtable->get_Craftingtable("Craftingtable 2")->Get_Unlocked())
 		{
 			double cost = round(craftingtable2->Get_Worker_Cost());
-			string label = "Cost: " + std::to_string(static_cast<int>(std::round(cost))) + " " + resource_Manager->Get_Resource("Thalions")->Get_Name() + " 1 " + craftingtable2->Get_Worker_Tool_Equiped();
+			string label = "Cost: " + to_string(static_cast<int>(std::round(cost))) + " " + resource_Manager->Get_Resource("Thalions")->Get_Name() + " 1 " + craftingtable2->Get_Worker_Tool_Equiped();
 
 			button_Standard("Crafting table 2", "", "", 340, 160, screen, window_Manager, player);
+
+			if(craftingtable2->Get_Resource() != "None")
+			{
+				screen->Bar(340, 215, 340 + (craftingtable2)->Get_Progress() / resource_Manager->Get_Resource(craftingtable2->Get_Resource())->Get_Hardness() * 110, 225, 0x00FF00);
+			}
+
 			button_Standard("Buy Worker", label.c_str(), "", 340, 230, screen, window_Manager, player);
-			button_Standard("Upgrade Tools", "", "", 340, 300, screen, window_Manager, player);
+			if (!sorted_Item.empty() &&
+				sorted_Item[0]->Get_Power() > craftingtable2->Get_Worker_Tool_Power())
+			{
+				cost = round(craftingtable2->Get_Worker());
+				label = "Cost: " + to_string(static_cast<int>(std::round(cost))) + " " + sorted_Item[0]->Get_Name();
+				button_Standard("Upgrade tools", label.c_str(), "", 340, 300, screen, window_Manager, player); // upgrade tools
+			}
+			else
+			{
+				button_Standard("Upgrade tools", "No Upgrades Available", "", 340, 300, screen, window_Manager, player); // upgrade tools
+			}
 		}
 	}
 	if (window_Manager->get_Active_Window() == "Craftingtable")
@@ -341,8 +397,11 @@ void UI::Forge_UI(Surface* screen, Resource_Manager* resource_Manager, Player* p
 		if (craftingtable->get_Craftingtable(craftingtable->Get_Active_Table())->Get_Resource() != "None" &&
 			craftingtable->get_Craftingtable(craftingtable->Get_Active_Table())->Get_Blueprint() != "None")
 		{
-			screen->Bar(SCRWIDTH / 2 - 50, SCRHEIGHT / 10 * 8 - 50, SCRWIDTH / 2 - 50 + (craftingtable->get_Craftingtable(craftingtable->Get_Active_Table())->Get_Progress() / resource_Manager->Get_Resource(craftingtable->get_Craftingtable(craftingtable->Get_Active_Table())->Get_Resource())->Get_Hardness() * 110), SCRHEIGHT / 10 * 8, 0x00FF00);
-			button_Standard("Craft", "", "", SCRWIDTH / 2 - 50, SCRHEIGHT / 10 * 8 - 50, screen, window_Manager, player);
+			screen->Bar(SCRWIDTH / 2 - 50, SCRHEIGHT / 10 * 8 - 100, SCRWIDTH / 2 - 50 + (craftingtable->get_Craftingtable(craftingtable->Get_Active_Table())->Get_Progress() / resource_Manager->Get_Resource(craftingtable->get_Craftingtable(craftingtable->Get_Active_Table())->Get_Resource())->Get_Hardness() * 110), SCRHEIGHT / 10 * 8 -50, 0x00FF00);
+			string label = to_string(static_cast<int>(craftingtable->get_Craftingtable(craftingtable->Get_Active_Table())->Get_Progress())) + " / " + to_string(static_cast<int>(resource_Manager->Get_Resource(craftingtable->get_Craftingtable(craftingtable->Get_Active_Table())->Get_Resource())->Get_Hardness()));
+			screen->Print(label.c_str(), SCRWIDTH / 2, SCRHEIGHT / 10 * 8 - 75, 0xFF00FF, 1.5F);
+			label = "Click Power: " + to_string(static_cast<int>(player->Get_Stats("Crafting")->Get_Power()));
+			button_Standard("Craft", label.c_str(), "", SCRWIDTH / 2 - 50, SCRHEIGHT / 10 * 8 - 50, screen, window_Manager, player);
 			
 		}
 
@@ -566,7 +625,7 @@ void UI::Witch_Hut_UI(Surface* screen, Resource_Manager* resource_Manager, Bluep
 	}
 }
 
-void UI::Mine_UI(Surface* screen, Window_Manager* window_Manager, Player* player, Resource_Manager* resource_Manager)
+void UI::Mine_UI(Surface* screen, Window_Manager* window_Manager, Player* player, Resource_Manager* resource_Manager, Item_Manager* item_Manager)
 {
 	double level_Indicator = 150 + (player->Get_Stats("Mining")->Get_Exp() / player->Get_Stats("Mining")->Get_Exp_Needed() * (SCRWIDTH - 150));
 	screen->Bar(150, 100, level_Indicator, 150, 0x00FF00);
@@ -590,12 +649,33 @@ void UI::Mine_UI(Surface* screen, Window_Manager* window_Manager, Player* player
 	screen->Print(test2.c_str(), SCRWIDTH /2 - 50, SCRHEIGHT / 30 * 1 + 35, 0xFF00FF, 2.0);
 
 	
+	auto mine = player->Get_Stats("Mining");
+	string label = "Click power: " + to_string(static_cast<int>(round(mine->Get_Power() * stone->Get_Depth())));
+
+	button_Standard("Mine", label.c_str(), "Mine Stone", 160, 160, screen, window_Manager, player);
+	double cost = round(resource_Manager->Get_Resource("Stone")->Get_Worker_Cost());
+	label = "Cost: " + std::to_string(static_cast<int>(std::round(cost))) + " " + resource_Manager->Get_Resource("Thalions")->Get_Name() + " 1 " + resource_Manager->Get_Resource("Stone")->Get_Worker_Tool_Equiped();
+	button_Standard("Buy Worker", label.c_str(), "", 160, 230, screen, window_Manager, player); // buy worker
+	auto sorted_Item = item_Manager->get_Item_Sorted_By_Power_And_Equip_Slot("Mining");
+	if (!sorted_Item.empty() &&
+		sorted_Item[0]->Get_Power() > stone->Get_Workers_Tool_Power())
+	{
+		cost = round(stone->Get_Workers());
+		label = "Cost: " + to_string(static_cast<int>(std::round(cost))) + " " + sorted_Item[0]->Get_Name();
+		button_Standard("Upgrade tools", label.c_str(), "", 160, 300, screen, window_Manager, player); // upgrade tools
+	}
+	else
+	{
+		button_Standard("Upgrade tools", "No Upgrades Available", "", 160, 300, screen, window_Manager, player); // upgrade tools
+	}
 
 
 
-	button_Standard("Mine", "", "Mine Stone", 160, 160, screen, window_Manager, player);
+
 	button_Standard("Collect", "", "Collect mined stone", 280, 160, screen, window_Manager, player);
-	button_Standard("Delve", "Cost: 1000 SoftWood", "Delve deeprin into the mine", 400, 160, screen, window_Manager, player);
+
+	label = "Cost: " + to_string(static_cast<int>(round(stone->Get_Depth_Cost())));
+	button_Standard("Delve", label.c_str(), "Delve deeprin into the mine", 400, 160, screen, window_Manager, player);
 }
 
 void UI::button_Standard(string name, string cost, string description, int x1, int y1, Surface* screen, Window_Manager* window_Manager, Player* player)
@@ -887,7 +967,10 @@ void UI::draw_Ascension_Upgrades(Surface* screen, Ascension_Manager* ascension_M
 		if (ascension_Upgrade_Screen->Is_In_View(screen_X, screen_Y, 150, 50, SCRWIDTH / 3 * 2 - 150, 950))
 		{
 			string name = all_Upgrades[i]->Get_Name();
-			button_Standard(name.c_str(), "", "", screen_X, screen_Y, screen, window_Manager, player);
+			double cost = all_Upgrades[i]->Get_Cost();
+			string label = "Cost: " + to_string(static_cast<int>(std::round(cost))) + " Hourglasses";
+			string description = all_Upgrades[i]->Get_Description();
+			button_Standard(name.c_str(), label.c_str(), description.c_str(), screen_X, screen_Y, screen, window_Manager, player);
 		}
 
 	}

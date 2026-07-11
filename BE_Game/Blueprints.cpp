@@ -1,8 +1,8 @@
 #include "precomp.h"
 #include "Blueprints.h"
 
-Blueprints::Blueprints(string name, string equip_Slot, double base_Conversion_Rate, double cost,  int order)
-	:name(name), equip_Slot(equip_Slot), conversion_Rate(base_Conversion_Rate), base_Conversion_Rate(base_Conversion_Rate), order(order), level(1.0), cost(cost), unlocked(false), researched(true)
+Blueprints::Blueprints(string name, string equip_Slot, double base_Conversion_Rate, double cost, double value,  int order)
+	:name(name), equip_Slot(equip_Slot), conversion_Rate(base_Conversion_Rate), base_Conversion_Rate(base_Conversion_Rate), order(order), level(1.0), cost(cost), value(value), unlocked(false), researched(true)
 {
 }
 
@@ -30,6 +30,11 @@ double Blueprints::Get_Level() const
 double Blueprints::Get_Cost() const
 {
 	return cost;
+}
+
+double Blueprints::Get_value() const
+{
+	return value;
 }
 
 double Blueprints::Get_Conversion_Rate() const
@@ -67,6 +72,12 @@ void Blueprints::Set_Level(double amount)
 void Blueprints::Set_Cost(double amount)
 {
 	cost = amount;
+	return;
+}
+
+void Blueprints::Set_value(double amount)
+{
+	value = amount;
 	return;
 }
 

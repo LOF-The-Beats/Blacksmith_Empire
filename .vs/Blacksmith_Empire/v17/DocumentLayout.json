@@ -22,8 +22,12 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 1,
           "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
+            },
             {
               "$type": "Document",
               "DocumentIndex": 1,
@@ -32,7 +36,7 @@
               "RelativeDocumentMoniker": "BE_Game\\game.cpp",
               "ToolTip": "C:\\Users\\kyeld\\Documents\\GitHub\\Blacksmith_Empire\\BE_Game\\game.cpp",
               "RelativeToolTip": "BE_Game\\game.cpp",
-              "ViewState": "AQIAAA8AAAAAAAAAAAAAAC0AAAAmAAAA",
+              "ViewState": "AQIAAA8AAAAAAAAAAAAAAC0AAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2026-04-09T15:17:15.563Z",
               "EditorCaption": ""
@@ -47,8 +51,7 @@
               "RelativeToolTip": "BE_Game\\Game_Manager.cpp",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2026-04-09T15:19:43.157Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-04-09T15:19:43.157Z"
             }
           ]
         },
@@ -64,7 +67,7 @@
               "RelativeDocumentMoniker": "BE_Game\\game.h",
               "ToolTip": "C:\\Users\\kyeld\\Documents\\GitHub\\Blacksmith_Empire\\BE_Game\\game.h",
               "RelativeToolTip": "BE_Game\\game.h",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAACEAAAAQAAAA",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAABEAAAAYAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
               "WhenOpened": "2026-04-09T15:17:16.54Z",
               "EditorCaption": ""

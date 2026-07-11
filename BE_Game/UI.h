@@ -24,7 +24,7 @@ public:
 	void Player_UI(Surface* screen, Window_Manager* window_Manager, Item_Manager* item_Manager, Player* player);
 	void Libary_UI(Surface* screen, Resource_Manager* resource_Manager, Blueprint_Manager* blueprint_Manager, Player* player, Window_Manager* window_Manager, Draft_Manager* Draft_Manager);
 	void Witch_Hut_UI(Surface* screen, Resource_Manager* resource_Manager, Blueprint_Manager* blueprint_Manager, Player* player, Window_Manager* window_Manager, Draft_Manager* Draft_Manager, Ascension_Upgrade_Screen* ascension_Upgrade_Screen, Ascension_Manager* ascension_Manager);
-	void Mine_UI(Surface* screen, Window_Manager* window_Manager, Player* player, Resource_Manager* resource_Manager);
+	void Mine_UI(Surface* screen, Window_Manager* window_Manager, Player* player, Resource_Manager* resource_Manager, Item_Manager* item_Manager);
 
 
 

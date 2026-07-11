@@ -10,7 +10,7 @@ public:
 	//getter
 
 	Item* Get_Item(const string name) const;
-
+	vector<Item*> Get_All_Items();
 
 	//adder
 

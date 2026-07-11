@@ -58,7 +58,7 @@ void Game_Manager::If_Clicked(Player* player, Resource_Manager* resource_Manager
 			}			
 			else if (window_Manager->get_Active_Window() == "Mine")
 			{
-				Mine_Buttons(player, resource_Manager);
+				Mine_Buttons(player, resource_Manager, item_Manager);
 			}
 
 			if (window_Manager->get_Active_Window() == "Craftingtable")
@@ -383,14 +383,57 @@ void Game_Manager::Witch_Hut_Buttons(Player* player, Window_Manager* window_Mana
 	}
 }
 
-void Game_Manager::Mine_Buttons(Player* player, Resource_Manager* resource_Manager)
+void Game_Manager::Mine_Buttons(Player* player, Resource_Manager* resource_Manager, Item_Manager* item_Manager)
 {
+	auto mining = player->Get_Stats("Mining");
+	auto stone = resource_Manager->Get_Resource("Stone");
+	auto thalions = resource_Manager->Get_Resource("Thalions");
+	auto item = item_Manager->Get_Item(stone->Get_Worker_Tool_Equiped());
+
 	if (Is_Mouse_Over_Standard(player, 160, 160))
 	{
-		auto mining = player->Get_Stats("Mining");
-		auto stone = resource_Manager->Get_Resource("Stone");
 		stone->Add_Mined(mining->Get_Power() * stone->Get_Depth());
 		mining->Add_Exp(1);
+	}
+
+	if (Is_Mouse_Over_Standard(player, 160, 230) &&
+		stone->Get_Worker_Cost() <= thalions->Get_Quantity())
+	{
+
+		if (stone->Get_Worker_Tool_Equiped() != "None" &&
+			item->Get_Quantity() >= 1)
+		{
+
+			stone->Add_Workers(1);
+			stone->Update_Production_Rate();
+			thalions->Sub_Quantity(stone->Get_Worker_Cost());
+			stone->Set_Worker_Cost(stone->Get_Worker_Cost() * 1.2);
+
+			item->Sub_Quantity(1);
+		}
+		else if (stone->Get_Worker_Tool_Equiped() == "None")
+		{
+			stone->Add_Workers(1);
+			stone->Update_Production_Rate();
+			thalions->Sub_Quantity(stone->Get_Worker_Cost());
+			stone->Set_Worker_Cost(stone->Get_Worker_Cost() * 1.2);
+		}
+	}
+
+	if (Is_Mouse_Over_Standard(player, 160, 300))
+	{
+		auto sorted_Item = item_Manager->get_Item_Sorted_By_Power_And_Equip_Slot("Mining");
+		if (!sorted_Item.empty() &&
+			sorted_Item[0]->Get_Power() > stone->Get_Workers_Tool_Power())
+		{
+			if (sorted_Item[0]->Get_Quantity() >= stone->Get_Workers())
+			{
+				sorted_Item[0]->Sub_Quantity(stone->Get_Workers());
+				stone->Set_Workers_Tool_Power(sorted_Item[0]->Get_Power());
+				stone->Set_Worker_Tool_Equiped(sorted_Item[0]->Get_Name());
+
+			}
+		}
 	}
 
 	if (Is_Mouse_Over_Standard(player, 280, 160))
@@ -405,9 +448,10 @@ void Game_Manager::Mine_Buttons(Player* player, Resource_Manager* resource_Manag
 		auto softwood = resource_Manager->Get_Resource("SoftWood");
 		auto stone = resource_Manager->Get_Resource("Stone");
 
-		if (softwood->Get_Quantity() >= 1000)
+		if (softwood->Get_Quantity() >= stone->Get_Depth_Cost())
 		{
-			softwood->Sub_Quantity(1000);
+			softwood->Sub_Quantity(stone->Get_Depth_Cost());
+			stone->Set_Depth_Cost(stone->Get_Depth_Cost() * 1.2);
 			stone->Add_Depth(1);
 		}
 	}
@@ -619,6 +663,7 @@ void Game_Manager::Ascension_Upgrade_Window(Player* player, Window_Manager* wind
 			{
 				ascension_Manager->Buy_Upgrades(all_Upgrades[i]->Get_Name(),resource_Manager, player, craftingtable_Manager);
 			}
+
 		}
 	}
 }
@@ -636,100 +681,105 @@ void Game_Manager::Check_All_Updates(double deltatime, Player* player, Resource_
 
 void Game_Manager::Update_All_Per_Seccond_Events(double deltaTime, Player* player, Resource_Manager* resource_Manager, Craftingtable_Manager* craftingtable_Manager, Blueprint_Manager* blueprint_Manager)
 {
-	auto softwood = resource_Manager->Get_Resource("SoftWood");
+	auto all_Resources = resource_Manager->Get_All_Resources();
 	auto all_Craftingtables = craftingtable_Manager->Get_All_Craftingtables();
 
-	softwood->Update_Production_Rate();
-	
+	double delta_Seconds = deltaTime / 1000.0;
+	double production_Multiplier = 1.0;
 
 	if (player->Get_Timer() >= player->Get_Idle_Deep_Timer())
 	{
-		softwood->Add_Quantity(softwood->Get_Production_Rate() * player->Get_Idle_Deep_Multiplier() * player->Get_Idle_Multiplier() * (deltaTime / 1000));
-
-		for (size_t i = 0; i < all_Craftingtables.size(); i++)
-		{
-			if (all_Craftingtables[i]->Get_Unlocked())
-			{
-				auto blueprint = blueprint_Manager->Get_Blueprints(all_Craftingtables[i]->Get_Blueprint());
-				auto resource = resource_Manager->Get_Resource(all_Craftingtables[i]->Get_Resource());
-				all_Craftingtables[i]->Update_Production_Rate();
-				if (blueprint && resource &&
-					(blueprint->Get_Cost() <= resource->Get_Quantity() ||
-						all_Craftingtables[i]->Get_In_Use()))
-				{
-					all_Craftingtables[i]->Add_Progress(all_Craftingtables[i]->Get_Production_Rate() * player->Get_Idle_Deep_Multiplier() * player->Get_Idle_Multiplier() * (deltaTime / 1000));
-					if (all_Craftingtables[i]->Get_In_Use() == false)
-					{
-						resource->Sub_Quantity(blueprint->Get_Cost());
-					}
-					all_Craftingtables[i]->Set_In_Use(true);
-				}
-			}
-
-		}
+		production_Multiplier =
+			player->Get_Idle_Deep_Multiplier() *
+			player->Get_Idle_Multiplier();
 	}
 	else if (player->Get_Timer() >= player->Get_Idle_Timer())
 	{
-		softwood->Add_Quantity(softwood->Get_Production_Rate() * player->Get_Idle_Multiplier() * (deltaTime / 1000));
+		production_Multiplier =
+			player->Get_Idle_Multiplier();
+	}
 
-		for (size_t i = 0; i < all_Craftingtables.size(); i++)
+	for (size_t i = 0; i < all_Resources.size(); i++)
+	{
+		auto resource = all_Resources[i];
+
+		if (!resource)
 		{
-			if (all_Craftingtables[i]->Get_Unlocked())
-			{
-				auto blueprint = blueprint_Manager->Get_Blueprints(all_Craftingtables[i]->Get_Blueprint());
-				auto resource = resource_Manager->Get_Resource(all_Craftingtables[i]->Get_Resource());
-				all_Craftingtables[i]->Update_Production_Rate();
-				if (blueprint && resource &&
-					(blueprint->Get_Cost() <= resource->Get_Quantity() ||
-						all_Craftingtables[i]->Get_In_Use()))
-				{
-					all_Craftingtables[i]->Add_Progress(all_Craftingtables[i]->Get_Production_Rate() * player->Get_Idle_Multiplier() * (deltaTime / 1000));
-					if (all_Craftingtables[i]->Get_In_Use() == false)
-					{
-						resource->Sub_Quantity(blueprint->Get_Cost());
-					}
-					all_Craftingtables[i]->Set_In_Use(true);
-				}
-			}
+			continue;
+		}
 
+		resource->Update_Production_Rate();
+
+		double amount =
+			resource->Get_Production_Rate() *
+			production_Multiplier *
+			delta_Seconds;
+
+		if (resource->Get_Gathering_Destination() == "Mined")
+		{
+			resource->Add_Mined(amount);
+		}
+		else
+		{
+			resource->Add_Quantity(amount);
 		}
 	}
-	else
-	{
-		softwood->Add_Quantity(softwood->Get_Production_Rate() * (deltaTime / 1000));
 
-		for (size_t i = 0; i < all_Craftingtables.size(); i++)
+	for (size_t i = 0; i < all_Craftingtables.size(); i++)
+	{
+		auto table = all_Craftingtables[i];
+
+		if (!table ||
+			!table->Get_Unlocked() ||
+			table->Get_Worker() < 1)
 		{
-			if (all_Craftingtables[i]->Get_Unlocked())
-			{
-				auto blueprint = blueprint_Manager->Get_Blueprints(all_Craftingtables[i]->Get_Blueprint());
-				auto resource = resource_Manager->Get_Resource(all_Craftingtables[i]->Get_Resource());
-				all_Craftingtables[i]->Update_Production_Rate();
-				if (blueprint && resource &&
-					(blueprint->Get_Cost() <= resource->Get_Quantity() ||
-						all_Craftingtables[i]->Get_In_Use()))
-				{
-					all_Craftingtables[i]->Add_Progress(all_Craftingtables[i]->Get_Production_Rate() * (deltaTime / 1000));
-					if (all_Craftingtables[i]->Get_In_Use() == false)
-					{
-						resource->Sub_Quantity(blueprint->Get_Cost());
-					}
-					all_Craftingtables[i]->Set_In_Use(true);
-				}
-			}
-
+			continue;
 		}
-	}
-	if (player->Get_Timer() <= 60)
-	{
-		player->Add_Timer(deltaTime / 1000);
+
+		auto blueprint =
+			blueprint_Manager->Get_Blueprints(
+				table->Get_Blueprint());
+
+		auto resource =
+			resource_Manager->Get_Resource(
+				table->Get_Resource());
+
+		if (!blueprint || !resource)
+		{
+			continue;
+		}
+
+		bool can_Start =
+			blueprint->Get_Cost() <= resource->Get_Quantity();
+
+		if (!table->Get_In_Use() && !can_Start)
+		{
+			continue;
+		}
+
+		table->Update_Production_Rate();
+
+		if (!table->Get_In_Use())
+		{
+			resource->Sub_Quantity(blueprint->Get_Cost());
+			table->Set_In_Use(true);
+		}
+
+		table->Add_Progress(
+			table->Get_Production_Rate() *
+			production_Multiplier *
+			delta_Seconds
+		);
 	}
 
-	if (clicked == true)
+	if (clicked)
 	{
 		player->Set_Timer(0);
 	}
-	
+	else if (player->Get_Timer() < 60)
+	{
+		player->Add_Timer(delta_Seconds);
+	}
 }
 
 void Game_Manager::Check_Level_Up(Player* player)
@@ -808,7 +858,7 @@ void Game_Manager::Check_Craftingtable_Progress(Resource_Manager* resource_Manag
 			}
 			else
 			{
-				item_Manager->Add_Item(combined_Name, all_Craftingtables[i]->Get_Resource(), all_Craftingtables[i]->Get_Blueprint(), blueprint->Get_Equip_Slot(), blueprint->Get_Level(), resource->Get_Hardness() * blueprint->Get_Level() * (blueprint->Get_Cost() / resource->Get_Hardness()), resource->Get_Hardness() * blueprint->Get_Conversion_Rate());
+				item_Manager->Add_Item(combined_Name, all_Craftingtables[i]->Get_Resource(), all_Craftingtables[i]->Get_Blueprint(), blueprint->Get_Equip_Slot(), blueprint->Get_Level(), resource->Get_Hardness() * blueprint->Get_Level() * blueprint->Get_value(), resource->Get_Hardness() * blueprint->Get_Conversion_Rate());
 				all_Craftingtables[i]->Set_In_Use(false);
 			}
 		}

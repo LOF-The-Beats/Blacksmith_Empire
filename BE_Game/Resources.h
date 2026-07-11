@@ -2,15 +2,17 @@
 class Resources
 {
 public:
-	Resources(string name, double quantity, double hardness, int order, bool crafting_Resource);
+	Resources(string name, string gathering_Destination, double quantity, double hardness, double worker_Cost, int order, bool crafting_Resource);
 
 	//getters
 	string Get_Name() const;
 	string Get_Worker_Tool_Equiped() const;
+	string Get_Gathering_Destination() const;
 	int Get_Order() const;
 	double Get_Quantity() const;
 	double Get_Mined() const;
 	double Get_Depth() const;
+	double Get_Depth_Cost() const;
 	double Get_Gain_On_Reset() const;
 	double Get_Workers() const;
 	double Get_Workers_Tool_Power() const;
@@ -23,9 +25,11 @@ public:
 	//setters
 	void Set_Name(string n);
 	void Set_Worker_Tool_Equiped(string n);
+	void Set_Gathering_Destination(string n);
 	void Set_Quantity(double d);
 	void Set_Mined(double d);
 	void Set_Depth(double d);
+	void Set_Depth_Cost(double d);
 	void Set_Gain_On_Reset(double d);
 	void Set_Workers(double d);
 	void Set_Workers_Tool_Power(double d);
@@ -57,10 +61,12 @@ public:
 private:
 	string name;
 	string worker_Tool_Equiped;
+	string gathering_Destination;
 	int order;
 	double quantity;
 	double mined;
 	double depth;
+	double depth_Cost;
 	double gain_On_Reset;
 	double workers;
 	double worker_Tool_Power;

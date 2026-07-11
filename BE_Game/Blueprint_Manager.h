@@ -14,8 +14,9 @@ public:
 
 
 
+
 	//adders
-	void Add_Blueprints(const string name, string equip_Slot, const double conversion_Rate, double cost, int order);
+	void Add_Blueprints(const string name, string equip_Slot, const double conversion_Rate, double cost, double value, int order);
 
 	//creator
 	void Create_All_Blueprints();

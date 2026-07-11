@@ -12,9 +12,11 @@ public:
 	double Get_Resource_Quantity(const string name) const;
 	vector<Resources*> Get_Sorted_Resources_Numbers();
 	vector<Resources*> Get_All_Resources();
+
+
 	
 	//adders
-	void Add_Resource(const string name, double quantity, double hardness, int order, bool crafting_Resource);
+	void Add_Resource(const string name, string gathering_Destination, double quantity, double hardness, double worker_Cost, int order, bool crafting_Resource);
 	void Add_Resource_Quantity(const string name, double amount);
 	
 	//subtrackters

@@ -82,6 +82,8 @@ void Ascension_Manager::Ascend_Run(Resource_Manager* resource_Manager, Blueprint
 			all_Resources[i]->Set_Worker_Cost(20);
 			all_Resources[i]->Set_Worker_Tool_Equiped("None");
 			all_Resources[i]->Set_Production_Rate(0);
+			all_Resources[i]->Set_Depth(0);
+			all_Resources[i]->Set_Depth_Cost(1000);
 		}
 	}
 
@@ -191,7 +193,7 @@ void Ascension_Manager::Apply_Upgrade(string name, Resource_Manager* resource_Ma
 
 	if (name == "Stone")
 	{
-		resource_Manager->Add_Resource("Stone", 0, 25, 0, true);
+		resource_Manager->Add_Resource("Stone", "Mined", 0, 25, 200, 0, true);
 	}
 
 	else if (name == "Lumberjack")

@@ -37,12 +37,12 @@ void Game::Init()
 	m_Ascension_Upgrade_Screen = new Ascension_Upgrade_Screen;
 
 	//Resources
-	m_Resource_Manager->Add_Resource("Thalions", 0, 0, 0, false);
-	m_Resource_Manager->Add_Resource("Hourglass", 0, 0, 0, false);
-	m_Resource_Manager->Add_Resource("Paper", 0, 1000, 0, false);
+	m_Resource_Manager->Add_Resource("Thalions", "Quantity", 0, 0, 20, 0, false);
+	m_Resource_Manager->Add_Resource("Hourglass", "Quantity", 0, 0, 20, 0, false);
+	m_Resource_Manager->Add_Resource("Paper", "Quantity", 0, 1000, 20, 0, false);
 
-	m_Resource_Manager->Add_Resource("SoftWood", 0, 10, 0, true);
-	m_Resource_Manager->Add_Resource("Stone", 0, 10, 0, true);
+	m_Resource_Manager->Add_Resource("SoftWood", "Quantity", 0, 10, 20, 0, true);
+
 
 
 	//Windows / Locations
@@ -91,9 +91,9 @@ void Game::Init()
 	// testing things
 	if (true)
 	{
-		m_Tutorial->Set_Enabled(false);
-
+		m_Resource_Manager->Add_Resource("Stone", "Mined", 0, 25, 200, 0, true);
 		vector all_Resources = m_Resource_Manager->Get_All_Resources();
+
 		m_Unlock_Manager->Get_Unlocked("Forest")->Set_Unlocked(true);
 		m_Unlock_Manager->Get_Unlocked("Forge")->Set_Unlocked(true);
 		m_Unlock_Manager->Get_Unlocked("Player")->Set_Unlocked(true);

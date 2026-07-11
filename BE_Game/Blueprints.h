@@ -3,7 +3,7 @@ class Blueprints
 {
 public:
 
-	Blueprints(string name, string equip_Slot, double base_Conversion_Rate, double cost, int order);
+	Blueprints(string name, string equip_Slot, double base_Conversion_Rate, double cost, double value, int order);
 
 	// getters
 	string Get_Name() const;
@@ -11,6 +11,7 @@ public:
 	int Get_Order() const;
 	double Get_Level() const;
 	double Get_Cost() const;
+	double Get_value() const;
 	double Get_Conversion_Rate() const;
 	double Get_Base_Conversion_Rate() const;
 	bool Get_Unlocked() const;
@@ -20,6 +21,7 @@ public:
 	void Set_Name(string n);
 	void Set_Level(double amount);
 	void Set_Cost(double amount);
+	void Set_value(double amount);
 	void Set_Conversion_Rate(double amount);
 	void Set_Base_Conversion_Rate(double amount);
 	void Set_Unlocked(bool b);
@@ -44,6 +46,7 @@ private:
 	int order;
 	double level;
 	double cost;
+	double value;
 	double conversion_Rate;
 	double base_Conversion_Rate;
 	bool unlocked;
