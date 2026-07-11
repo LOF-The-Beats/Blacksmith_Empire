@@ -748,6 +748,7 @@ void Game_Manager::Check_Level_Up(Player* player)
 			all_Stats[i]->Add_Exp_Needed(50);
 			all_Stats[i]->Set_Exp(0);
 		}
+	}
 }
 
 void Game_Manager::Check_Player_Stats(Player* player)
