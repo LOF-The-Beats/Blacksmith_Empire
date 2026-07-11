@@ -2,7 +2,7 @@
 #include "Resources.h"
 
 Resources::Resources(string name, double quantity, double hardness, int order, bool crafting_Resource)
-	:name(name), quantity(quantity), gain_On_Reset(0.0), workers(0.0), worker_Cost(20), production_Rate(0.0), hardness(hardness), worker_Tool_Power(1.0), worker_Ascension_Power(0), worker_Tool_Equiped("None"), order(order), crafting_Resource(crafting_Resource)
+	:name(name), quantity(quantity), mined(0.0), depth (1.0), gain_On_Reset(0.0), workers(0.0), worker_Cost(20), production_Rate(0.0), hardness(hardness), worker_Tool_Power(1.0), worker_Ascension_Power(0), worker_Tool_Equiped("None"), order(order), crafting_Resource(crafting_Resource)
 {
 }
 
@@ -24,6 +24,16 @@ int Resources::Get_Order() const
 double Resources::Get_Quantity() const
 {
 	return quantity;
+}
+
+double Resources::Get_Mined() const
+{
+	return mined;
+}
+
+double Resources::Get_Depth() const
+{
+	return depth;
 }
 
 double Resources::Get_Gain_On_Reset() const
@@ -84,6 +94,18 @@ void Resources::Set_Quantity(double d)
 	return;
 }
 
+void Resources::Set_Mined(double d)
+{
+	mined = d;
+	return;
+}
+
+void Resources::Set_Depth(double d)
+{
+	depth = d;
+	return;
+}
+
 void Resources::Set_Gain_On_Reset(double d)
 {
 	gain_On_Reset = d;
@@ -129,6 +151,18 @@ void Resources::Set_Hardness(double d)
 void Resources::Add_Quantity(double d)
 {
 	quantity += d;
+	return;
+}
+
+void Resources::Add_Mined(double d)
+{
+	mined += d;
+	return;
+}
+
+void Resources::Add_Depth(double d)
+{
+	depth += d;
 	return;
 }
 

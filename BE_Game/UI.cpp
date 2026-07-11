@@ -52,6 +52,10 @@ void UI::Draw_UI(float deltaTime,Surface* screen,Surface* resource_Icon_Sheet, R
 	{
 		Witch_Hut_UI(screen, resource_Manager, blueprint_Manager, player, window_Manager, draft_Manager, ascension_Upgrade_Screen, ascension_Manager);
 	}
+	else if (window_Manager->get_Active_Window() == "Mine")
+	{
+		Mine_UI(screen, window_Manager, player, resource_Manager);
+	}
 
 }
 
@@ -119,6 +123,14 @@ void UI::UI_Layout(Surface* screen,Surface* resource_Icon_Sheet, Resource_Manage
 			button_Tab_Selected("Witch Hut", tab_X, tab_Y + (4 * tab_H), screen);
 		else
 			button_Tab("Witch Hut", tab_X, tab_Y + (4 * tab_H), screen);
+	}
+
+	if (unlock_Manager->Get_Unlocked("Mine")->Get_Unlocked())
+	{
+		if (window_Manager->get_Active_Window() == "Mine")
+			button_Tab_Selected("Mine", tab_X, tab_Y + (5 * tab_H), screen);
+		else
+			button_Tab("Mine", tab_X, tab_Y + (5 * tab_H), screen);
 	}
 }
 
@@ -552,6 +564,38 @@ void UI::Witch_Hut_UI(Surface* screen, Resource_Manager* resource_Manager, Bluep
 		ascension_Upgrade_Screen->Update_Drag(player);
 		draw_Ascension_Upgrades(screen, ascension_Manager, ascension_Upgrade_Screen, player, window_Manager);
 	}
+}
+
+void UI::Mine_UI(Surface* screen, Window_Manager* window_Manager, Player* player, Resource_Manager* resource_Manager)
+{
+	double level_Indicator = 150 + (player->Get_Stats("Mining")->Get_Exp() / player->Get_Stats("Mining")->Get_Exp_Needed() * (SCRWIDTH - 150));
+	screen->Bar(150, 100, level_Indicator, 150, 0x00FF00);
+	double player_Exp = round(player->Get_Stats("Mining")->Get_Exp());
+	double player_Exp_Needed = round(player->Get_Stats("Mining")->Get_Exp_Needed());
+	string level_Idicator_Tekst = "Exp: " + to_string(static_cast<int>(round(player_Exp))) + " / Exp Needed: " + to_string(static_cast<int>(std::round(player_Exp_Needed)));
+	screen->Print(level_Idicator_Tekst.c_str(), (SCRWIDTH - 150) / 2, 125, 0xFF0000, 2.0F);
+	screen->Line(150, 100, SCRWIDTH, 100, 0xFF00FF);
+	screen->Line(150, 150, SCRWIDTH, 150, 0xFF00FF);
+
+	auto stone = resource_Manager->Get_Resource("Stone");
+	double test1 = stone->Get_Quantity();
+	string test2 = stone->Get_Name() + ": " + to_string(static_cast<int>(test1));
+	screen->Print(test2.c_str(), 180, SCRHEIGHT / 30 * 1 + 35, 0xFF00FF, 1.5);
+	test1 = stone->Get_Mined();
+	test2 = "Mined: " + to_string(static_cast<int>(test1));
+	screen->Print(test2.c_str(), 330, SCRHEIGHT / 30 * 1 + 35, 0xFF00FF, 1.5);
+
+	test1 = stone->Get_Depth();
+	test2 = "Depth: " + to_string(static_cast<int>(test1));
+	screen->Print(test2.c_str(), SCRWIDTH /2 - 50, SCRHEIGHT / 30 * 1 + 35, 0xFF00FF, 2.0);
+
+	
+
+
+
+	button_Standard("Mine", "", "Mine Stone", 160, 160, screen, window_Manager, player);
+	button_Standard("Collect", "", "Collect mined stone", 280, 160, screen, window_Manager, player);
+	button_Standard("Delve", "Cost: 1000 SoftWood", "Delve deeprin into the mine", 400, 160, screen, window_Manager, player);
 }
 
 void UI::button_Standard(string name, string cost, string description, int x1, int y1, Surface* screen, Window_Manager* window_Manager, Player* player)

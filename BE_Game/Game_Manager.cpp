@@ -55,6 +55,10 @@ void Game_Manager::If_Clicked(Player* player, Resource_Manager* resource_Manager
 			else if (window_Manager->get_Active_Window() == "Witch Hut")
 			{
 				Witch_Hut_Buttons(player, window_Manager, item_Manager, resource_Manager, craftingtable, draft_Manager, blueprint_Manager, ascension_Manager, ascension_Upgrade_Screen);
+			}			
+			else if (window_Manager->get_Active_Window() == "Mine")
+			{
+				Mine_Buttons(player, resource_Manager);
 			}
 
 			if (window_Manager->get_Active_Window() == "Craftingtable")
@@ -139,6 +143,11 @@ void Game_Manager::Location_Buttons_Pressed(Player* player, Window_Manager* wind
 		Is_Mouse_Over_Location(player, 0, 0, 4))
 	{
 		window_Manager->set_Active_Window("Witch Hut");
+	}
+	else if (unlock_Manager->Get_Unlocked("Mine")->Get_Unlocked() &&
+		Is_Mouse_Over_Location(player, 0, 0, 5))
+	{
+		window_Manager->set_Active_Window("Mine");
 	}
 }
 
@@ -371,6 +380,36 @@ void Game_Manager::Witch_Hut_Buttons(Player* player, Window_Manager* window_Mana
 		ascension_Upgrade_Screen->Set_Last_Mouse_X(player->Get_Player_X());
 		ascension_Upgrade_Screen->Set_Last_Mouse_Y(player->Get_Player_Y());
 		ascension_Upgrade_Screen->Center_On(500, 500);
+	}
+}
+
+void Game_Manager::Mine_Buttons(Player* player, Resource_Manager* resource_Manager)
+{
+	if (Is_Mouse_Over_Standard(player, 160, 160))
+	{
+		auto mining = player->Get_Stats("Mining");
+		auto stone = resource_Manager->Get_Resource("Stone");
+		stone->Add_Mined(mining->Get_Power() * stone->Get_Depth());
+		mining->Add_Exp(1);
+	}
+
+	if (Is_Mouse_Over_Standard(player, 280, 160))
+	{
+		auto stone = resource_Manager->Get_Resource("Stone");
+		stone->Add_Quantity(stone->Get_Mined());
+		stone->Set_Mined(0);
+	}
+
+	if (Is_Mouse_Over_Standard(player, 400, 160))
+	{
+		auto softwood = resource_Manager->Get_Resource("SoftWood");
+		auto stone = resource_Manager->Get_Resource("Stone");
+
+		if (softwood->Get_Quantity() >= 1000)
+		{
+			softwood->Sub_Quantity(1000);
+			stone->Add_Depth(1);
+		}
 	}
 }
 
@@ -698,6 +737,7 @@ void Game_Manager::Check_Level_Up(Player* player)
 
 	auto lumberjack = player->Get_Stats("Lumberjack");
 	auto crafting = player->Get_Stats("Crafting");
+	auto mining = player->Get_Stats("Mining");
 	auto all_Stats = player->Get_All_Stats();
 
 	for (size_t i = 0; i < all_Stats.size(); i++)
@@ -708,8 +748,6 @@ void Game_Manager::Check_Level_Up(Player* player)
 			all_Stats[i]->Add_Exp_Needed(50);
 			all_Stats[i]->Set_Exp(0);
 		}
-	}
-	
 }
 
 void Game_Manager::Check_Player_Stats(Player* player)

@@ -42,6 +42,7 @@ void Game::Init()
 	m_Resource_Manager->Add_Resource("Paper", 0, 1000, 0, false);
 
 	m_Resource_Manager->Add_Resource("SoftWood", 0, 10, 0, true);
+	m_Resource_Manager->Add_Resource("Stone", 0, 10, 0, true);
 
 
 	//Windows / Locations
@@ -50,6 +51,7 @@ void Game::Init()
 	m_Window_Manager->add_Window("Player", false);
 	m_Window_Manager->add_Window("Libary", false);
 	m_Window_Manager->add_Window("Witch Hut", false);
+	m_Window_Manager->add_Window("Mine", false);
 
 
 	m_Window_Manager->add_Window("Craftingtable", false);
@@ -89,6 +91,8 @@ void Game::Init()
 	// testing things
 	if (true)
 	{
+		m_Tutorial->Set_Enabled(false);
+
 		vector all_Resources = m_Resource_Manager->Get_All_Resources();
 		m_Unlock_Manager->Get_Unlocked("Forest")->Set_Unlocked(true);
 		m_Unlock_Manager->Get_Unlocked("Forge")->Set_Unlocked(true);

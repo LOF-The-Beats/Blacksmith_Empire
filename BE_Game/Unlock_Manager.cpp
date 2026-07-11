@@ -32,6 +32,7 @@ void Unlock_Manager::Create_All_Unlocks()
 	Add_Unlocked("Player");
 	Add_Unlocked("Libary");
 	Add_Unlocked("Witch Hut");
+	Add_Unlocked("Mine");
 
 
 	Get_Unlocked("Forest")->Set_Unlocked(true);
@@ -59,6 +60,10 @@ void Unlock_Manager::Check_Unlock(Resource_Manager* resource_Manager, Player* pl
 		!Get_Unlocked("Witch Hut")->Get_Unlocked())
 	{
 		Get_Unlocked("Witch Hut")->Set_Unlocked(true);
+	}
+	if (!Get_Unlocked("Mine")->Get_Unlocked())
+	{
+		Get_Unlocked("Mine")->Set_Unlocked(true);
 	}
 
 }

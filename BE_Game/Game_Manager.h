@@ -30,7 +30,7 @@ public:
 	void Player_Buttons(Player* player, Window_Manager* window_Manager, Item_Manager* item_Manager);
 	void Libary_Buttons(Player* player, Window_Manager* window_Manager, Item_Manager* item_Manager, Resource_Manager* resource_Manager, Draft_Manager* draft_Manager, Blueprint_Manager* blueprint_Manager);
 	void Witch_Hut_Buttons(Player* player, Window_Manager* window_Manager, Item_Manager* item_Manager, Resource_Manager* resource_Manager, Craftingtable_Manager* craftingtable_Manager, Draft_Manager* draft_Manager, Blueprint_Manager* blueprint_Manager, Ascension_Manager* ascension_Manager, Ascension_Upgrade_Screen* ascension_Upgrade_Screen);
-
+	void Mine_Buttons(Player* player, Resource_Manager* resource_Manager);
 
 
 

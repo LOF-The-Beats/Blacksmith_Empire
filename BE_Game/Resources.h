@@ -9,6 +9,8 @@ public:
 	string Get_Worker_Tool_Equiped() const;
 	int Get_Order() const;
 	double Get_Quantity() const;
+	double Get_Mined() const;
+	double Get_Depth() const;
 	double Get_Gain_On_Reset() const;
 	double Get_Workers() const;
 	double Get_Workers_Tool_Power() const;
@@ -22,6 +24,8 @@ public:
 	void Set_Name(string n);
 	void Set_Worker_Tool_Equiped(string n);
 	void Set_Quantity(double d);
+	void Set_Mined(double d);
+	void Set_Depth(double d);
 	void Set_Gain_On_Reset(double d);
 	void Set_Workers(double d);
 	void Set_Workers_Tool_Power(double d);
@@ -33,6 +37,8 @@ public:
 
 	//adders
 	void Add_Quantity(double d);
+	void Add_Mined(double d);
+	void Add_Depth(double d);
 	void Add_Workers(double d);
 	void Add_Workers_Tool_Power(double d);
 	void Add_Workers_Ascension_Power(double d);
@@ -53,6 +59,8 @@ private:
 	string worker_Tool_Equiped;
 	int order;
 	double quantity;
+	double mined;
+	double depth;
 	double gain_On_Reset;
 	double workers;
 	double worker_Tool_Power;

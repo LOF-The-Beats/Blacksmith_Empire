@@ -76,6 +76,7 @@ void Ascension_Manager::Ascend_Run(Resource_Manager* resource_Manager, Blueprint
 		else
 		{
 			all_Resources[i]->Set_Quantity(all_Resources[i]->Get_Gain_On_Reset());
+			all_Resources[i]->Set_Mined(0);
 			all_Resources[i]->Set_Workers(0);
 			all_Resources[i]->Set_Workers_Tool_Power(1);
 			all_Resources[i]->Set_Worker_Cost(20);
