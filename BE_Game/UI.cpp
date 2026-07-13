@@ -637,6 +637,8 @@ void UI::Mine_UI(Surface* screen, Window_Manager* window_Manager, Player* player
 	screen->Line(150, 150, SCRWIDTH, 150, 0xFF00FF);
 
 	auto stone = resource_Manager->Get_Resource("Stone");
+	screen->Bar(280, 215, 280 +  stone->Get_Time() / stone->Get_Collect_Time() * 110, 225, 0x00FF00);
+
 	double test1 = stone->Get_Quantity();
 	string test2 = stone->Get_Name() + ": " + to_string(static_cast<int>(test1));
 	screen->Print(test2.c_str(), 180, SCRHEIGHT / 30 * 1 + 35, 0xFF00FF, 1.5);
@@ -670,9 +672,19 @@ void UI::Mine_UI(Surface* screen, Window_Manager* window_Manager, Player* player
 	}
 
 
-
-
 	button_Standard("Collect", "", "Collect mined stone", 280, 160, screen, window_Manager, player);
+
+	cost = round(resource_Manager->Get_Resource("Stone")->Get_Worker_Cost());
+	label = "Cost: " + std::to_string(static_cast<int>(std::round(cost))) + " " + resource_Manager->Get_Resource("Thalions")->Get_Name();
+	button_Standard("Buy Worker", label.c_str(), "", 280, 230, screen, window_Manager, player); // buy worker
+
+	cost = round(stone->Get_Collect_Cost());
+	label = "Cost: " + std::to_string(static_cast<int>(std::round(cost))) + " " + resource_Manager->Get_Resource("Thalions")->Get_Name();
+	button_Standard("Upgrade Carts", label.c_str(), "Increases collect rate of workers", 280, 300, screen, window_Manager, player); // upgrade workers
+
+	cost = round(stone->Get_Time_Upgrade_Cost());
+	label = "Cost: " + std::to_string(static_cast<int>(std::round(cost))) + " " + resource_Manager->Get_Resource("Thalions")->Get_Name();
+	button_Standard("Upgrade Rails", label.c_str(), "Decrease collect timer", 280, 370, screen, window_Manager, player); // upgrade workers
 
 	label = "Cost: " + to_string(static_cast<int>(round(stone->Get_Depth_Cost())));
 	button_Standard("Delve", label.c_str(), "Delve deeprin into the mine", 400, 160, screen, window_Manager, player);

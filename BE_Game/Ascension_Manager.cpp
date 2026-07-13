@@ -84,6 +84,13 @@ void Ascension_Manager::Ascend_Run(Resource_Manager* resource_Manager, Blueprint
 			all_Resources[i]->Set_Production_Rate(0);
 			all_Resources[i]->Set_Depth(0);
 			all_Resources[i]->Set_Depth_Cost(1000);
+			all_Resources[i]->Set_Collect_Cost(100);
+			all_Resources[i]->Set_Collect_Rate(0);
+			all_Resources[i]->Set_Collect_Time(60);
+			all_Resources[i]->Set_Collect_Workers(0);
+			all_Resources[i]->Set_Collect_Workers_Tool_Power(1.0);
+			all_Resources[i]->Set_Time(0);
+			all_Resources[i]->Set_Time_Upgrade_Cost(250);
 		}
 	}
 

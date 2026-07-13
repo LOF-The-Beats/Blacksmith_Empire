@@ -2,7 +2,7 @@
 #include "Resources.h"
 
 Resources::Resources(string name, string gathering_Destination, double quantity, double hardness, double worker_Cost, int order, bool crafting_Resource)
-	:name(name), gathering_Destination(gathering_Destination), quantity(quantity), mined(0.0), depth (1.0), depth_Cost(1000), gain_On_Reset(0.0), workers(0.0), worker_Cost(worker_Cost), production_Rate(0.0), hardness(hardness), worker_Tool_Power(1.0), worker_Ascension_Power(0), worker_Tool_Equiped("None"), order(order), crafting_Resource(crafting_Resource)
+	:name(name), gathering_Destination(gathering_Destination), quantity(quantity), mined(0.0), depth (1.0), depth_Cost(1000), gain_On_Reset(0.0), workers(0.0), worker_Cost(worker_Cost), production_Rate(0.0), hardness(hardness), worker_Tool_Power(1.0), worker_Ascension_Power(0), worker_Tool_Equiped("None"), order(order), crafting_Resource(crafting_Resource), time(0.0), collect_Time(60), collect_Workers(0.0), collect_Worker_Tool_Power(1.0), collect_Worker_Ascension_Power(0.0), collect_Rate(0.0), collect_Cost(100.0), time_Upgrade_Cost(250)
 {
 }
 
@@ -84,6 +84,46 @@ double Resources::Get_Hardness() const
 bool Resources::Get_Crafting_Resource() const
 {
 	return crafting_Resource;
+}
+
+double Resources::Get_Time() const
+{
+	return time;
+}
+
+double Resources::Get_Time_Upgrade_Cost() const
+{
+	return time_Upgrade_Cost;
+}
+
+double Resources::Get_Collect_Time() const
+{
+	return collect_Time;
+}
+
+double Resources::Get_Collect_Workers() const
+{
+	return collect_Workers;
+}
+
+double Resources::Get_Collect_Workers_Tool_Power() const
+{
+	return collect_Worker_Tool_Power;
+}
+
+double Resources::Get_Collect_Workers_Ascension_Power() const
+{
+	return collect_Worker_Ascension_Power;
+}
+
+double Resources::Get_Collect_Rate() const
+{
+	return collect_Rate;
+}
+
+double Resources::Get_Collect_Cost() const
+{
+	return collect_Cost;
 }
 
 void Resources::Set_Name(string n)
@@ -170,6 +210,54 @@ void Resources::Set_Hardness(double d)
 	return;
 }
 
+void Resources::Set_Time(double d)
+{
+	time = d;
+	return;
+}
+
+void Resources::Set_Time_Upgrade_Cost(double d)
+{
+	time_Upgrade_Cost = d;
+	return;
+}
+
+void Resources::Set_Collect_Time(double d)
+{
+	collect_Time = d;
+	return;
+}
+
+void Resources::Set_Collect_Workers(double d)
+{
+	collect_Workers = d;
+	return;
+}
+
+void Resources::Set_Collect_Workers_Tool_Power(double d)
+{
+	collect_Worker_Tool_Power = d;
+	return;
+}
+
+void Resources::Set_Collect_Workers_Ascension_Power(double d)
+{
+	collect_Worker_Ascension_Power = d;
+	return;
+}
+
+void Resources::Set_Collect_Rate(double d)
+{
+	collect_Rate = d;
+	return;
+}
+
+void Resources::Set_Collect_Cost(double d)
+{
+	collect_Cost = d;
+	return;
+}
+
 void Resources::Add_Quantity(double d)
 {
 	quantity += d;
@@ -218,6 +306,36 @@ void Resources::Add_Hardness(double d)
 	return;
 }
 
+void Resources::Add_Time(double d)
+{
+	time += d;
+	return;
+}
+
+void Resources::Add_Collect_Time(double d)
+{
+	collect_Time += d;
+	return;
+}
+
+void Resources::Add_Collect_Workers(double d)
+{
+	collect_Workers += d;
+	return;
+}
+
+void Resources::Add_Collect_Workers_Tool_Power(double d)
+{
+	collect_Worker_Tool_Power += d;
+	return;
+}
+
+void Resources::Add_Collect_Workers_Ascension_Power(double d)
+{
+	collect_Worker_Ascension_Power += d;
+	return;
+}
+
 void Resources::Sub_Quantity(double d)
 {
 	quantity -= d;
@@ -230,10 +348,24 @@ void Resources::Sub_Hardness(double d)
 	return;
 }
 
+void Resources::Sub_Collect_Time(double d)
+{
+	collect_Time -= d;
+	return;
+}
+
 void Resources::Update_Production_Rate()
 {
 	if (workers > 0)
 	{
 		production_Rate = (workers + worker_Ascension_Power) * worker_Tool_Power;
+	}
+}
+
+void Resources::Update_Collect_Rate()
+{
+	if (collect_Workers > 0)
+	{
+		collect_Rate = (collect_Workers + collect_Worker_Ascension_Power) * collect_Worker_Tool_Power;
 	}
 }

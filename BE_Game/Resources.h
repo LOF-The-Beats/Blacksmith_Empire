@@ -21,6 +21,14 @@ public:
 	double Get_Production_Rate() const;
 	double Get_Hardness() const;
 	bool Get_Crafting_Resource() const;
+	double Get_Time() const;
+	double Get_Time_Upgrade_Cost() const;
+	double Get_Collect_Time() const;
+	double Get_Collect_Workers() const;
+	double Get_Collect_Workers_Tool_Power() const;
+	double Get_Collect_Workers_Ascension_Power() const;
+	double Get_Collect_Rate() const;
+	double Get_Collect_Cost() const;
 
 	//setters
 	void Set_Name(string n);
@@ -37,6 +45,14 @@ public:
 	void Set_Worker_Cost(double d);
 	void Set_Production_Rate(double d);
 	void Set_Hardness(double d);
+	void Set_Time(double d);
+	void Set_Time_Upgrade_Cost(double d);
+	void Set_Collect_Time(double d);
+	void Set_Collect_Workers(double d);
+	void Set_Collect_Workers_Tool_Power(double d);
+	void Set_Collect_Workers_Ascension_Power(double d);
+	void Set_Collect_Rate(double d);
+	void Set_Collect_Cost(double d);
 
 
 	//adders
@@ -48,15 +64,22 @@ public:
 	void Add_Workers_Ascension_Power(double d);
 	void Add_Worker_Cost(double d);
 	void Add_Hardness(double d);
+	void Add_Time(double d);
+	void Add_Collect_Time(double d);
+	void Add_Collect_Workers(double d);
+	void Add_Collect_Workers_Tool_Power(double d);
+	void Add_Collect_Workers_Ascension_Power(double d);
 
 
 
 	//subtrackters
 	void Sub_Quantity(double d);
 	void Sub_Hardness(double d);
+	void Sub_Collect_Time(double d);
 
 	//updaters
 	void Update_Production_Rate();
+	void Update_Collect_Rate();
 
 private:
 	string name;
@@ -75,6 +98,14 @@ private:
 	double production_Rate;
 	double hardness;
 	bool crafting_Resource;
+	double time;
+	double time_Upgrade_Cost;
+	double collect_Time;
+	double collect_Workers;
+	double collect_Worker_Tool_Power;
+	double collect_Worker_Ascension_Power;
+	double collect_Rate;
+	double collect_Cost;
 
 };
 

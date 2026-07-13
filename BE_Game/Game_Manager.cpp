@@ -439,8 +439,35 @@ void Game_Manager::Mine_Buttons(Player* player, Resource_Manager* resource_Manag
 	if (Is_Mouse_Over_Standard(player, 280, 160))
 	{
 		auto stone = resource_Manager->Get_Resource("Stone");
-		stone->Add_Quantity(stone->Get_Mined());
-		stone->Set_Mined(0);
+
+		stone->Add_Time(mining->Get_Power());
+	}
+
+	if (Is_Mouse_Over_Standard(player, 280, 230) &&
+		stone->Get_Worker_Cost() <= thalions->Get_Quantity())
+	{
+		stone->Add_Collect_Workers(1);
+		stone->Update_Collect_Rate();
+		thalions->Sub_Quantity(stone->Get_Worker_Cost());
+		stone->Set_Worker_Cost(stone->Get_Worker_Cost() * 1.2);
+	}
+
+	if (Is_Mouse_Over_Standard(player, 280, 300) &&
+		stone->Get_Collect_Cost() <= thalions->Get_Quantity())	
+	{
+		stone->Add_Collect_Workers_Tool_Power(1);
+		stone->Update_Collect_Rate();
+		thalions->Sub_Quantity(stone->Get_Collect_Cost());
+		stone->Set_Collect_Cost(stone->Get_Collect_Cost() * 1.2);
+	}
+
+	if (Is_Mouse_Over_Standard(player, 280, 370) &&
+		stone->Get_Time_Upgrade_Cost() <= thalions->Get_Quantity() &&
+		stone->Get_Collect_Time() > 10)	
+	{
+		stone->Sub_Collect_Time(10);
+		thalions->Sub_Quantity(stone->Get_Time_Upgrade_Cost());
+		stone->Set_Time_Upgrade_Cost(stone->Get_Time_Upgrade_Cost() * 1.2);
 	}
 
 	if (Is_Mouse_Over_Standard(player, 400, 160))
@@ -453,6 +480,7 @@ void Game_Manager::Mine_Buttons(Player* player, Resource_Manager* resource_Manag
 			softwood->Sub_Quantity(stone->Get_Depth_Cost());
 			stone->Set_Depth_Cost(stone->Get_Depth_Cost() * 1.2);
 			stone->Add_Depth(1);
+			stone->Add_Collect_Time(10);
 		}
 	}
 }
@@ -689,14 +717,11 @@ void Game_Manager::Update_All_Per_Seccond_Events(double deltaTime, Player* playe
 
 	if (player->Get_Timer() >= player->Get_Idle_Deep_Timer())
 	{
-		production_Multiplier =
-			player->Get_Idle_Deep_Multiplier() *
-			player->Get_Idle_Multiplier();
+		production_Multiplier = player->Get_Idle_Deep_Multiplier() * player->Get_Idle_Multiplier();
 	}
 	else if (player->Get_Timer() >= player->Get_Idle_Timer())
 	{
-		production_Multiplier =
-			player->Get_Idle_Multiplier();
+		production_Multiplier = player->Get_Idle_Multiplier();
 	}
 
 	for (size_t i = 0; i < all_Resources.size(); i++)
@@ -709,11 +734,9 @@ void Game_Manager::Update_All_Per_Seccond_Events(double deltaTime, Player* playe
 		}
 
 		resource->Update_Production_Rate();
+		resource->Update_Collect_Rate();
 
-		double amount =
-			resource->Get_Production_Rate() *
-			production_Multiplier *
-			delta_Seconds;
+		double amount = resource->Get_Production_Rate() * resource->Get_Depth() * production_Multiplier * delta_Seconds;
 
 		if (resource->Get_Gathering_Destination() == "Mined")
 		{
@@ -722,6 +745,24 @@ void Game_Manager::Update_All_Per_Seccond_Events(double deltaTime, Player* playe
 		else
 		{
 			resource->Add_Quantity(amount);
+		}
+
+		if (resource->Get_Collect_Time() <= resource->Get_Time() &&
+			resource->Get_Mined() > resource->Get_Collect_Workers() * resource->Get_Collect_Workers_Tool_Power())
+		{
+			resource->Add_Quantity(resource->Get_Collect_Rate() * production_Multiplier);
+			resource->Set_Mined(resource->Get_Mined() - (resource->Get_Collect_Rate() * production_Multiplier));
+			resource->Set_Time(0);
+		}
+		else if (resource->Get_Collect_Time() <= resource->Get_Time())
+		{
+			resource->Add_Quantity(resource->Get_Mined());
+			resource->Set_Mined(0);
+			resource->Set_Time(0);
+		}
+		else
+		{
+			resource->Add_Time(delta_Seconds);
 		}
 	}
 
@@ -736,21 +777,15 @@ void Game_Manager::Update_All_Per_Seccond_Events(double deltaTime, Player* playe
 			continue;
 		}
 
-		auto blueprint =
-			blueprint_Manager->Get_Blueprints(
-				table->Get_Blueprint());
-
-		auto resource =
-			resource_Manager->Get_Resource(
-				table->Get_Resource());
+		auto blueprint = blueprint_Manager->Get_Blueprints(table->Get_Blueprint());
+		auto resource = resource_Manager->Get_Resource(table->Get_Resource());
 
 		if (!blueprint || !resource)
 		{
 			continue;
 		}
 
-		bool can_Start =
-			blueprint->Get_Cost() <= resource->Get_Quantity();
+		bool can_Start = blueprint->Get_Cost() <= resource->Get_Quantity();
 
 		if (!table->Get_In_Use() && !can_Start)
 		{
@@ -765,11 +800,7 @@ void Game_Manager::Update_All_Per_Seccond_Events(double deltaTime, Player* playe
 			table->Set_In_Use(true);
 		}
 
-		table->Add_Progress(
-			table->Get_Production_Rate() *
-			production_Multiplier *
-			delta_Seconds
-		);
+		table->Add_Progress(table->Get_Production_Rate() * production_Multiplier * delta_Seconds);
 	}
 
 	if (clicked)
