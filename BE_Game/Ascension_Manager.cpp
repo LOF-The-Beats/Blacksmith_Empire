@@ -82,7 +82,7 @@ void Ascension_Manager::Ascend_Run(Resource_Manager* resource_Manager, Blueprint
 			all_Resources[i]->Set_Worker_Cost(20);
 			all_Resources[i]->Set_Worker_Tool_Equiped("None");
 			all_Resources[i]->Set_Production_Rate(0);
-			all_Resources[i]->Set_Depth(0);
+			all_Resources[i]->Set_Depth(1);
 			all_Resources[i]->Set_Depth_Cost(1000);
 			all_Resources[i]->Set_Collect_Cost(100);
 			all_Resources[i]->Set_Collect_Rate(0);
@@ -91,6 +91,7 @@ void Ascension_Manager::Ascend_Run(Resource_Manager* resource_Manager, Blueprint
 			all_Resources[i]->Set_Collect_Workers_Tool_Power(1.0);
 			all_Resources[i]->Set_Time(0);
 			all_Resources[i]->Set_Time_Upgrade_Cost(250);
+			all_Resources[i]->Set_Time_Escalation(1);
 		}
 	}
 
@@ -121,7 +122,6 @@ void Ascension_Manager::Ascend_Run(Resource_Manager* resource_Manager, Blueprint
 		all_Craftingtables[i]->Set_Worker_Tool_Power(1);
 		all_Craftingtables[i]->Set_Worker_Cost(20);
 		all_Craftingtables[i]->Set_Worker_Tool_Equiped("None");
-		all_Craftingtables[i]->Set_Production_Rate(0);
 	}
 
 	draft_Manager->Set_Blueprint_Card_1("None");
@@ -180,6 +180,8 @@ void Ascension_Manager::Create_Upgrades()
 	Add_Upgrade("Mining", "Increase Mining power by 1", 10, 1, 320, 400);
 	Add_Upgrade("Workers Lumberjack", "Increase Worker Lumberjack power by 1", 10, 1, 500, 600);
 	Add_Upgrade("Workers Craftingtable", "Increase Worker craftingtable power by 1", 10, 1, 680, 600);
+	Add_Upgrade("Workers Mining", "Increase Worker Mining power by 1", 10, 1, 320, 600);
+	Add_Upgrade("Workers Collecting", "Increase Worker Collecting power by 1", 10, 1, 140, 600);
 	Add_Upgrade("Lumberjack Crit Chance", "Increase Lumberjack crit chance by 1%", 5, 10, 500, 300);
 	Add_Upgrade("Lumberjack Knowledge", "Increase Lumberjack XP gain by 1", 1, 100, 680, 300);
 	Add_Upgrade("Lumberjack Crit Power", "Increase Lumberjack crit power by 10%", 5, 100, 500, 200);
@@ -190,6 +192,10 @@ void Ascension_Manager::Create_Upgrades()
 	Add_Upgrade("Crafting Mass Production", "Can craft more items at a time", 1, 1000, 1040, 300);
 	Add_Upgrade("Workers Idle", "Increase idle multiplier by 10%", 10, 10, 500, 700);
 	Add_Upgrade("Workers Deep Idle", "Increase deep idle multiplier by 10%", 10, 25, 680, 700);
+	Add_Upgrade("Mining Crit Chance", "Increase Mining crit chance by 1%", 5, 10, 140, 300);
+	Add_Upgrade("Mining Knowledge", "Increase Mining XP gain by 1", 1, 100, 320, 300);
+	Add_Upgrade("Mining Crit Power", "Increase Mining crit power by 10%", 5, 100, 140, 200);
+	Add_Upgrade("Mining Growth", "Increase Mining strength gain after level up by 1", 1, 1000, 320, 200);
 
 }
 
@@ -197,10 +203,11 @@ void Ascension_Manager::Apply_Upgrade(string name, Resource_Manager* resource_Ma
 {
 	auto lumberjack = player->Get_Stats("Lumberjack");
 	auto crafting = player->Get_Stats("Crafting");
+	auto mining = player->Get_Stats("Mining");
 
 	if (name == "Stone")
 	{
-		resource_Manager->Add_Resource("Stone", "Mined", 0, 25, 200, 0, true);
+		resource_Manager->Add_Resource("Stone", "Mined", 0, 25, 20, 0, true);
 	}
 
 	else if (name == "Lumberjack")
@@ -215,7 +222,7 @@ void Ascension_Manager::Apply_Upgrade(string name, Resource_Manager* resource_Ma
 
 	else if (name == "Mining")
 	{
-		player->Get_Stats("Mining")->Add_Ascension_Power(1);
+		mining->Add_Ascension_Power(1);
 	}
 
 	else if (name == "Workers Lumberjack")
@@ -226,6 +233,16 @@ void Ascension_Manager::Apply_Upgrade(string name, Resource_Manager* resource_Ma
 	else if (name == "Workers Craftingtable")
 	{
 		craftingtable_Manager->get_Craftingtable("Craftingtable 1")->Add_Worker_Ascension_Power(1);
+	}
+
+	else if (name == "Workers Mining")
+	{
+		resource_Manager->Get_Resource("Stone")->Add_Workers_Ascension_Power(1);
+	}
+
+	else if (name == "Workers Collecting")
+	{
+		resource_Manager->Get_Resource("Stone")->Add_Collect_Workers_Ascension_Power(1);
 	}
 
 	else if (name == "Lumberjack Crit Chance")
@@ -278,5 +295,25 @@ void Ascension_Manager::Apply_Upgrade(string name, Resource_Manager* resource_Ma
 	else if (name == "Workers Deep Idle")
 	{
 		player->Add_Idle_Deep_Multiplier(0.1);
+	}
+	else if (name == "Mining Crit Chance")
+	{
+		mining->Add_Crit_Chance(1);
+	}
+
+	else if (name == "Mining Knowledge")
+	{
+		mining->Add_Exp_Gain(1);
+	}
+
+	else if (name == "Mining Crit Power")
+	{
+		mining->Add_Crit_Power(0.1);
+	}
+
+	else if (name == "Mining Growth")
+	{
+		mining->Add_Growth(1);
+		mining->Set_Level(mining->Get_Level() * mining->Get_Growth() - 1);
 	}
 }

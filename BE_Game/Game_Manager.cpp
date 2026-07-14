@@ -392,8 +392,16 @@ void Game_Manager::Mine_Buttons(Player* player, Resource_Manager* resource_Manag
 
 	if (Is_Mouse_Over_Standard(player, 160, 160))
 	{
-		stone->Add_Mined(mining->Get_Power() * stone->Get_Depth());
-		mining->Add_Exp(1);
+		if (mining->is_Crit())
+		{
+			stone->Add_Mined(mining->Get_Power() * mining->Get_Crit_Power());
+			mining->Add_Exp(mining->Get_Exp_Gain());
+		}
+		else
+		{
+			stone->Add_Mined(mining->Get_Power());
+			mining->Add_Exp(mining->Get_Exp_Gain());
+		}
 	}
 
 	if (Is_Mouse_Over_Standard(player, 160, 230) &&
@@ -462,10 +470,9 @@ void Game_Manager::Mine_Buttons(Player* player, Resource_Manager* resource_Manag
 	}
 
 	if (Is_Mouse_Over_Standard(player, 280, 370) &&
-		stone->Get_Time_Upgrade_Cost() <= thalions->Get_Quantity() &&
-		stone->Get_Collect_Time() > 10)	
+		stone->Get_Time_Upgrade_Cost() <= thalions->Get_Quantity()	)
 	{
-		stone->Sub_Collect_Time(10);
+		stone->Add_Time_Escalaction(1);
 		thalions->Sub_Quantity(stone->Get_Time_Upgrade_Cost());
 		stone->Set_Time_Upgrade_Cost(stone->Get_Time_Upgrade_Cost() * 1.2);
 	}
@@ -489,6 +496,7 @@ void Game_Manager::Craftingtable_Window(Player* player, Craftingtable_Manager* c
 {
 
 	auto sorted_Resources = resource_Manager->Get_Sorted_Resources_Numbers();
+	auto craftingtables = craftingtable->get_Craftingtable(craftingtable->Get_Active_Table());
 	for (size_t i = 0; i < sorted_Resources.size(); i++)
 	{
 		int start_Y = 160;
@@ -514,18 +522,18 @@ void Game_Manager::Craftingtable_Window(Player* player, Craftingtable_Manager* c
 		window_Manager->set_Active_Window("Forge");
 	}
 	if (Is_Mouse_Over_Standard(player, SCRWIDTH / 2 - 50, SCRHEIGHT / 10 * 8 - 50) &&
-		craftingtable->get_Craftingtable(craftingtable->Get_Active_Table())->Get_Resource() != "none" &&
-		craftingtable->get_Craftingtable(craftingtable->Get_Active_Table())->Get_Blueprint() != "none" &&
-		(blueprint_Manager->Get_Blueprints(craftingtable->get_Craftingtable(craftingtable->Get_Active_Table())->Get_Blueprint())->Get_Cost() <= resource_Manager->Get_Resource(craftingtable->get_Craftingtable(craftingtable->Get_Active_Table())->Get_Resource())->Get_Quantity() ||
-		craftingtable->get_Craftingtable(craftingtable->Get_Active_Table())->Get_In_Use()))
+		craftingtables->Get_Resource() != "none" &&
+		craftingtables->Get_Blueprint() != "none" &&
+		(blueprint_Manager->Get_Blueprints(craftingtables->Get_Blueprint())->Get_Cost() <= resource_Manager->Get_Resource(craftingtables->Get_Resource())->Get_Quantity() ||
+			craftingtables->Get_In_Use()))
 	{
 		player->Get_Stats("Crafting")->Add_Exp(player->Get_Stats("Crafting")->Get_Exp_Gain());
-		craftingtable->get_Craftingtable(craftingtable->Get_Active_Table())->Add_Progress(player->Get_Stats("Crafting")->Get_Power());
-		if (craftingtable->get_Craftingtable(craftingtable->Get_Active_Table())->Get_In_Use() == false)
+		craftingtables->Add_Progress(player->Get_Stats("Crafting")->Get_Power());
+		if (craftingtables->Get_In_Use() == false)
 		{
-			resource_Manager->Get_Resource(craftingtable->get_Craftingtable(craftingtable->Get_Active_Table())->Get_Resource())->Sub_Quantity(blueprint_Manager->Get_Blueprints(craftingtable->get_Craftingtable(craftingtable->Get_Active_Table())->Get_Blueprint())->Get_Cost());
+			resource_Manager->Get_Resource(craftingtables->Get_Resource())->Sub_Quantity(blueprint_Manager->Get_Blueprints(craftingtables->Get_Blueprint())->Get_Cost());
 		}
-		craftingtable->get_Craftingtable(craftingtable->Get_Active_Table())->Set_In_Use(true);
+		craftingtables->Set_In_Use(true);
 	}
 }
 
@@ -748,10 +756,10 @@ void Game_Manager::Update_All_Per_Seccond_Events(double deltaTime, Player* playe
 		}
 
 		if (resource->Get_Collect_Time() <= resource->Get_Time() &&
-			resource->Get_Mined() > resource->Get_Collect_Workers() * resource->Get_Collect_Workers_Tool_Power())
+			resource->Get_Mined() > (resource->Get_Collect_Rate() + player->Get_Stats("Mining")->Get_Power()) * production_Multiplier)
 		{
-			resource->Add_Quantity(resource->Get_Collect_Rate() * production_Multiplier);
-			resource->Set_Mined(resource->Get_Mined() - (resource->Get_Collect_Rate() * production_Multiplier));
+			resource->Add_Quantity((resource->Get_Collect_Rate() + player->Get_Stats("Mining")->Get_Power()) * production_Multiplier);
+			resource->Set_Mined(resource->Get_Mined() - ((resource->Get_Collect_Rate() + player->Get_Stats("Mining")->Get_Power()) * production_Multiplier));
 			resource->Set_Time(0);
 		}
 		else if (resource->Get_Collect_Time() <= resource->Get_Time())
@@ -762,7 +770,7 @@ void Game_Manager::Update_All_Per_Seccond_Events(double deltaTime, Player* playe
 		}
 		else
 		{
-			resource->Add_Time(delta_Seconds);
+			resource->Add_Time(resource->Get_Time_Escalation() * delta_Seconds);
 		}
 	}
 

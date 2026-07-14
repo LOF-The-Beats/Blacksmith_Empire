@@ -684,7 +684,7 @@ void UI::Mine_UI(Surface* screen, Window_Manager* window_Manager, Player* player
 
 	cost = round(stone->Get_Time_Upgrade_Cost());
 	label = "Cost: " + std::to_string(static_cast<int>(std::round(cost))) + " " + resource_Manager->Get_Resource("Thalions")->Get_Name();
-	button_Standard("Upgrade Rails", label.c_str(), "Decrease collect timer", 280, 370, screen, window_Manager, player); // upgrade workers
+	button_Standard("Upgrade Rails", label.c_str(), "Increase Timer gain", 280, 370, screen, window_Manager, player); // upgrade workers
 
 	label = "Cost: " + to_string(static_cast<int>(round(stone->Get_Depth_Cost())));
 	button_Standard("Delve", label.c_str(), "Delve deeprin into the mine", 400, 160, screen, window_Manager, player);

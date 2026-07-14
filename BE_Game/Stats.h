@@ -51,7 +51,7 @@ public:
 	void Sub_Level(double amount);
 
 	// checkers
-	bool is_Crit();
+	bool is_Crit() const;
 
 private:
 	string name;

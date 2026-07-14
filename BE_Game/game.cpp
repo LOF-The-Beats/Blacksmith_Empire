@@ -91,7 +91,7 @@ void Game::Init()
 	// testing things
 	if (true)
 	{
-		m_Resource_Manager->Add_Resource("Stone", "Mined", 0, 25, 200, 0, true);
+		m_Resource_Manager->Add_Resource("Stone", "Mined", 0, 25, 20, 0, true);
 		vector all_Resources = m_Resource_Manager->Get_All_Resources();
 
 		m_Unlock_Manager->Get_Unlocked("Forest")->Set_Unlocked(true);

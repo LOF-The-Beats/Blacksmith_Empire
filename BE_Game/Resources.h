@@ -22,6 +22,7 @@ public:
 	double Get_Hardness() const;
 	bool Get_Crafting_Resource() const;
 	double Get_Time() const;
+	double Get_Time_Escalation() const;
 	double Get_Time_Upgrade_Cost() const;
 	double Get_Collect_Time() const;
 	double Get_Collect_Workers() const;
@@ -46,6 +47,7 @@ public:
 	void Set_Production_Rate(double d);
 	void Set_Hardness(double d);
 	void Set_Time(double d);
+	void Set_Time_Escalation(double d);
 	void Set_Time_Upgrade_Cost(double d);
 	void Set_Collect_Time(double d);
 	void Set_Collect_Workers(double d);
@@ -65,6 +67,7 @@ public:
 	void Add_Worker_Cost(double d);
 	void Add_Hardness(double d);
 	void Add_Time(double d);
+	void Add_Time_Escalaction(double d);
 	void Add_Collect_Time(double d);
 	void Add_Collect_Workers(double d);
 	void Add_Collect_Workers_Tool_Power(double d);
@@ -99,6 +102,7 @@ private:
 	double hardness;
 	bool crafting_Resource;
 	double time;
+	double time_Escalation;
 	double time_Upgrade_Cost;
 	double collect_Time;
 	double collect_Workers;

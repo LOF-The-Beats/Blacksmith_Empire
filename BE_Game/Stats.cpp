@@ -213,7 +213,7 @@ void Stats::Sub_Level(double amount)
 	return;
 }
 
-bool Stats::is_Crit()
+bool Stats::is_Crit() const
 {
 	double roll = (rand() % 100) + 1; // 1 - 100
 

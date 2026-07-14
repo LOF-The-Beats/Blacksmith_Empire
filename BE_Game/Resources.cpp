@@ -2,7 +2,7 @@
 #include "Resources.h"
 
 Resources::Resources(string name, string gathering_Destination, double quantity, double hardness, double worker_Cost, int order, bool crafting_Resource)
-	:name(name), gathering_Destination(gathering_Destination), quantity(quantity), mined(0.0), depth (1.0), depth_Cost(1000), gain_On_Reset(0.0), workers(0.0), worker_Cost(worker_Cost), production_Rate(0.0), hardness(hardness), worker_Tool_Power(1.0), worker_Ascension_Power(0), worker_Tool_Equiped("None"), order(order), crafting_Resource(crafting_Resource), time(0.0), collect_Time(60), collect_Workers(0.0), collect_Worker_Tool_Power(1.0), collect_Worker_Ascension_Power(0.0), collect_Rate(0.0), collect_Cost(100.0), time_Upgrade_Cost(250)
+	:name(name), gathering_Destination(gathering_Destination), quantity(quantity), mined(0.0), depth (1.0), depth_Cost(1000), gain_On_Reset(0.0), workers(0.0), worker_Cost(worker_Cost), production_Rate(0.0), hardness(hardness), worker_Tool_Power(1.0), worker_Ascension_Power(1), worker_Tool_Equiped("None"), order(order), crafting_Resource(crafting_Resource), time(0.0), collect_Time(60), collect_Workers(0.0), collect_Worker_Tool_Power(1.0), collect_Worker_Ascension_Power(1.0), collect_Rate(0.0), collect_Cost(100.0), time_Upgrade_Cost(250), time_Escalation(1.0)
 {
 }
 
@@ -89,6 +89,11 @@ bool Resources::Get_Crafting_Resource() const
 double Resources::Get_Time() const
 {
 	return time;
+}
+
+double Resources::Get_Time_Escalation() const
+{
+	return time_Escalation;
 }
 
 double Resources::Get_Time_Upgrade_Cost() const
@@ -216,6 +221,12 @@ void Resources::Set_Time(double d)
 	return;
 }
 
+void Resources::Set_Time_Escalation(double d)
+{
+	time_Escalation = d;
+	return;
+}
+
 void Resources::Set_Time_Upgrade_Cost(double d)
 {
 	time_Upgrade_Cost = d;
@@ -312,6 +323,12 @@ void Resources::Add_Time(double d)
 	return;
 }
 
+void Resources::Add_Time_Escalaction(double d)
+{
+	time_Escalation += d;
+	return;
+}
+
 void Resources::Add_Collect_Time(double d)
 {
 	collect_Time += d;
@@ -358,7 +375,7 @@ void Resources::Update_Production_Rate()
 {
 	if (workers > 0)
 	{
-		production_Rate = (workers + worker_Ascension_Power) * worker_Tool_Power;
+		production_Rate = workers * worker_Ascension_Power * worker_Tool_Power;
 	}
 }
 
@@ -366,6 +383,6 @@ void Resources::Update_Collect_Rate()
 {
 	if (collect_Workers > 0)
 	{
-		collect_Rate = (collect_Workers + collect_Worker_Ascension_Power) * collect_Worker_Tool_Power;
+		collect_Rate = collect_Workers * collect_Worker_Ascension_Power * collect_Worker_Tool_Power;
 	}
 }
