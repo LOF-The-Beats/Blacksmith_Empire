@@ -11,6 +11,7 @@ class Unlock_Manager;
 class Tutorial;
 class Ascension_Manager;
 class Ascension_Upgrade_Screen;
+class Smelter_Manager;
 
 class Game_Manager
 {

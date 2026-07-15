@@ -10,6 +10,7 @@ class Unlock_Manager;
 class Tutorial;
 class Ascension_Upgrade_Screen;
 class Ascension_Manager;
+class Smelter_Manager;
 
 class UI
 {

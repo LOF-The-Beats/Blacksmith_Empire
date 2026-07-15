@@ -43,6 +43,8 @@
     <ClCompile Include="Ascension_Manager.cpp" />
     <ClCompile Include="Ascension_Upgrade_Screen.cpp" />
     <ClCompile Include="Ascension_Upgrades.cpp" />
+    <ClCompile Include="Smelter.cpp" />
+    <ClCompile Include="Smelter_Manager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="game.h" />
@@ -93,6 +95,8 @@
     <ClInclude Include="Ascension_Manager.h" />
     <ClInclude Include="Ascension_Upgrade_Screen.h" />
     <ClInclude Include="Ascension_Upgrades.h" />
+    <ClInclude Include="Smelter.h" />
+    <ClInclude Include="Smelter_Manager.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="README.md">

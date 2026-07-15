@@ -1,0 +1,20 @@
+#pragma once
+#include "Smelter.h"
+#include <unordered_map>
+
+class Smelter_Manager
+{
+public:
+	Smelter_Manager();
+
+	// Getters
+	Smelter* Get_Smelter(string name);
+	vector<Smelter*> Get_All_smelters();
+
+	// Adders
+	void Add_Smelter(string name);
+
+private:
+	unordered_map<string, Smelter*> smelter;
+};
+

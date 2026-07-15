@@ -12,6 +12,7 @@
 #include "Ascension_Manager.h"
 #include "Ascension_Upgrade_Screen.h"
 #include "Ascension_Upgrades.h"
+#include "Smelter_Manager.h"
 
 extern GLFWwindow* window;
 

@@ -13,6 +13,7 @@
 #include "Tutorial.h"
 #include "Ascension_Manager.h"
 #include "Ascension_Upgrade_Screen.h"
+#include "Smelter_Manager.h"
 
 
 
@@ -35,6 +36,7 @@ void Game::Init()
 	m_Tutorial = new Tutorial;
 	m_Ascension_Manger = new Ascension_Manager;
 	m_Ascension_Upgrade_Screen = new Ascension_Upgrade_Screen;
+	m_Smelter_Manager = new Smelter_Manager;
 
 	//Resources
 	m_Resource_Manager->Add_Resource("Thalions", "Quantity", 0, 0, 20, 0, false);
@@ -69,6 +71,9 @@ void Game::Init()
 
 	m_Craftingtable_Manager->get_Craftingtable("Craftingtable 1")->Set_Unlocked(true);
 
+	//Smelters
+	m_Smelter_Manager->Add_Smelter("Smelter 1");
+
 	//Stats
 	m_Player->Add_Stats("Lumberjack", 1);
 	m_Player->Add_Stats("Crafting", 1);
@@ -99,6 +104,8 @@ void Game::Init()
 		m_Unlock_Manager->Get_Unlocked("Player")->Set_Unlocked(true);
 		m_Unlock_Manager->Get_Unlocked("Libary")->Set_Unlocked(true);
 		m_Unlock_Manager->Get_Unlocked("Witch Hut")->Set_Unlocked(true);
+
+		m_Smelter_Manager->Get_Smelter("Smelter 1")->Set_Unlocked(true);
 
 		for (size_t i = 0; i < all_Resources.size(); i++)
 		{
