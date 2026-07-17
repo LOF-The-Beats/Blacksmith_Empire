@@ -1,8 +1,20 @@
 #pragma once
 class Resources
 {
+
+
+
 public:
-	Resources(string name, string gathering_Destination, double quantity, double hardness, double worker_Cost, int order, bool crafting_Resource);
+	enum class Resource_Type
+	{
+		None,
+		Fuel,
+		Ore,
+		Crafting,
+		Currency
+	};
+
+	Resources(string name, string gathering_Destination, double quantity, double hardness, double worker_Cost, int order, bool crafting_Resource, Resource_Type resource_Type_1, Resource_Type resource_Type_2);
 
 	//getters
 	string Get_Name() const;
@@ -84,6 +96,11 @@ public:
 	void Update_Production_Rate();
 	void Update_Collect_Rate();
 
+
+	bool Check_Resource_Type(Resource_Type resource_Type) const;
+
+	
+
 private:
 	string name;
 	string worker_Tool_Equiped;
@@ -110,6 +127,8 @@ private:
 	double collect_Worker_Ascension_Power;
 	double collect_Rate;
 	double collect_Cost;
+	Resource_Type resource_Type_1;
+	Resource_Type resource_Type_2;
 
 };
 

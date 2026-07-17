@@ -20,7 +20,7 @@ UI::UI()
 {
 }
 
-void UI::Draw_UI(float deltaTime,Surface* screen,Surface* resource_Icon_Sheet, Resource_Manager* resource_Manager, Player* player, Window_Manager* window_Manager, Craftingtable_Manager* craftingtable, Blueprint_Manager* blueprint_Manager, Item_Manager* item_Manager, Draft_Manager* draft_Manager, Unlock_Manager* unlock_Manager, Tutorial* tutorial, Ascension_Upgrade_Screen* ascension_Upgrade_Screen, Ascension_Manager* ascension_Manager)
+void UI::Draw_UI(float deltaTime,Surface* screen,Surface* resource_Icon_Sheet, Resource_Manager* resource_Manager, Player* player, Window_Manager* window_Manager, Craftingtable_Manager* craftingtable, Blueprint_Manager* blueprint_Manager, Item_Manager* item_Manager, Draft_Manager* draft_Manager, Unlock_Manager* unlock_Manager, Tutorial* tutorial, Ascension_Upgrade_Screen* ascension_Upgrade_Screen, Ascension_Manager* ascension_Manager, Smelter_Manager* smelter_Manager)
 {
 	UI_Layout(screen, resource_Icon_Sheet, resource_Manager, unlock_Manager, window_Manager, player);
 	tutorial->Draw_Tutorial_UI(screen, this, player, window_Manager);
@@ -31,9 +31,10 @@ void UI::Draw_UI(float deltaTime,Surface* screen,Surface* resource_Icon_Sheet, R
 	}
 	else if (
 		(window_Manager->get_Active_Window() == "Forge" ||
-		window_Manager->get_Active_Window() == "Craftingtable"))
+		window_Manager->get_Active_Window() == "Craftingtable") ||
+		window_Manager->get_Active_Window() == "Smelter")
 	{
-		Forge_UI(screen, resource_Manager, player, window_Manager, craftingtable, blueprint_Manager, item_Manager);
+		Forge_UI(screen, resource_Manager, player, window_Manager, craftingtable, blueprint_Manager, item_Manager, smelter_Manager);
 	}
 	else if (window_Manager->get_Active_Window() == "Player" ||
 		window_Manager->get_Active_Window() == "Lumberjack Tool" ||
@@ -212,7 +213,7 @@ void UI::Forest_UI(float deltaTime, Surface* screen, Surface* resource_Icon_Shee
 
 }
 
-void UI::Forge_UI(Surface* screen, Resource_Manager* resource_Manager, Player* player, Window_Manager* window_Manager, Craftingtable_Manager* craftingtable, Blueprint_Manager* blueprint_Manager, Item_Manager* item_Manager)
+void UI::Forge_UI(Surface* screen, Resource_Manager* resource_Manager, Player* player, Window_Manager* window_Manager, Craftingtable_Manager* craftingtable, Blueprint_Manager* blueprint_Manager, Item_Manager* item_Manager, Smelter_Manager* smelter_Manager)
 {
 	// draws the level progress bar
 	{
@@ -264,7 +265,7 @@ void UI::Forge_UI(Surface* screen, Resource_Manager* resource_Manager, Player* p
 
 		cost = earned_gold;
 		label = "Gain: " + to_string(static_cast<int>(std::round(cost))); +" " + resource_Manager->Get_Resource("Thalions")->Get_Name();
-		button_Standard("Sell all items", label.c_str(), "", 160, 600, screen, window_Manager, player);
+		button_Standard("Sell all items", label.c_str(), "", 160, 800, screen, window_Manager, player);
 
 		if (craftingtable->get_Craftingtable("Craftingtable 2")->Get_Unlocked())
 		{
@@ -291,6 +292,12 @@ void UI::Forge_UI(Surface* screen, Resource_Manager* resource_Manager, Player* p
 				button_Standard("Upgrade tools", "No Upgrades Available", "", 340, 300, screen, window_Manager, player); // upgrade tools
 			}
 		}
+
+		button_Standard("Smelter", "", "", 160, 450, screen, window_Manager, player);
+		button_Standard("Buy Worker", "", "", 160, 520, screen, window_Manager, player);
+		button_Standard("Upgrade Tools", "", "", 160, 590, screen, window_Manager, player);
+		button_Standard("Upgrade Smelter", "", "", 160, 660, screen, window_Manager, player);
+
 	}
 	if (window_Manager->get_Active_Window() == "Craftingtable")
 	{
@@ -404,6 +411,52 @@ void UI::Forge_UI(Surface* screen, Resource_Manager* resource_Manager, Player* p
 			label = "Click Power: " + to_string(static_cast<int>(player->Get_Stats("Crafting")->Get_Power()));
 			button_Standard("Craft", label.c_str(), "", SCRWIDTH / 2 - 50, SCRHEIGHT / 10 * 8 - 50, screen, window_Manager, player);
 			
+		}
+
+	}
+
+	if (window_Manager->get_Active_Window() == "Smelter")
+	{
+		// layout of Smelter
+		screen->Line(SCRWIDTH / 3 * 1, 150, SCRWIDTH / 3 * 1, SCRHEIGHT, 0xFF00FF);
+		screen->Line(SCRWIDTH / 3 * 2, 150, SCRWIDTH / 3 * 2, SCRHEIGHT, 0xFF00FF);
+		screen->Line(100, SCRHEIGHT / 10 * 8 + 50, SCRWIDTH, SCRHEIGHT / 10 * 8 + 50, 0xFF00FF);
+
+		auto sorted_Resources = resource_Manager->Get_Sorted_Resources_Numbers();
+		auto active_Smelter = smelter_Manager->Get_Smelter(smelter_Manager->Get_Active_Smelter());
+		int q = 0;
+		int start_Y = 160;
+
+		for (size_t i = 0; i < sorted_Resources.size(); i++)
+		{
+			if (sorted_Resources[i]->Check_Resource_Type(Resources::Resource_Type::Fuel))
+			{
+				if (active_Smelter->Get_Fuel() == sorted_Resources[i]->Get_Name())
+				{
+					button_Standard_Selected(sorted_Resources[i]->Get_Name(), SCRWIDTH / 3 * 1 - 120, start_Y + (q * 60), window_Manager, screen);
+				}
+				else
+				{
+					button_Standard(sorted_Resources[i]->Get_Name(), "", "", SCRWIDTH / 3 * 1 - 120, start_Y + (q * 60), screen, window_Manager, player);
+				}
+				q++;
+			}
+		}
+		q = 0;
+		for (size_t i = 0; i < sorted_Resources.size(); i++)
+		{
+			if (sorted_Resources[i]->Check_Resource_Type(Resources::Resource_Type::Ore))
+			{
+				if (active_Smelter->Get_Fuel() == sorted_Resources[i]->Get_Name())
+				{
+					button_Standard_Selected(sorted_Resources[i]->Get_Name(), SCRWIDTH / 3 * 2 + 10, start_Y + (q * 60), window_Manager, screen);
+				}
+				else
+				{
+					button_Standard(sorted_Resources[i]->Get_Name(), "", "", SCRWIDTH / 3 * 2 + 10, start_Y + (q * 60), screen, window_Manager, player);
+				}
+				q++;
+			}
 		}
 
 	}

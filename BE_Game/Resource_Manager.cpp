@@ -57,11 +57,11 @@ vector<Resources*> Resource_Manager::Get_All_Resources()
 	return all_Resources;
 }
 
-void Resource_Manager::Add_Resource(const string name, string gathering_Destination, double quantity, double hardness, double worker_Cost, int order, bool crafting_Resource)
+void Resource_Manager::Add_Resource(const string name, string gathering_Destination, double quantity, double hardness, double worker_Cost, int order, bool crafting_Resource, Resources::Resource_Type resource_Type_1, Resources::Resource_Type resource_Type_2)
 {
 	if (resources.find(name) == resources.end())
 	{
-		resources[name] = new Resources(name, gathering_Destination, quantity, hardness, worker_Cost,  order, crafting_Resource);
+		resources[name] = new Resources(name, gathering_Destination, quantity, hardness, worker_Cost,  order, crafting_Resource, resource_Type_1, resource_Type_2);
 	}
 }
 

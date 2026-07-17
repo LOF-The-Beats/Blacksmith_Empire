@@ -2,6 +2,7 @@
 #include "Smelter_Manager.h"
 
 Smelter_Manager::Smelter_Manager()
+	: active_Smelter("None")
 {
 }
 
@@ -24,6 +25,17 @@ vector<Smelter*> Smelter_Manager::Get_All_smelters()
 	}
 
 	return all_Smelters;
+}
+
+string Smelter_Manager::Get_Active_Smelter() const
+{
+	return active_Smelter;
+}
+
+void Smelter_Manager::Set_Active_Smelter(string n)
+{
+	active_Smelter = n;
+	return;
 }
 
 void Smelter_Manager::Add_Smelter(string name)

@@ -14,9 +14,10 @@ public:
 	vector<Resources*> Get_All_Resources();
 
 
+
 	
 	//adders
-	void Add_Resource(const string name, string gathering_Destination, double quantity, double hardness, double worker_Cost, int order, bool crafting_Resource);
+	void Add_Resource(const string name, string gathering_Destination, double quantity, double hardness, double worker_Cost, int order, bool crafting_Resource, Resources::Resource_Type resource_Type_1, Resources::Resource_Type resource_Type_2);
 	void Add_Resource_Quantity(const string name, double amount);
 	
 	//subtrackters

@@ -39,11 +39,12 @@ void Game::Init()
 	m_Smelter_Manager = new Smelter_Manager;
 
 	//Resources
-	m_Resource_Manager->Add_Resource("Thalions", "Quantity", 0, 0, 20, 0, false);
-	m_Resource_Manager->Add_Resource("Hourglass", "Quantity", 0, 0, 20, 0, false);
-	m_Resource_Manager->Add_Resource("Paper", "Quantity", 0, 1000, 20, 0, false);
+	m_Resource_Manager->Add_Resource("Thalions", "Quantity", 0, 0, 20, 0, false, Resources::Resource_Type::Currency, Resources::Resource_Type::None);
+	m_Resource_Manager->Add_Resource("Hourglass", "Quantity", 0, 0, 20, 0, false, Resources::Resource_Type::Currency, Resources::Resource_Type::None);
+	m_Resource_Manager->Add_Resource("Paper", "Quantity", 0, 1000, 20, 0, false, Resources::Resource_Type::None, Resources::Resource_Type::None);
 
-	m_Resource_Manager->Add_Resource("SoftWood", "Quantity", 0, 10, 20, 0, true);
+	m_Resource_Manager->Add_Resource("SoftWood", "Quantity", 0, 10, 20, 0, true, Resources::Resource_Type::Crafting, Resources::Resource_Type::Fuel);
+	m_Resource_Manager->Add_Resource("Tin Ore", "Quantity", 0, 10, 20, 0, true, Resources::Resource_Type::Ore, Resources::Resource_Type::None);
 
 
 
@@ -57,6 +58,7 @@ void Game::Init()
 
 
 	m_Window_Manager->add_Window("Craftingtable", false);
+	m_Window_Manager->add_Window("Smelter", false);
 	m_Window_Manager->add_Window("Lumberjack Tool", false);
 	m_Window_Manager->add_Window("Crafting Tool", false);
 	m_Window_Manager->add_Window("Mining Tool", false);
@@ -96,7 +98,7 @@ void Game::Init()
 	// testing things
 	if (true)
 	{
-		m_Resource_Manager->Add_Resource("Stone", "Mined", 0, 25, 20, 0, true);
+		m_Resource_Manager->Add_Resource("Stone", "Mined", 0, 25, 20, 0, true, Resources::Resource_Type::Crafting, Resources::Resource_Type::None);
 		vector all_Resources = m_Resource_Manager->Get_All_Resources();
 
 		m_Unlock_Manager->Get_Unlocked("Forest")->Set_Unlocked(true);
@@ -119,8 +121,8 @@ void Game::Tick(float deltaTime)
 {
 	screen->Clear(0);
 	m_Game_Manager->Update_Mouse_Pos(m_Player);
-	m_UI->Draw_UI(deltaTime ,screen, m_Resource_Icon_Sheet, m_Resource_Manager, m_Player, m_Window_Manager, m_Craftingtable_Manager, m_Blueprint_Manager, m_Item_Manager, m_Draft_Manager, m_Unlock_Manager, m_Tutorial, m_Ascension_Upgrade_Screen, m_Ascension_Manger);
-	m_Game_Manager->If_Clicked(m_Player, m_Resource_Manager, m_Window_Manager, m_Craftingtable_Manager, m_Blueprint_Manager, m_Item_Manager, m_Draft_Manager, m_Unlock_Manager, m_Tutorial, m_Ascension_Manger, m_Ascension_Upgrade_Screen);
+	m_UI->Draw_UI(deltaTime ,screen, m_Resource_Icon_Sheet, m_Resource_Manager, m_Player, m_Window_Manager, m_Craftingtable_Manager, m_Blueprint_Manager, m_Item_Manager, m_Draft_Manager, m_Unlock_Manager, m_Tutorial, m_Ascension_Upgrade_Screen, m_Ascension_Manger,m_Smelter_Manager);
+	m_Game_Manager->If_Clicked(m_Player, m_Resource_Manager, m_Window_Manager, m_Craftingtable_Manager, m_Blueprint_Manager, m_Item_Manager, m_Draft_Manager, m_Unlock_Manager, m_Tutorial, m_Ascension_Manger, m_Ascension_Upgrade_Screen, m_Smelter_Manager);
 
 	//update per seccond events
 	m_Game_Manager->Check_All_Updates(deltaTime, m_Player, m_Resource_Manager, m_Craftingtable_Manager, m_Blueprint_Manager ,m_Item_Manager, m_Unlock_Manager, m_Ascension_Manger);

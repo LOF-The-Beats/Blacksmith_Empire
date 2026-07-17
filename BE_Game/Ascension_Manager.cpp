@@ -207,7 +207,7 @@ void Ascension_Manager::Apply_Upgrade(string name, Resource_Manager* resource_Ma
 
 	if (name == "Stone")
 	{
-		resource_Manager->Add_Resource("Stone", "Mined", 0, 25, 20, 0, true);
+		resource_Manager->Add_Resource("Stone", "Mined", 0, 25, 20, 0, true, Resources::Resource_Type::Crafting, Resources::Resource_Type::None);
 	}
 
 	else if (name == "Lumberjack")

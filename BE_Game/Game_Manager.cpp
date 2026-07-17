@@ -29,7 +29,7 @@ void Game_Manager::Update_Mouse_Pos(Player* player)
 	return;
 }
 
-void Game_Manager::If_Clicked(Player* player, Resource_Manager* resource_Manager, Window_Manager* window_Manager, Craftingtable_Manager* craftingtable, Blueprint_Manager* blueprint_Manager, Item_Manager* item_Manager, Draft_Manager* draft_Manager, Unlock_Manager* unlock_Manager, Tutorial* tutorial, Ascension_Manager* ascension_Manager, Ascension_Upgrade_Screen* ascension_Upgrade_Screen)
+void Game_Manager::If_Clicked(Player* player, Resource_Manager* resource_Manager, Window_Manager* window_Manager, Craftingtable_Manager* craftingtable, Blueprint_Manager* blueprint_Manager, Item_Manager* item_Manager, Draft_Manager* draft_Manager, Unlock_Manager* unlock_Manager, Tutorial* tutorial, Ascension_Manager* ascension_Manager, Ascension_Upgrade_Screen* ascension_Upgrade_Screen, Smelter_Manager* smelter_Manager)
 {
 	if (glfwGetMouseButton(window, 0) == GLFW_PRESS)
 	{
@@ -43,7 +43,7 @@ void Game_Manager::If_Clicked(Player* player, Resource_Manager* resource_Manager
 			}
 			else if (window_Manager->get_Active_Window() == "Forge")
 			{
-				Forge_Buttons(player, resource_Manager, window_Manager, item_Manager, craftingtable);
+				Forge_Buttons(player, resource_Manager, window_Manager, item_Manager, craftingtable, smelter_Manager);
 			}
 			else if (window_Manager->get_Active_Window() == "Player")
 			{
@@ -83,6 +83,10 @@ void Game_Manager::If_Clicked(Player* player, Resource_Manager* resource_Manager
 			else if (window_Manager->get_Active_Window() == "Ascension Upgrade")
 			{
 				Ascension_Upgrade_Window(player, window_Manager, item_Manager, blueprint_Manager, draft_Manager, resource_Manager, ascension_Upgrade_Screen, ascension_Manager, craftingtable);
+			}
+			else if (window_Manager->get_Active_Window() == "Smelter")
+			{
+				Smelting_Window(player, window_Manager, item_Manager, blueprint_Manager, draft_Manager, resource_Manager, ascension_Upgrade_Screen, ascension_Manager, craftingtable);
 			}
 		}
 		clicked = true;
@@ -212,7 +216,7 @@ void Game_Manager::Forest_Buttons(Player* player, Resource_Manager* resource_Man
 	}
 }
 
-void Game_Manager::Forge_Buttons(Player* player, Resource_Manager* resource_Manager, Window_Manager* window_Manager, Item_Manager* item_Manager, Craftingtable_Manager* craftingtable_Manager)
+void Game_Manager::Forge_Buttons(Player* player, Resource_Manager* resource_Manager, Window_Manager* window_Manager, Item_Manager* item_Manager, Craftingtable_Manager* craftingtable_Manager, Smelter_Manager* smelter_Manager)
 {
 
 	auto craftingtable = craftingtable_Manager->get_Craftingtable(craftingtable_Manager->Get_Active_Table());
@@ -316,7 +320,13 @@ void Game_Manager::Forge_Buttons(Player* player, Resource_Manager* resource_Mana
 		}
 	}
 
-	if (Is_Mouse_Over_Standard(player, 160, 600))
+	if (Is_Mouse_Over_Standard(player, 160, 450))
+	{
+		window_Manager->set_Active_Window("Smelter");
+		smelter_Manager->Set_Active_Smelter("Smelter 1");
+	}
+
+	if (Is_Mouse_Over_Standard(player, 160, 800))
 	{
 		resource_Manager->Get_Resource("Thalions")->Add_Quantity(item_Manager->Sell_All_Items());
 	}
@@ -703,6 +713,11 @@ void Game_Manager::Ascension_Upgrade_Window(Player* player, Window_Manager* wind
 
 		}
 	}
+}
+
+void Game_Manager::Smelting_Window(Player* player, Window_Manager* window_Manager, Item_Manager* item_Manager, Blueprint_Manager* blueprint_Manager, Draft_Manager* draft_Manager, Resource_Manager* resource_Manager, Ascension_Upgrade_Screen* ascension_Upgrade_Screen, Ascension_Manager* ascension_Manager, Craftingtable_Manager* craftingtable_Manager)
+{
+
 }
 
 void Game_Manager::Check_All_Updates(double deltatime, Player* player, Resource_Manager* resource_Manager, Craftingtable_Manager* craftingtable, Blueprint_Manager* blueprint_Manager, Item_Manager* item_Manager, Unlock_Manager* unlock_Manger, Ascension_Manager* ascension_Manager)
