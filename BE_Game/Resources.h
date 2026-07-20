@@ -42,6 +42,8 @@ public:
 	double Get_Collect_Workers_Ascension_Power() const;
 	double Get_Collect_Rate() const;
 	double Get_Collect_Cost() const;
+	double Get_Heat_Minimal() const;
+	double Get_Smelting_Time() const;
 
 	//setters
 	void Set_Name(string n);
@@ -67,6 +69,8 @@ public:
 	void Set_Collect_Workers_Ascension_Power(double d);
 	void Set_Collect_Rate(double d);
 	void Set_Collect_Cost(double d);
+	void Set_Heat_Minimal(double d);
+	void Set_Smelting_Time(double d);
 
 
 	//adders
@@ -129,6 +133,8 @@ private:
 	double collect_Cost;
 	Resource_Type resource_Type_1;
 	Resource_Type resource_Type_2;
+	double heat_Minimal;
+	double smelting_Time;
 
 };
 

@@ -2,7 +2,7 @@
 #include "Smelter.h"
 
 Smelter::Smelter(string name)
-	:name(name), fuel("None"), ore("None"), heat(0.0)
+	:name(name), fuel("None"), ore("None"), heat(0.0), progress(0.0)
 {
 }
 
@@ -24,6 +24,11 @@ string Smelter::Get_Ore() const
 double Smelter::Get_Heat() const
 {
 	return heat;
+}
+
+double Smelter::Get_Progress() const
+{
+	return progress;
 }
 
 bool Smelter::Get_Unlocked() const
@@ -55,6 +60,12 @@ void Smelter::Set_Heat(double amount)
 	return;
 }
 
+void Smelter::Set_Progress(double amount)
+{
+	progress = amount;
+	return;
+}
+
 void Smelter::Set_Unlocked(double b)
 {
 	unlocked = b;
@@ -64,6 +75,12 @@ void Smelter::Set_Unlocked(double b)
 void Smelter::Add_Heat(double amount)
 {
 	heat += amount;
+	return;
+}
+
+void Smelter::Add_Progress(double amount)
+{
+	progress += amount;
 	return;
 }
 

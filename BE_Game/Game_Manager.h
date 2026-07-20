@@ -42,12 +42,13 @@ public:
 	void Blueprint_Crafting_Window(Player* player, Window_Manager* window_Manager, Item_Manager* item_Manager, Blueprint_Manager* blueprint_Manager, Draft_Manager* draft_Manager, Resource_Manager* resource_Manager);
 	void Blueprint_Upgrade_Window(Player* player, Window_Manager* window_Manager, Item_Manager* item_Manager, Blueprint_Manager* blueprint_Manager, Draft_Manager* draft_Manager, Resource_Manager* resource_Manager);
 	void Ascension_Upgrade_Window(Player* player, Window_Manager* window_Manager, Item_Manager* item_Manager, Blueprint_Manager* blueprint_Manager, Draft_Manager* draft_Manager, Resource_Manager* resource_Manager, Ascension_Upgrade_Screen* ascension_Upgrade_Screen, Ascension_Manager* ascension_Manager, Craftingtable_Manager* craftingtable_Manager);
-	void Smelting_Window(Player* player, Window_Manager* window_Manager, Item_Manager* item_Manager, Blueprint_Manager* blueprint_Manager, Draft_Manager* draft_Manager, Resource_Manager* resource_Manager, Ascension_Upgrade_Screen* ascension_Upgrade_Screen, Ascension_Manager* ascension_Manager, Craftingtable_Manager* craftingtable_Manager);
+	void Smelting_Window(Player* player, Window_Manager* window_Manager, Item_Manager* item_Manager, Blueprint_Manager* blueprint_Manager, Draft_Manager* draft_Manager, Resource_Manager* resource_Manager, Ascension_Upgrade_Screen* ascension_Upgrade_Screen, Ascension_Manager* ascension_Manager, Craftingtable_Manager* craftingtable_Manager, Smelter_Manager* smelter_Manager);
 
 
 
-	void Check_All_Updates(double deltatime, Player* player, Resource_Manager* resource_Manager, Craftingtable_Manager* craftingtable, Blueprint_Manager* blueprint_Manager, Item_Manager* item_Manager, Unlock_Manager* unlock_Manager, Ascension_Manager* ascension_Manager);
-	void Update_All_Per_Seccond_Events(double deltaTime, Player* player, Resource_Manager* resource_Manager, Craftingtable_Manager* craftingtable_Manager, Blueprint_Manager* blueprint_Manager);
+
+	void Check_All_Updates(double deltatime, Player* player, Resource_Manager* resource_Manager, Craftingtable_Manager* craftingtable, Blueprint_Manager* blueprint_Manager, Item_Manager* item_Manager, Unlock_Manager* unlock_Manger, Ascension_Manager* ascension_Manager, Smelter_Manager* smelter_Manager);
+	void Update_All_Per_Seccond_Events(double deltaTime, Player* player, Resource_Manager* resource_Manager, Craftingtable_Manager* craftingtable_Manager, Blueprint_Manager* blueprint_Manager, Smelter_Manager* smelter_Manager);
 	void Check_Level_Up(Player* player);
 	void Check_Player_Stats(Player* player);
 	void Check_Craftingtable_Progress(Resource_Manager* resource_Manager, Craftingtable_Manager* craftingtable, Blueprint_Manager* blueprint_Manager, Item_Manager* item_Manager);

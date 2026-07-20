@@ -86,7 +86,7 @@ void Game_Manager::If_Clicked(Player* player, Resource_Manager* resource_Manager
 			}
 			else if (window_Manager->get_Active_Window() == "Smelter")
 			{
-				Smelting_Window(player, window_Manager, item_Manager, blueprint_Manager, draft_Manager, resource_Manager, ascension_Upgrade_Screen, ascension_Manager, craftingtable);
+				Smelting_Window(player, window_Manager, item_Manager, blueprint_Manager, draft_Manager, resource_Manager, ascension_Upgrade_Screen, ascension_Manager, craftingtable, smelter_Manager);
 			}
 		}
 		clicked = true;
@@ -715,14 +715,55 @@ void Game_Manager::Ascension_Upgrade_Window(Player* player, Window_Manager* wind
 	}
 }
 
-void Game_Manager::Smelting_Window(Player* player, Window_Manager* window_Manager, Item_Manager* item_Manager, Blueprint_Manager* blueprint_Manager, Draft_Manager* draft_Manager, Resource_Manager* resource_Manager, Ascension_Upgrade_Screen* ascension_Upgrade_Screen, Ascension_Manager* ascension_Manager, Craftingtable_Manager* craftingtable_Manager)
+void Game_Manager::Smelting_Window(Player* player, Window_Manager* window_Manager, Item_Manager* item_Manager, Blueprint_Manager* blueprint_Manager, Draft_Manager* draft_Manager, Resource_Manager* resource_Manager, Ascension_Upgrade_Screen* ascension_Upgrade_Screen, Ascension_Manager* ascension_Manager, Craftingtable_Manager* craftingtable_Manager, Smelter_Manager* smelter_Manager)
 {
+	auto sorted_Resources = resource_Manager->Get_Sorted_Resources_Numbers();
+	auto active_Smelter = smelter_Manager->Get_Smelter(smelter_Manager->Get_Active_Smelter());
+	int q = 0;
+	int start_Y = 160;
 
+	for (size_t i = 0; i < sorted_Resources.size(); i++)
+	{
+		if (sorted_Resources[i]->Check_Resource_Type(Resources::Resource_Type::Fuel))
+		{
+			if (Is_Mouse_Over_Standard(player, SCRWIDTH / 3 * 1 - 120, start_Y + (q * 60)))
+			{
+				active_Smelter->Set_Fuel(sorted_Resources[i]->Get_Name());
+			}
+			q++;
+		}
+	}
+	q = 0;
+	for (size_t i = 0; i < sorted_Resources.size(); i++)
+	{
+		if (sorted_Resources[i]->Check_Resource_Type(Resources::Resource_Type::Ore))
+		{
+			if (Is_Mouse_Over_Standard(player, SCRWIDTH / 3 * 2 + 10, start_Y + (q * 60)))
+			{
+				active_Smelter->Set_Ore(sorted_Resources[i]->Get_Name());
+			}
+			q++;
+		}
+	}
+
+	if (Is_Mouse_Over_Standard(player, SCRWIDTH / 2 - 50, 160))
+	{
+		window_Manager->set_Active_Window("Forge");
+	}
+
+	if (active_Smelter->Get_Fuel() != "None" &&
+		active_Smelter->Get_Ore() != "None")
+	{
+		if (Is_Mouse_Over_Standard(player, SCRWIDTH / 2 - 50, SCRHEIGHT / 10 * 8 - 50))
+		{
+			active_Smelter->Add_Heat(resource_Manager->Get_Resource(active_Smelter->Get_Fuel())->Get_Heat_Minimal() / 100 * 10);
+		}
+	}
 }
 
-void Game_Manager::Check_All_Updates(double deltatime, Player* player, Resource_Manager* resource_Manager, Craftingtable_Manager* craftingtable, Blueprint_Manager* blueprint_Manager, Item_Manager* item_Manager, Unlock_Manager* unlock_Manger, Ascension_Manager* ascension_Manager)
+void Game_Manager::Check_All_Updates(double deltatime, Player* player, Resource_Manager* resource_Manager, Craftingtable_Manager* craftingtable, Blueprint_Manager* blueprint_Manager, Item_Manager* item_Manager, Unlock_Manager* unlock_Manger, Ascension_Manager* ascension_Manager, Smelter_Manager* smelter_Manager)
 {
-	Update_All_Per_Seccond_Events(deltatime, player, resource_Manager, craftingtable, blueprint_Manager);
+	Update_All_Per_Seccond_Events(deltatime, player, resource_Manager, craftingtable, blueprint_Manager, smelter_Manager);
 	Check_Level_Up(player);
 	Check_Player_Stats(player);
 	Check_Craftingtable_Progress(resource_Manager, craftingtable, blueprint_Manager, item_Manager);
@@ -731,10 +772,11 @@ void Game_Manager::Check_All_Updates(double deltatime, Player* player, Resource_
 
 }
 
-void Game_Manager::Update_All_Per_Seccond_Events(double deltaTime, Player* player, Resource_Manager* resource_Manager, Craftingtable_Manager* craftingtable_Manager, Blueprint_Manager* blueprint_Manager)
+void Game_Manager::Update_All_Per_Seccond_Events(double deltaTime, Player* player, Resource_Manager* resource_Manager, Craftingtable_Manager* craftingtable_Manager, Blueprint_Manager* blueprint_Manager, Smelter_Manager* smelter_Manager)
 {
 	auto all_Resources = resource_Manager->Get_All_Resources();
 	auto all_Craftingtables = craftingtable_Manager->Get_All_Craftingtables();
+	auto all_Smelters = smelter_Manager->Get_All_smelters();
 
 	double delta_Seconds = deltaTime / 1000.0;
 	double production_Multiplier = 1.0;
@@ -835,6 +877,23 @@ void Game_Manager::Update_All_Per_Seccond_Events(double deltaTime, Player* playe
 	{
 		player->Add_Timer(delta_Seconds);
 	}
+
+	for (size_t i = 0; i < all_Smelters.size(); i++)
+	{
+		auto fuel = all_Smelters[i]->Get_Fuel();
+		auto ore = all_Smelters[i]->Get_Ore();
+
+		if (fuel == "None" || ore == "None")
+		{
+			continue;
+		}
+
+		if (all_Smelters[i]->Get_Heat() >= resource_Manager->Get_Resource(all_Smelters[i]->Get_Fuel())->Get_Heat_Minimal())
+		{
+			all_Smelters[i]->Add_Progress(all_Smelters[i]->Get_Heat() / resource_Manager->Get_Resource(all_Smelters[i]->Get_Fuel())->Get_Heat_Minimal() * delta_Seconds);
+		}
+	}
+
 }
 
 void Game_Manager::Check_Level_Up(Player* player)

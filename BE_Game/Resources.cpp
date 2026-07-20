@@ -2,7 +2,7 @@
 #include "Resources.h"
 
 Resources::Resources(string name, string gathering_Destination, double quantity, double hardness, double worker_Cost, int order, bool crafting_Resource, Resource_Type resource_Type_1, Resource_Type resource_Type_2)
-	:name(name), gathering_Destination(gathering_Destination), quantity(quantity), mined(0.0), depth (1.0), depth_Cost(1000), gain_On_Reset(0.0), workers(0.0), worker_Cost(worker_Cost), production_Rate(0.0), hardness(hardness), worker_Tool_Power(1.0), worker_Ascension_Power(1), worker_Tool_Equiped("None"), order(order), crafting_Resource(crafting_Resource), time(0.0), collect_Time(60), collect_Workers(0.0), collect_Worker_Tool_Power(1.0), collect_Worker_Ascension_Power(1.0), collect_Rate(0.0), collect_Cost(100.0), time_Upgrade_Cost(250), time_Escalation(1.0), resource_Type_1(resource_Type_1), resource_Type_2(resource_Type_2)
+	:name(name), gathering_Destination(gathering_Destination), quantity(quantity), mined(0.0), depth (1.0), depth_Cost(1000), gain_On_Reset(0.0), workers(0.0), worker_Cost(worker_Cost), production_Rate(0.0), hardness(hardness), worker_Tool_Power(1.0), worker_Ascension_Power(1), worker_Tool_Equiped("None"), order(order), crafting_Resource(crafting_Resource), time(0.0), collect_Time(60), collect_Workers(0.0), collect_Worker_Tool_Power(1.0), collect_Worker_Ascension_Power(1.0), collect_Rate(0.0), collect_Cost(100.0), time_Upgrade_Cost(250), time_Escalation(1.0), resource_Type_1(resource_Type_1), resource_Type_2(resource_Type_2), heat_Minimal(100)
 {
 }
 
@@ -129,6 +129,16 @@ double Resources::Get_Collect_Rate() const
 double Resources::Get_Collect_Cost() const
 {
 	return collect_Cost;
+}
+
+double Resources::Get_Heat_Minimal() const
+{
+	return heat_Minimal;
+}
+
+double Resources::Get_Smelting_Time() const
+{
+	return smelting_Time;
 }
 
 void Resources::Set_Name(string n)
@@ -266,6 +276,18 @@ void Resources::Set_Collect_Rate(double d)
 void Resources::Set_Collect_Cost(double d)
 {
 	collect_Cost = d;
+	return;
+}
+
+void Resources::Set_Heat_Minimal(double d)
+{
+	heat_Minimal = d;
+	return;
+}
+
+void Resources::Set_Smelting_Time(double d)
+{
+	smelting_Time = d;
 	return;
 }
 

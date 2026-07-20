@@ -434,6 +434,11 @@ void UI::Forge_UI(Surface* screen, Resource_Manager* resource_Manager, Player* p
 				if (active_Smelter->Get_Fuel() == sorted_Resources[i]->Get_Name())
 				{
 					button_Standard_Selected(sorted_Resources[i]->Get_Name(), SCRWIDTH / 3 * 1 - 120, start_Y + (q * 60), window_Manager, screen);
+
+					double number = sorted_Resources[i]->Get_Heat_Minimal() / 100;
+					string label = "Heat gain: " + to_string(static_cast<int>(number));
+					screen->Print(label.c_str(), 160, 925, 0xFF00FF, 1.5F);
+
 				}
 				else
 				{
@@ -447,9 +452,11 @@ void UI::Forge_UI(Surface* screen, Resource_Manager* resource_Manager, Player* p
 		{
 			if (sorted_Resources[i]->Check_Resource_Type(Resources::Resource_Type::Ore))
 			{
-				if (active_Smelter->Get_Fuel() == sorted_Resources[i]->Get_Name())
+				if (active_Smelter->Get_Ore() == sorted_Resources[i]->Get_Name())
 				{
 					button_Standard_Selected(sorted_Resources[i]->Get_Name(), SCRWIDTH / 3 * 2 + 10, start_Y + (q * 60), window_Manager, screen);
+
+					screen->Print("test", SCRWIDTH / 3 * 2 + 10, 925, 0xFF00FF, 1.5F);
 				}
 				else
 				{
@@ -457,6 +464,22 @@ void UI::Forge_UI(Surface* screen, Resource_Manager* resource_Manager, Player* p
 				}
 				q++;
 			}
+		}
+
+		button_Standard("Close", "", "", SCRWIDTH / 2 - 50, 160, screen, window_Manager, player);
+
+		if (active_Smelter->Get_Fuel() != "None" &&
+			active_Smelter->Get_Ore() != "None")
+		{
+			screen->Bar(SCRWIDTH / 2 - 50, SCRHEIGHT / 10 * 8 - 100, SCRWIDTH / 2 - 50 + (active_Smelter->Get_Progress() / 60 * 110), SCRHEIGHT / 10 * 8 - 50, 0x00FF00);
+			string label = "Click Power: " + to_string(static_cast<int>(player->Get_Stats("Crafting")->Get_Power()));
+			button_Standard("Craft", label.c_str(), "", SCRWIDTH / 2 - 50, SCRHEIGHT / 10 * 8 - 50, screen, window_Manager, player);
+
+			label = to_string(static_cast<int>(active_Smelter->Get_Progress())) + " / " + to_string(static_cast<int>(60));
+			screen->Print(label.c_str(), SCRWIDTH / 2, SCRHEIGHT / 10 * 8 - 75, 0xFF00FF, 1.5F);
+
+			label = "Heat: " + to_string(static_cast<int>(active_Smelter->Get_Heat()));
+			screen->Print(label.c_str(), SCRWIDTH / 3 * 1 + 10, 925, 0xFF00FF, 1.5F);
 		}
 
 	}
