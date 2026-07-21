@@ -67,4 +67,11 @@ void Unlock_Manager::Check_Unlock(Resource_Manager* resource_Manager, Player* pl
 		Get_Unlocked("Mine")->Set_Unlocked(true);
 	}
 
+
+	if (resource_Manager->Get_Resource("Stone")->Get_Depth() >= 25)
+	{
+		resource_Manager->Get_Resource("Tin")->Set_Unlocked(true);
+		resource_Manager->Get_Resource("Tin Ore")->Set_Unlocked(true);
+	}
+
 }

@@ -405,12 +405,12 @@ void Game_Manager::Mine_Buttons(Player* player, Resource_Manager* resource_Manag
 	{
 		if (mining->is_Crit())
 		{
-			stone->Add_Mined(mining->Get_Power() * mining->Get_Crit_Power());
+			stone->Add_Mined(mining->Get_Power() * mining->Get_Crit_Power() * stone->Get_Depth());
 			mining->Add_Exp(mining->Get_Exp_Gain());
 		}
 		else
 		{
-			stone->Add_Mined(mining->Get_Power());
+			stone->Add_Mined(mining->Get_Power() * stone->Get_Depth());
 			mining->Add_Exp(mining->Get_Exp_Gain());
 		}
 	}
@@ -506,7 +506,7 @@ void Game_Manager::Mine_Buttons(Player* player, Resource_Manager* resource_Manag
 void Game_Manager::Craftingtable_Window(Player* player, Craftingtable_Manager* craftingtable, Window_Manager* window_Manager, Blueprint_Manager* blueprint_Manager, Resource_Manager* resource_Manager)
 {
 
-	auto sorted_Resources = resource_Manager->Get_Sorted_Resources_Numbers();
+	auto sorted_Resources = resource_Manager->Get_Sorted_Resources_Numbers(Resources::Resource_Type::Crafting);
 	auto craftingtables = craftingtable->get_Craftingtable(craftingtable->Get_Active_Table());
 	for (size_t i = 0; i < sorted_Resources.size(); i++)
 	{
@@ -717,30 +717,32 @@ void Game_Manager::Ascension_Upgrade_Window(Player* player, Window_Manager* wind
 
 void Game_Manager::Smelting_Window(Player* player, Window_Manager* window_Manager, Item_Manager* item_Manager, Blueprint_Manager* blueprint_Manager, Draft_Manager* draft_Manager, Resource_Manager* resource_Manager, Ascension_Upgrade_Screen* ascension_Upgrade_Screen, Ascension_Manager* ascension_Manager, Craftingtable_Manager* craftingtable_Manager, Smelter_Manager* smelter_Manager)
 {
-	auto sorted_Resources = resource_Manager->Get_Sorted_Resources_Numbers();
+	auto sorted_Ore = resource_Manager->Get_Sorted_Resources_Numbers(Resources::Resource_Type::Ore);
+	auto sorted_Fuel = resource_Manager->Get_Sorted_Resources_Numbers(Resources::Resource_Type::Fuel);
 	auto active_Smelter = smelter_Manager->Get_Smelter(smelter_Manager->Get_Active_Smelter());
+	auto smelting = player->Get_Stats("Smelting");
 	int q = 0;
 	int start_Y = 160;
 
-	for (size_t i = 0; i < sorted_Resources.size(); i++)
+	for (size_t i = 0; i < sorted_Fuel.size(); i++)
 	{
-		if (sorted_Resources[i]->Check_Resource_Type(Resources::Resource_Type::Fuel))
+		if (sorted_Fuel[i]->Check_Resource_Type(Resources::Resource_Type::Fuel))
 		{
 			if (Is_Mouse_Over_Standard(player, SCRWIDTH / 3 * 1 - 120, start_Y + (q * 60)))
 			{
-				active_Smelter->Set_Fuel(sorted_Resources[i]->Get_Name());
+				active_Smelter->Set_Fuel(sorted_Fuel[i]->Get_Name());
 			}
 			q++;
 		}
 	}
 	q = 0;
-	for (size_t i = 0; i < sorted_Resources.size(); i++)
+	for (size_t i = 0; i < sorted_Ore.size(); i++)
 	{
-		if (sorted_Resources[i]->Check_Resource_Type(Resources::Resource_Type::Ore))
+		if (sorted_Ore[i]->Check_Resource_Type(Resources::Resource_Type::Ore))
 		{
 			if (Is_Mouse_Over_Standard(player, SCRWIDTH / 3 * 2 + 10, start_Y + (q * 60)))
 			{
-				active_Smelter->Set_Ore(sorted_Resources[i]->Get_Name());
+				active_Smelter->Set_Ore(sorted_Ore[i]->Get_Name());
 			}
 			q++;
 		}
@@ -756,7 +758,9 @@ void Game_Manager::Smelting_Window(Player* player, Window_Manager* window_Manage
 	{
 		if (Is_Mouse_Over_Standard(player, SCRWIDTH / 2 - 50, SCRHEIGHT / 10 * 8 - 50))
 		{
-			active_Smelter->Add_Heat(resource_Manager->Get_Resource(active_Smelter->Get_Fuel())->Get_Heat_Minimal() / 100 * 10);
+			active_Smelter->Add_Heat(resource_Manager->Get_Resource(active_Smelter->Get_Fuel())->Get_Heat_Minimal() / 100 * smelting->Get_Power());
+			resource_Manager->Get_Resource(active_Smelter->Get_Fuel())->Sub_Quantity(smelting->Get_Power());
+			player->Get_Stats("Smelting")->Add_Exp(player->Get_Stats("Smelting")->Get_Exp_Gain());
 		}
 	}
 }
@@ -767,6 +771,7 @@ void Game_Manager::Check_All_Updates(double deltatime, Player* player, Resource_
 	Check_Level_Up(player);
 	Check_Player_Stats(player);
 	Check_Craftingtable_Progress(resource_Manager, craftingtable, blueprint_Manager, item_Manager);
+	Check_Smelter_Progress(smelter_Manager, resource_Manager);
 	unlock_Manger->Check_Unlock(resource_Manager, player);
 	ascension_Manager->Update_Gain_On_Reset(resource_Manager);
 
@@ -891,6 +896,10 @@ void Game_Manager::Update_All_Per_Seccond_Events(double deltaTime, Player* playe
 		if (all_Smelters[i]->Get_Heat() >= resource_Manager->Get_Resource(all_Smelters[i]->Get_Fuel())->Get_Heat_Minimal())
 		{
 			all_Smelters[i]->Add_Progress(all_Smelters[i]->Get_Heat() / resource_Manager->Get_Resource(all_Smelters[i]->Get_Fuel())->Get_Heat_Minimal() * delta_Seconds);
+			if (all_Smelters[i]->Get_Heat() > resource_Manager->Get_Resource(all_Smelters[i]->Get_Fuel())->Get_Heat_Minimal() + 1)
+			{
+				all_Smelters[i]->Sub_Heat(all_Smelters[i]->Get_Heat() / 60 * delta_Seconds);
+			}
 		}
 	}
 
@@ -917,13 +926,12 @@ void Game_Manager::Check_Level_Up(Player* player)
 
 void Game_Manager::Check_Player_Stats(Player* player)
 {
-	auto lumberjack = player->Get_Stats("Lumberjack");
-	auto crafting = player->Get_Stats("Crafting");
-	auto mining = player->Get_Stats("Mining");
+	auto all_Stats = player->Get_All_Stats();
 
-	lumberjack->Set_Power((lumberjack->Get_Level() + lumberjack->Get_Ascension_Power()) * lumberjack->Get_Tool_Power());
-	crafting->Set_Power((crafting->Get_Level() + crafting->Get_Ascension_Power()) * crafting->Get_Tool_Power());
-	mining->Set_Power((mining->Get_Level() + mining->Get_Ascension_Power()) * mining->Get_Tool_Power());
+	for (size_t i = 0; i < all_Stats.size(); i++)
+	{
+		all_Stats[i]->Set_Power((all_Stats[i]->Get_Level() + all_Stats[i]->Get_Ascension_Power()) * all_Stats[i]->Get_Tool_Power());
+	}
 }
 
 void Game_Manager::Check_Craftingtable_Progress(Resource_Manager* resource_Manager, Craftingtable_Manager* craftingtable, Blueprint_Manager* blueprint_Manager, Item_Manager* item_Manager)
@@ -974,6 +982,30 @@ void Game_Manager::Check_Craftingtable_Progress(Resource_Manager* resource_Manag
 			{
 				item_Manager->Add_Item(combined_Name, all_Craftingtables[i]->Get_Resource(), all_Craftingtables[i]->Get_Blueprint(), blueprint->Get_Equip_Slot(), blueprint->Get_Level(), resource->Get_Hardness() * blueprint->Get_Level() * blueprint->Get_value(), resource->Get_Hardness() * blueprint->Get_Conversion_Rate());
 				all_Craftingtables[i]->Set_In_Use(false);
+			}
+		}
+	}
+}
+
+void Game_Manager::Check_Smelter_Progress(Smelter_Manager* smelter_Manager, Resource_Manager* resource_Manager)
+{
+	auto all_Smelters = smelter_Manager->Get_All_smelters();
+	auto all_Resources = resource_Manager->Get_All_Resources();
+
+	for (size_t i = 0; i < all_Smelters.size(); i++)
+	{
+
+		if (all_Smelters[i]->Get_Fuel() != "None" &&
+			all_Smelters[i]->Get_Ore() != "None")
+		
+		{
+		auto smelting_Output = resource_Manager->Get_Resource(all_Smelters[i]->Get_Ore())->Get_Smelting_Output();
+		auto smelting_Input = resource_Manager->Get_Resource(all_Smelters[i]->Get_Ore())->Get_Name();
+			if (all_Smelters[i]->Get_Progress() >= 60)
+			{
+				all_Smelters[i]->Set_Progress(0);
+				resource_Manager->Get_Resource(smelting_Output)->Add_Quantity(1);
+				resource_Manager->Get_Resource(smelting_Input)->Sub_Quantity(1);
 			}
 		}
 	}

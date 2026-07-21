@@ -14,7 +14,7 @@ public:
 		Currency
 	};
 
-	Resources(string name, string gathering_Destination, double quantity, double hardness, double worker_Cost, int order, bool crafting_Resource, Resource_Type resource_Type_1, Resource_Type resource_Type_2);
+	Resources(string name, string gathering_Destination, double quantity, double hardness, double worker_Cost, int order, bool crafting_Resource, Resource_Type resource_Type_1, Resource_Type resource_Type_2, string smelting_Output);
 
 	//getters
 	string Get_Name() const;
@@ -32,7 +32,7 @@ public:
 	double Get_Worker_Cost() const;
 	double Get_Production_Rate() const;
 	double Get_Hardness() const;
-	bool Get_Crafting_Resource() const;
+	bool Get_Unlocked() const;
 	double Get_Time() const;
 	double Get_Time_Escalation() const;
 	double Get_Time_Upgrade_Cost() const;
@@ -44,6 +44,7 @@ public:
 	double Get_Collect_Cost() const;
 	double Get_Heat_Minimal() const;
 	double Get_Smelting_Time() const;
+	string Get_Smelting_Output() const;
 
 	//setters
 	void Set_Name(string n);
@@ -60,6 +61,7 @@ public:
 	void Set_Worker_Cost(double d);
 	void Set_Production_Rate(double d);
 	void Set_Hardness(double d);
+	void Set_Unlocked(bool b);
 	void Set_Time(double d);
 	void Set_Time_Escalation(double d);
 	void Set_Time_Upgrade_Cost(double d);
@@ -71,6 +73,7 @@ public:
 	void Set_Collect_Cost(double d);
 	void Set_Heat_Minimal(double d);
 	void Set_Smelting_Time(double d);
+	void Set_Smelting_Output(string n);
 
 
 	//adders
@@ -121,7 +124,7 @@ private:
 	double worker_Cost;
 	double production_Rate;
 	double hardness;
-	bool crafting_Resource;
+	bool unlocked;
 	double time;
 	double time_Escalation;
 	double time_Upgrade_Cost;
@@ -135,6 +138,8 @@ private:
 	Resource_Type resource_Type_2;
 	double heat_Minimal;
 	double smelting_Time;
+	string smelting_Output;
+
 
 };
 

@@ -25,13 +25,14 @@ double Resource_Manager::Get_Resource_Quantity(const string name) const
 	return 0.0;
 }
 
-vector<Resources*> Resource_Manager::Get_Sorted_Resources_Numbers()
+vector<Resources*> Resource_Manager::Get_Sorted_Resources_Numbers(Resources::Resource_Type resource_Type)
 {
 	vector<Resources*> sorted_Resources;
 
 	for (auto& resource : resources)
 	{
-		if (resource.second->Get_Crafting_Resource())
+		if (resource.second->Check_Resource_Type(resource_Type) &&
+			resource.second->Get_Unlocked() == true)
 		{
 			sorted_Resources.push_back(resource.second);
 		}
@@ -57,11 +58,11 @@ vector<Resources*> Resource_Manager::Get_All_Resources()
 	return all_Resources;
 }
 
-void Resource_Manager::Add_Resource(const string name, string gathering_Destination, double quantity, double hardness, double worker_Cost, int order, bool crafting_Resource, Resources::Resource_Type resource_Type_1, Resources::Resource_Type resource_Type_2)
+void Resource_Manager::Add_Resource(const string name, string gathering_Destination, double quantity, double hardness, double worker_Cost, int order, bool unlocked, Resources::Resource_Type resource_Type_1, Resources::Resource_Type resource_Type_2, string smelting_Output)
 {
 	if (resources.find(name) == resources.end())
 	{
-		resources[name] = new Resources(name, gathering_Destination, quantity, hardness, worker_Cost,  order, crafting_Resource, resource_Type_1, resource_Type_2);
+		resources[name] = new Resources(name, gathering_Destination, quantity, hardness, worker_Cost,  order, unlocked, resource_Type_1, resource_Type_2, smelting_Output);
 	}
 }
 
@@ -93,4 +94,17 @@ void Resource_Manager::Remove_Resource(const string name)
 		delete it->second;
 		resources.erase(it);
 	}
+}
+
+void Resource_Manager::Create_All_Resources()
+{
+	Add_Resource("Thalions", "Quantity", 0, 0, 20, 0, true, Resources::Resource_Type::Currency, Resources::Resource_Type::None, "Thalions");
+	Add_Resource("Hourglass", "Quantity", 0, 0, 20, 0, true, Resources::Resource_Type::Currency, Resources::Resource_Type::None, "Hourglass");
+	Add_Resource("Paper", "Quantity", 0, 1000, 20, 0, true, Resources::Resource_Type::None, Resources::Resource_Type::None, "Paper");
+
+	Add_Resource("SoftWood", "Quantity", 0, 10, 20, 0, true, Resources::Resource_Type::Crafting, Resources::Resource_Type::Fuel, "SoftWood");
+	Add_Resource("Stone", "Mined", 0, 25, 20, 1, false, Resources::Resource_Type::Crafting, Resources::Resource_Type::None, "Stone");
+
+	Add_Resource("Tin Ore", "Mined", 0, 100, 20, 0, false, Resources::Resource_Type::Ore, Resources::Resource_Type::None, "Tin");
+	Add_Resource("Tin", "Quantity", 0, 100, 20, 2, false, Resources::Resource_Type::Crafting, Resources::Resource_Type::None, "Tin");
 }

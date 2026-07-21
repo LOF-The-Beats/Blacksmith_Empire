@@ -1,8 +1,8 @@
 #include "precomp.h"
 #include "Resources.h"
 
-Resources::Resources(string name, string gathering_Destination, double quantity, double hardness, double worker_Cost, int order, bool crafting_Resource, Resource_Type resource_Type_1, Resource_Type resource_Type_2)
-	:name(name), gathering_Destination(gathering_Destination), quantity(quantity), mined(0.0), depth (1.0), depth_Cost(1000), gain_On_Reset(0.0), workers(0.0), worker_Cost(worker_Cost), production_Rate(0.0), hardness(hardness), worker_Tool_Power(1.0), worker_Ascension_Power(1), worker_Tool_Equiped("None"), order(order), crafting_Resource(crafting_Resource), time(0.0), collect_Time(60), collect_Workers(0.0), collect_Worker_Tool_Power(1.0), collect_Worker_Ascension_Power(1.0), collect_Rate(0.0), collect_Cost(100.0), time_Upgrade_Cost(250), time_Escalation(1.0), resource_Type_1(resource_Type_1), resource_Type_2(resource_Type_2), heat_Minimal(100)
+Resources::Resources(string name, string gathering_Destination, double quantity, double hardness, double worker_Cost, int order, bool unlocked, Resource_Type resource_Type_1, Resource_Type resource_Type_2, string smelting_Output)
+	:name(name), gathering_Destination(gathering_Destination), quantity(quantity), mined(0.0), depth (1.0), depth_Cost(1000), gain_On_Reset(0.0), workers(0.0), worker_Cost(worker_Cost), production_Rate(0.0), hardness(hardness), worker_Tool_Power(1.0), worker_Ascension_Power(1), worker_Tool_Equiped("None"), order(order), unlocked(unlocked), time(0.0), collect_Time(60), collect_Workers(0.0), collect_Worker_Tool_Power(1.0), collect_Worker_Ascension_Power(1.0), collect_Rate(0.0), collect_Cost(100.0), time_Upgrade_Cost(250), time_Escalation(1.0), resource_Type_1(resource_Type_1), resource_Type_2(resource_Type_2), heat_Minimal(100), smelting_Output(smelting_Output)
 {
 }
 
@@ -81,9 +81,9 @@ double Resources::Get_Hardness() const
 	return hardness;
 }
 
-bool Resources::Get_Crafting_Resource() const
+bool Resources::Get_Unlocked() const
 {
-	return crafting_Resource;
+	return unlocked;
 }
 
 double Resources::Get_Time() const
@@ -139,6 +139,11 @@ double Resources::Get_Heat_Minimal() const
 double Resources::Get_Smelting_Time() const
 {
 	return smelting_Time;
+}
+
+string Resources::Get_Smelting_Output() const
+{
+	return smelting_Output;
 }
 
 void Resources::Set_Name(string n)
@@ -225,6 +230,12 @@ void Resources::Set_Hardness(double d)
 	return;
 }
 
+void Resources::Set_Unlocked(bool b)
+{
+	unlocked = b;
+	return;
+}
+
 void Resources::Set_Time(double d)
 {
 	time = d;
@@ -288,6 +299,12 @@ void Resources::Set_Heat_Minimal(double d)
 void Resources::Set_Smelting_Time(double d)
 {
 	smelting_Time = d;
+	return;
+}
+
+void Resources::Set_Smelting_Output(string n)
+{
+	smelting_Output = n;
 	return;
 }
 

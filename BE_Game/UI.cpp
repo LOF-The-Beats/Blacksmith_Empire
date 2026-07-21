@@ -215,15 +215,7 @@ void UI::Forest_UI(float deltaTime, Surface* screen, Surface* resource_Icon_Shee
 
 void UI::Forge_UI(Surface* screen, Resource_Manager* resource_Manager, Player* player, Window_Manager* window_Manager, Craftingtable_Manager* craftingtable, Blueprint_Manager* blueprint_Manager, Item_Manager* item_Manager, Smelter_Manager* smelter_Manager)
 {
-	// draws the level progress bar
-	{
-		double level_Indicator = 150 + (player->Get_Stats("Crafting")->Get_Exp() / player->Get_Stats("Crafting")->Get_Exp_Needed() * (SCRWIDTH - 150));
-		screen->Bar(150, 100, level_Indicator, 150, 0x00FF00);
-		double player_Exp = round(player->Get_Stats("Crafting")->Get_Exp());
-		double player_Exp_Needed = round(player->Get_Stats("Crafting")->Get_Exp_Needed());
-		string level_Idicator_Tekst = "Exp: " + to_string(static_cast<int>(round(player_Exp))) + " / Exp Needed: " + to_string(static_cast<int>(round(player_Exp_Needed)));
-		screen->Print(level_Idicator_Tekst.c_str(), (SCRWIDTH - 150) / 2, 125, 0xFF0000, 2.0F);
-	}
+	
 	screen->Line(150, 100, SCRWIDTH, 100, 0xFF00FF);
 	screen->Line(150, 150, SCRWIDTH, 150, 0xFF00FF);
 
@@ -301,6 +293,16 @@ void UI::Forge_UI(Surface* screen, Resource_Manager* resource_Manager, Player* p
 	}
 	if (window_Manager->get_Active_Window() == "Craftingtable")
 	{
+		// draws the level progress bar
+		{
+			double level_Indicator = 150 + (player->Get_Stats("Crafting")->Get_Exp() / player->Get_Stats("Crafting")->Get_Exp_Needed() * (SCRWIDTH - 150));
+			screen->Bar(150, 100, level_Indicator, 150, 0x00FF00);
+			double player_Exp = round(player->Get_Stats("Crafting")->Get_Exp());
+			double player_Exp_Needed = round(player->Get_Stats("Crafting")->Get_Exp_Needed());
+			string level_Idicator_Tekst = "Exp: " + to_string(static_cast<int>(round(player_Exp))) + " / Exp Needed: " + to_string(static_cast<int>(round(player_Exp_Needed)));
+			screen->Print(level_Idicator_Tekst.c_str(), (SCRWIDTH - 150) / 2, 125, 0xFF0000, 2.0F);
+		}
+
 		// layout of craftingtable
 		screen->Line(SCRWIDTH / 3 * 1, 150, SCRWIDTH / 3 * 1, SCRHEIGHT, 0xFF00FF);
 		screen->Line(SCRWIDTH / 3 * 2, 150, SCRWIDTH / 3 * 2, SCRHEIGHT, 0xFF00FF);
@@ -308,7 +310,7 @@ void UI::Forge_UI(Surface* screen, Resource_Manager* resource_Manager, Player* p
 
 		//Testing
 		auto Sorted_Blueprints = blueprint_Manager->Get_Sorted_Blueprints_Numbers();
-		auto sorted_Resources = resource_Manager->Get_Sorted_Resources_Numbers();
+		auto sorted_Resources = resource_Manager->Get_Sorted_Resources_Numbers(Resources::Resource_Type::Crafting);
 
 		for (size_t i = 0; i < Sorted_Blueprints.size(); i++)
 		{
@@ -417,50 +419,62 @@ void UI::Forge_UI(Surface* screen, Resource_Manager* resource_Manager, Player* p
 
 	if (window_Manager->get_Active_Window() == "Smelter")
 	{
+		auto smelting = player->Get_Stats("Smelting");
+		// draws the level progress bar
+		{
+			double level_Indicator = 150 + (smelting->Get_Exp() / smelting->Get_Exp_Needed() * (SCRWIDTH - 150));
+			screen->Bar(150, 100, level_Indicator, 150, 0x00FF00);
+			double player_Exp = round(smelting->Get_Exp());
+			double player_Exp_Needed = round(smelting->Get_Exp_Needed());
+			string level_Idicator_Tekst = "Exp: " + to_string(static_cast<int>(round(player_Exp))) + " / Exp Needed: " + to_string(static_cast<int>(round(player_Exp_Needed)));
+			screen->Print(level_Idicator_Tekst.c_str(), (SCRWIDTH - 150) / 2, 125, 0xFF0000, 2.0F);
+		}
+
 		// layout of Smelter
 		screen->Line(SCRWIDTH / 3 * 1, 150, SCRWIDTH / 3 * 1, SCRHEIGHT, 0xFF00FF);
 		screen->Line(SCRWIDTH / 3 * 2, 150, SCRWIDTH / 3 * 2, SCRHEIGHT, 0xFF00FF);
 		screen->Line(100, SCRHEIGHT / 10 * 8 + 50, SCRWIDTH, SCRHEIGHT / 10 * 8 + 50, 0xFF00FF);
 
-		auto sorted_Resources = resource_Manager->Get_Sorted_Resources_Numbers();
+		auto sorted_Ore = resource_Manager->Get_Sorted_Resources_Numbers(Resources::Resource_Type::Ore);
+		auto sorted_Fuel = resource_Manager->Get_Sorted_Resources_Numbers(Resources::Resource_Type::Fuel);
 		auto active_Smelter = smelter_Manager->Get_Smelter(smelter_Manager->Get_Active_Smelter());
 		int q = 0;
 		int start_Y = 160;
 
-		for (size_t i = 0; i < sorted_Resources.size(); i++)
+		for (size_t i = 0; i < sorted_Fuel.size(); i++)
 		{
-			if (sorted_Resources[i]->Check_Resource_Type(Resources::Resource_Type::Fuel))
+			if (sorted_Fuel[i]->Check_Resource_Type(Resources::Resource_Type::Fuel))
 			{
-				if (active_Smelter->Get_Fuel() == sorted_Resources[i]->Get_Name())
+				if (active_Smelter->Get_Fuel() == sorted_Fuel[i]->Get_Name())
 				{
-					button_Standard_Selected(sorted_Resources[i]->Get_Name(), SCRWIDTH / 3 * 1 - 120, start_Y + (q * 60), window_Manager, screen);
+					button_Standard_Selected(sorted_Fuel[i]->Get_Name(), SCRWIDTH / 3 * 1 - 120, start_Y + (q * 60), window_Manager, screen);
 
-					double number = sorted_Resources[i]->Get_Heat_Minimal() / 100;
+					double number = sorted_Fuel[i]->Get_Heat_Minimal() / 100;
 					string label = "Heat gain: " + to_string(static_cast<int>(number));
 					screen->Print(label.c_str(), 160, 925, 0xFF00FF, 1.5F);
 
 				}
 				else
 				{
-					button_Standard(sorted_Resources[i]->Get_Name(), "", "", SCRWIDTH / 3 * 1 - 120, start_Y + (q * 60), screen, window_Manager, player);
+					button_Standard(sorted_Fuel[i]->Get_Name(), "", "", SCRWIDTH / 3 * 1 - 120, start_Y + (q * 60), screen, window_Manager, player);
 				}
 				q++;
 			}
 		}
 		q = 0;
-		for (size_t i = 0; i < sorted_Resources.size(); i++)
+		for (size_t i = 0; i < sorted_Ore.size(); i++)
 		{
-			if (sorted_Resources[i]->Check_Resource_Type(Resources::Resource_Type::Ore))
+			if (sorted_Ore[i]->Check_Resource_Type(Resources::Resource_Type::Ore))
 			{
-				if (active_Smelter->Get_Ore() == sorted_Resources[i]->Get_Name())
+				if (active_Smelter->Get_Ore() == sorted_Ore[i]->Get_Name())
 				{
-					button_Standard_Selected(sorted_Resources[i]->Get_Name(), SCRWIDTH / 3 * 2 + 10, start_Y + (q * 60), window_Manager, screen);
+					button_Standard_Selected(sorted_Ore[i]->Get_Name(), SCRWIDTH / 3 * 2 + 10, start_Y + (q * 60), window_Manager, screen);
 
 					screen->Print("test", SCRWIDTH / 3 * 2 + 10, 925, 0xFF00FF, 1.5F);
 				}
 				else
 				{
-					button_Standard(sorted_Resources[i]->Get_Name(), "", "", SCRWIDTH / 3 * 2 + 10, start_Y + (q * 60), screen, window_Manager, player);
+					button_Standard(sorted_Ore[i]->Get_Name(), "", "", SCRWIDTH / 3 * 2 + 10, start_Y + (q * 60), screen, window_Manager, player);
 				}
 				q++;
 			}
@@ -472,7 +486,7 @@ void UI::Forge_UI(Surface* screen, Resource_Manager* resource_Manager, Player* p
 			active_Smelter->Get_Ore() != "None")
 		{
 			screen->Bar(SCRWIDTH / 2 - 50, SCRHEIGHT / 10 * 8 - 100, SCRWIDTH / 2 - 50 + (active_Smelter->Get_Progress() / 60 * 110), SCRHEIGHT / 10 * 8 - 50, 0x00FF00);
-			string label = "Click Power: " + to_string(static_cast<int>(player->Get_Stats("Crafting")->Get_Power()));
+			string label = "Click Power: " + to_string(static_cast<int>(smelting->Get_Power()));
 			button_Standard("Craft", label.c_str(), "", SCRWIDTH / 2 - 50, SCRHEIGHT / 10 * 8 - 50, screen, window_Manager, player);
 
 			label = to_string(static_cast<int>(active_Smelter->Get_Progress())) + " / " + to_string(static_cast<int>(60));

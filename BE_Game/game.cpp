@@ -39,15 +39,10 @@ void Game::Init()
 	m_Smelter_Manager = new Smelter_Manager;
 
 	//Resources
-	m_Resource_Manager->Add_Resource("Thalions", "Quantity", 0, 0, 20, 0, false, Resources::Resource_Type::Currency, Resources::Resource_Type::None);
-	m_Resource_Manager->Add_Resource("Hourglass", "Quantity", 0, 0, 20, 0, false, Resources::Resource_Type::Currency, Resources::Resource_Type::None);
-	m_Resource_Manager->Add_Resource("Paper", "Quantity", 0, 1000, 20, 0, false, Resources::Resource_Type::None, Resources::Resource_Type::None);
+	
+	m_Resource_Manager->Create_All_Resources();
 
-	m_Resource_Manager->Add_Resource("SoftWood", "Quantity", 0, 10, 20, 0, true, Resources::Resource_Type::Crafting, Resources::Resource_Type::Fuel);
-	m_Resource_Manager->Add_Resource("Tin Ore", "Quantity", 0, 10, 20, 0, true, Resources::Resource_Type::Ore, Resources::Resource_Type::None);
-
-
-
+	              
 	//Windows / Locations
 	m_Window_Manager->add_Window("Forest", true);
 	m_Window_Manager->add_Window("Forge", false);
@@ -81,6 +76,7 @@ void Game::Init()
 	m_Player->Add_Stats("Crafting", 1);
 	m_Player->Add_Stats("Mining", 1);
 	m_Player->Add_Stats("Scribe", 1);
+	m_Player->Add_Stats("Smelting", 1);
 
 	//Blueprints
 	m_Blueprint_Manager->Create_All_Blueprints();
@@ -98,7 +94,6 @@ void Game::Init()
 	// testing things
 	if (true)
 	{
-		m_Resource_Manager->Add_Resource("Stone", "Mined", 0, 25, 20, 0, true, Resources::Resource_Type::Crafting, Resources::Resource_Type::None);
 		vector all_Resources = m_Resource_Manager->Get_All_Resources();
 
 		m_Unlock_Manager->Get_Unlocked("Forest")->Set_Unlocked(true);
@@ -111,7 +106,7 @@ void Game::Init()
 
 		for (size_t i = 0; i < all_Resources.size(); i++)
 		{
-			all_Resources[i]->Set_Quantity(100000);
+			all_Resources[i]->Set_Quantity(10000000);
 		}
 	}
 	m_Tutorial->Set_Enabled(false);

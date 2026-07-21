@@ -52,6 +52,7 @@ public:
 	void Check_Level_Up(Player* player);
 	void Check_Player_Stats(Player* player);
 	void Check_Craftingtable_Progress(Resource_Manager* resource_Manager, Craftingtable_Manager* craftingtable, Blueprint_Manager* blueprint_Manager, Item_Manager* item_Manager);
+	void Check_Smelter_Progress(Smelter_Manager* smelter_Manager, Resource_Manager* resource_Manager);
 private:
 	bool clicked = false;
 
