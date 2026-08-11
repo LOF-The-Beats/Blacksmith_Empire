@@ -952,7 +952,7 @@ void Game_Manager::Check_Craftingtable_Progress(Resource_Manager* resource_Manag
 				all_Craftingtables[i]->Set_Progress(all_Craftingtables[i]->Get_Progress() - resource->Get_Hardness());
 				resource->Sub_Quantity(blueprint->Get_Cost());
 				double level = blueprint->Get_Level();
-				string combined_Name = all_Craftingtables[i]->Get_Resource() + " " + all_Craftingtables[i]->Get_Blueprint() + " " + to_string(static_cast<int>(blueprint->Get_Level()));
+				string combined_Name = all_Craftingtables[i]->Get_Resource() + " " + all_Craftingtables[i]->Get_Blueprint() + " Level: " + to_string(static_cast<int>(blueprint->Get_Level()));
 				auto item = item_Manager->Get_Item(combined_Name);
 				if (item)
 				{
@@ -971,7 +971,7 @@ void Game_Manager::Check_Craftingtable_Progress(Resource_Manager* resource_Manag
 		{
 			all_Craftingtables[i]->Set_Progress(0);
 			double level = blueprint->Get_Level();
-			string combined_Name = all_Craftingtables[i]->Get_Resource() + " " + all_Craftingtables[i]->Get_Blueprint() + " " + to_string(static_cast<int>(blueprint->Get_Level()));
+			string combined_Name = all_Craftingtables[i]->Get_Resource() + " " + all_Craftingtables[i]->Get_Blueprint() + " Level: " + to_string(static_cast<int>(blueprint->Get_Level()));
 			auto item = item_Manager->Get_Item(combined_Name);
 			if (item)
 			{

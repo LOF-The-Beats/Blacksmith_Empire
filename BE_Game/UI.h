@@ -51,5 +51,10 @@ public:
 	void draw_Hover_Info(string name, string cost, string description, Surface* screen, Player* player, Window_Manager* window_Manager);
 
 private:
+	bool hover_Active = false;
+
+	string hover_Name;
+	string hover_Cost;
+	string hover_Description;
 };
 

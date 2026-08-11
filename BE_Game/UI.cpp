@@ -20,45 +20,136 @@ UI::UI()
 {
 }
 
-void UI::Draw_UI(float deltaTime,Surface* screen,Surface* resource_Icon_Sheet, Resource_Manager* resource_Manager, Player* player, Window_Manager* window_Manager, Craftingtable_Manager* craftingtable, Blueprint_Manager* blueprint_Manager, Item_Manager* item_Manager, Draft_Manager* draft_Manager, Unlock_Manager* unlock_Manager, Tutorial* tutorial, Ascension_Upgrade_Screen* ascension_Upgrade_Screen, Ascension_Manager* ascension_Manager, Smelter_Manager* smelter_Manager)
+void UI::Draw_UI(
+	float deltaTime,
+	Surface* screen,
+	Surface* resource_Icon_Sheet,
+	Resource_Manager* resource_Manager,
+	Player* player,
+	Window_Manager* window_Manager,
+	Craftingtable_Manager* craftingtable,
+	Blueprint_Manager* blueprint_Manager,
+	Item_Manager* item_Manager,
+	Draft_Manager* draft_Manager,
+	Unlock_Manager* unlock_Manager,
+	Tutorial* tutorial,
+	Ascension_Upgrade_Screen* ascension_Upgrade_Screen,
+	Ascension_Manager* ascension_Manager,
+	Smelter_Manager* smelter_Manager)
 {
-	UI_Layout(screen, resource_Icon_Sheet, resource_Manager, unlock_Manager, window_Manager, player);
-	tutorial->Draw_Tutorial_UI(screen, this, player, window_Manager);
+	hover_Active = false;
+
+	UI_Layout(
+		screen,
+		resource_Icon_Sheet,
+		resource_Manager,
+		unlock_Manager,
+		window_Manager,
+		player
+	);
+
+	tutorial->Draw_Tutorial_UI(
+		screen,
+		this,
+		player,
+		window_Manager
+	);
+
 	if (unlock_Manager->Get_Unlocked("Forest")->Get_Unlocked() &&
 		window_Manager->get_Active_Window() == "Forest")
 	{
-		Forest_UI(deltaTime, screen, resource_Icon_Sheet, resource_Manager, player, item_Manager, window_Manager);
+		Forest_UI(
+			deltaTime,
+			screen,
+			resource_Icon_Sheet,
+			resource_Manager,
+			player,
+			item_Manager,
+			window_Manager
+		);
 	}
 	else if (
-		(window_Manager->get_Active_Window() == "Forge" ||
-		window_Manager->get_Active_Window() == "Craftingtable") ||
+		window_Manager->get_Active_Window() == "Forge" ||
+		window_Manager->get_Active_Window() == "Craftingtable" ||
 		window_Manager->get_Active_Window() == "Smelter")
 	{
-		Forge_UI(screen, resource_Manager, player, window_Manager, craftingtable, blueprint_Manager, item_Manager, smelter_Manager);
+		Forge_UI(
+			screen,
+			resource_Manager,
+			player,
+			window_Manager,
+			craftingtable,
+			blueprint_Manager,
+			item_Manager,
+			smelter_Manager
+		);
 	}
-	else if (window_Manager->get_Active_Window() == "Player" ||
+	else if (
+		window_Manager->get_Active_Window() == "Player" ||
 		window_Manager->get_Active_Window() == "Lumberjack Tool" ||
 		window_Manager->get_Active_Window() == "Crafting Tool" ||
 		window_Manager->get_Active_Window() == "Mining Tool")
 	{
-		Player_UI(screen, window_Manager, item_Manager, player);
+		Player_UI(
+			screen,
+			window_Manager,
+			item_Manager,
+			player
+		);
 	}
-	else if (window_Manager->get_Active_Window() == "Libary" ||
+	else if (
+		window_Manager->get_Active_Window() == "Libary" ||
 		window_Manager->get_Active_Window() == "Blueprint Upgrade" ||
 		window_Manager->get_Active_Window() == "Blueprint Crafting")
 	{
-		Libary_UI(screen, resource_Manager, blueprint_Manager, player, window_Manager, draft_Manager);
+		Libary_UI(
+			screen,
+			resource_Manager,
+			blueprint_Manager,
+			player,
+			window_Manager,
+			draft_Manager
+		);
 	}
-	else if (window_Manager->get_Active_Window() == "Witch Hut" ||
+	else if (
+		window_Manager->get_Active_Window() == "Witch Hut" ||
 		window_Manager->get_Active_Window() == "Ascension Upgrade")
 	{
-		Witch_Hut_UI(screen, resource_Manager, blueprint_Manager, player, window_Manager, draft_Manager, ascension_Upgrade_Screen, ascension_Manager);
+		Witch_Hut_UI(
+			screen,
+			resource_Manager,
+			blueprint_Manager,
+			player,
+			window_Manager,
+			draft_Manager,
+			ascension_Upgrade_Screen,
+			ascension_Manager
+		);
 	}
 	else if (window_Manager->get_Active_Window() == "Mine")
 	{
-		Mine_UI(screen, window_Manager, player, resource_Manager, item_Manager);
+		Mine_UI(
+			screen,
+			window_Manager,
+			player,
+			resource_Manager,
+			item_Manager
+		);
 	}
 
+	if (hover_Active)
+	{
+		draw_Hover_Info(
+			hover_Name,
+			hover_Cost,
+			hover_Description,
+			screen,
+			player,
+			window_Manager
+		);
+	}
+
+	return;
 }
 
 void UI::UI_Layout(Surface* screen,Surface* resource_Icon_Sheet, Resource_Manager* resource_Manager, Unlock_Manager* unlock_Manager, Window_Manager* window_Manager, Player* player)
@@ -152,11 +243,20 @@ void UI::Forest_UI(float deltaTime, Surface* screen, Surface* resource_Icon_Shee
 	screen->Line(150, 150, SCRWIDTH, 150, 0xFF00FF);
 
 
-	string test = "Click Gather amount: " + to_string(static_cast<int>(player->Get_Stats("Lumberjack")->Get_Power()));
+	string test = "Click To Gather " + to_string(static_cast<int>(player->Get_Stats("Lumberjack")->Get_Power())) + " SoftWood";
 	button_Standard("Gather", "", test.c_str(), 160, 160, screen, window_Manager, player); //gather resource knop
 	
 	double cost =  round(resource_Manager->Get_Resource("SoftWood")->Get_Worker_Cost());
-	string label = "Cost: " + std::to_string(static_cast<int>(std::round(cost))) + " " + resource_Manager->Get_Resource("Thalions")->Get_Name() + " 1 " + resource_Manager->Get_Resource("SoftWood")->Get_Worker_Tool_Equiped();
+	string label;
+	if (resource_Manager->Get_Resource("SoftWood")->Get_Worker_Tool_Equiped() == "Tool")
+	{
+		label = "Cost = " + std::to_string(static_cast<int>(std::round(cost))) + " " + resource_Manager->Get_Resource("Thalions")->Get_Name();
+	}
+	else
+	{
+		label = "Cost = " + std::to_string(static_cast<int>(std::round(cost))) + " " + resource_Manager->Get_Resource("Thalions")->Get_Name() + " and 1 " + resource_Manager->Get_Resource("SoftWood")->Get_Worker_Tool_Equiped();
+
+	}
 	button_Standard("Buy Worker", label.c_str(), "", 160, 230, screen, window_Manager, player); // buy worker
 
 	auto sorted_Item = item_Manager->get_Item_Sorted_By_Power_And_Equip_Slot("Lumberjack");
@@ -375,7 +475,7 @@ void UI::Forge_UI(Surface* screen, Resource_Manager* resource_Manager, Player* p
 			auto table = craftingtable->get_Craftingtable(craftingtable->Get_Active_Table());
 			auto blueprint = blueprint_Manager->Get_Blueprints(table->Get_Blueprint());
 			auto resource = resource_Manager->Get_Resource(table->Get_Resource());
-			string combined_Name = table->Get_Resource() + " " + table->Get_Blueprint() + " " + to_string(static_cast<int>(blueprint->Get_Level()));
+			string combined_Name = table->Get_Resource() + " " + table->Get_Blueprint() + " Level: " + to_string(static_cast<int>(blueprint->Get_Level()));
 			auto item = item_Manager->Get_Item(combined_Name);
 
 			double number;
@@ -927,7 +1027,10 @@ void UI::button_Standard(string name, string cost, string description, int x1, i
 
 	if (hover)
 	{
-		draw_Hover_Info(name, cost, description, screen, player, window_Manager);
+		hover_Active = true;
+		hover_Name = name;
+		hover_Cost = cost;
+		hover_Description = description;
 	}
 	
 }
