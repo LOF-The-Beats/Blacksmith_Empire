@@ -9,6 +9,7 @@ public:
 	string Get_Fuel() const;
 	string Get_Ore() const;
 	double Get_Heat() const;
+	double Get_Heat_Loss() const;
 	double Get_Progress() const;
 	bool Get_Unlocked() const;
 
@@ -17,6 +18,7 @@ public:
 	void Set_Fuel(string n);
 	void Set_Ore(string n);
 	void Set_Heat(double amount);
+	void Set_Heat_Loss(double amount);
 	void Set_Progress(double amount);
 	void Set_Unlocked(double b);
 
@@ -29,7 +31,7 @@ public:
 
 private:
 	string name, fuel, ore;
-	double heat, progress;
+	double heat, heat_Loss, progress;
 	bool unlocked;
 };
 

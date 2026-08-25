@@ -594,6 +594,10 @@ void UI::Forge_UI(Surface* screen, Resource_Manager* resource_Manager, Player* p
 
 			label = "Heat: " + to_string(static_cast<int>(active_Smelter->Get_Heat()));
 			screen->Print(label.c_str(), SCRWIDTH / 3 * 1 + 10, 925, 0xFF00FF, 1.5F);
+
+			label = "Heat loss: " + to_string(static_cast<int>(active_Smelter->Get_Heat_Loss()));
+			screen->Print(label.c_str(), SCRWIDTH / 3 * 1 + 10, 950, 0xFF00FF, 1.5F);
+
 		}
 
 	}
@@ -828,6 +832,7 @@ void UI::Mine_UI(Surface* screen, Window_Manager* window_Manager, Player* player
 	screen->Line(150, 150, SCRWIDTH, 150, 0xFF00FF);
 
 	auto stone = resource_Manager->Get_Resource("Stone");
+	auto tin = resource_Manager->Get_Resource("Tin Ore");
 	screen->Bar(280, 215, 280 +  stone->Get_Time() / stone->Get_Collect_Time() * 110, 225, 0x00FF00);
 
 	double test1 = stone->Get_Quantity();
@@ -878,7 +883,52 @@ void UI::Mine_UI(Surface* screen, Window_Manager* window_Manager, Player* player
 	button_Standard("Upgrade Rails", label.c_str(), "Increase Timer gain", 280, 370, screen, window_Manager, player); // upgrade workers
 
 	label = "Cost: " + to_string(static_cast<int>(round(stone->Get_Depth_Cost())));
-	button_Standard("Delve", label.c_str(), "Delve deeprin into the mine", 400, 160, screen, window_Manager, player);
+	button_Standard("Delve", label.c_str(), "Delve deeper in into the mine", 400, 160, screen, window_Manager, player);
+
+
+	test1 = tin->Get_Quantity();
+	test2 = tin->Get_Name() + ": " + to_string(static_cast<int>(test1));
+	screen->Print(test2.c_str(), 450, SCRHEIGHT / 30 * 1 + 35, 0xFF00FF, 1.5);
+	test1 = tin->Get_Mined();
+	test2 = "Mined: " + to_string(static_cast<int>(test1));
+	screen->Print(test2.c_str(), 620, SCRHEIGHT / 30 * 1 + 35, 0xFF00FF, 1.5);
+
+	label = "Click power: " + to_string(static_cast<int>(round(mine->Get_Power() * tin->Get_Depth())));
+	button_Standard("Mine", label.c_str(), "Mine Tin Ore", 600, 160, screen, window_Manager, player);
+	cost = round(resource_Manager->Get_Resource("Tin Ore")->Get_Worker_Cost());
+	label = "Cost: " + std::to_string(static_cast<int>(std::round(cost))) + " " + resource_Manager->Get_Resource("Thalions")->Get_Name() + " 1 " + resource_Manager->Get_Resource("Tin Ore")->Get_Worker_Tool_Equiped();
+	button_Standard("Buy Worker", label.c_str(), "", 600, 230, screen, window_Manager, player); // buy worker
+	if (!sorted_Item.empty() &&
+		sorted_Item[0]->Get_Power() > stone->Get_Workers_Tool_Power())
+	{
+		cost = round(stone->Get_Workers());
+		label = "Cost: " + to_string(static_cast<int>(std::round(cost))) + " " + sorted_Item[0]->Get_Name();
+		button_Standard("Upgrade tools", label.c_str(), "", 600, 300, screen, window_Manager, player); // upgrade tools
+	}
+	else
+	{
+		button_Standard("Upgrade tools", "No Upgrades Available", "", 600, 300, screen, window_Manager, player); // upgrade tools
+	}
+
+
+	button_Standard("Collect", "", "Collect mined Tin Ore", 720, 160, screen, window_Manager, player);
+
+	cost = round(resource_Manager->Get_Resource("Tin Ore")->Get_Worker_Cost());
+	label = "Cost: " + to_string(static_cast<int>(round(cost))) + " " + resource_Manager->Get_Resource("Thalions")->Get_Name();
+	button_Standard("Buy Worker", label.c_str(), "", 720, 230, screen, window_Manager, player); // buy worker
+
+	cost = round(tin->Get_Collect_Cost());
+	label = "Cost: " + to_string(static_cast<int>(round(cost))) + " " + resource_Manager->Get_Resource("Thalions")->Get_Name();
+	button_Standard("Upgrade Carts", label.c_str(), "Increases collect rate of workers", 720, 300, screen, window_Manager, player); // upgrade workers
+
+	cost = round(tin->Get_Time_Upgrade_Cost());
+	label = "Cost: " + to_string(static_cast<int>(round(cost))) + " " + resource_Manager->Get_Resource("Thalions")->Get_Name();
+	button_Standard("Upgrade Rails", label.c_str(), "Increase Timer gain", 720, 370, screen, window_Manager, player); // upgrade workers
+
+	label = "Cost: " + to_string(static_cast<int>(round(tin->Get_Depth_Cost())));
+	button_Standard("Delve", label.c_str(), "Delve deeper in into the mine", 840, 160, screen, window_Manager, player);
+
+
 }
 
 void UI::button_Standard(string name, string cost, string description, int x1, int y1, Surface* screen, Window_Manager* window_Manager, Player* player)

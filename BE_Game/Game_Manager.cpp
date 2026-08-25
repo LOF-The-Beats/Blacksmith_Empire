@@ -398,6 +398,7 @@ void Game_Manager::Mine_Buttons(Player* player, Resource_Manager* resource_Manag
 {
 	auto mining = player->Get_Stats("Mining");
 	auto stone = resource_Manager->Get_Resource("Stone");
+	auto tin = resource_Manager->Get_Resource("Tin Ore");
 	auto thalions = resource_Manager->Get_Resource("Thalions");
 	auto item = item_Manager->Get_Item(stone->Get_Worker_Tool_Equiped());
 
@@ -419,7 +420,7 @@ void Game_Manager::Mine_Buttons(Player* player, Resource_Manager* resource_Manag
 		stone->Get_Worker_Cost() <= thalions->Get_Quantity())
 	{
 
-		if (stone->Get_Worker_Tool_Equiped() != "None" &&
+		if (stone->Get_Worker_Tool_Equiped() != "Tool" &&
 			item->Get_Quantity() >= 1)
 		{
 
@@ -430,7 +431,7 @@ void Game_Manager::Mine_Buttons(Player* player, Resource_Manager* resource_Manag
 
 			item->Sub_Quantity(1);
 		}
-		else if (stone->Get_Worker_Tool_Equiped() == "None")
+		else if (stone->Get_Worker_Tool_Equiped() == "Tool")
 		{
 			stone->Add_Workers(1);
 			stone->Update_Production_Rate();
@@ -491,7 +492,6 @@ void Game_Manager::Mine_Buttons(Player* player, Resource_Manager* resource_Manag
 	if (Is_Mouse_Over_Standard(player, 400, 160))
 	{
 		auto softwood = resource_Manager->Get_Resource("SoftWood");
-		auto stone = resource_Manager->Get_Resource("Stone");
 
 		if (softwood->Get_Quantity() >= stone->Get_Depth_Cost())
 		{
@@ -499,6 +499,105 @@ void Game_Manager::Mine_Buttons(Player* player, Resource_Manager* resource_Manag
 			stone->Set_Depth_Cost(stone->Get_Depth_Cost() * 1.2);
 			stone->Add_Depth(1);
 			stone->Add_Collect_Time(10);
+		}
+	}
+
+	//tin buttons
+	if (Is_Mouse_Over_Standard(player, 600, 160))
+	{
+		if (mining->is_Crit())
+		{
+			tin->Add_Mined(mining->Get_Power() * mining->Get_Crit_Power() * tin->Get_Depth());
+			mining->Add_Exp(mining->Get_Exp_Gain());
+		}
+		else
+		{
+			tin->Add_Mined(mining->Get_Power() * tin->Get_Depth());
+			mining->Add_Exp(mining->Get_Exp_Gain());
+		}
+	}
+
+	if (Is_Mouse_Over_Standard(player, 600, 230) &&
+		tin->Get_Worker_Cost() <= thalions->Get_Quantity())
+	{
+
+		if (tin->Get_Worker_Tool_Equiped() != "Tool" &&
+			item->Get_Quantity() >= 1)
+		{
+
+			tin->Add_Workers(1);
+			stone->Update_Production_Rate();
+			thalions->Sub_Quantity(tin->Get_Worker_Cost());
+			stone->Set_Worker_Cost(tin->Get_Worker_Cost() * 1.2);
+
+			item->Sub_Quantity(1);
+		}
+		else if (tin->Get_Worker_Tool_Equiped() == "Tool")
+		{
+			tin->Add_Workers(1);
+			tin->Update_Production_Rate();
+			thalions->Sub_Quantity(tin->Get_Worker_Cost());
+			tin->Set_Worker_Cost(tin->Get_Worker_Cost() * 1.2);
+		}
+	}
+
+	if (Is_Mouse_Over_Standard(player, 600, 300))
+	{
+		auto sorted_Item = item_Manager->get_Item_Sorted_By_Power_And_Equip_Slot("Mining");
+		if (!sorted_Item.empty() &&
+			sorted_Item[0]->Get_Power() > tin->Get_Workers_Tool_Power())
+		{
+			if (sorted_Item[0]->Get_Quantity() >= tin->Get_Workers())
+			{
+				sorted_Item[0]->Sub_Quantity(tin->Get_Workers());
+				tin->Set_Workers_Tool_Power(sorted_Item[0]->Get_Power());
+				tin->Set_Worker_Tool_Equiped(sorted_Item[0]->Get_Name());
+
+			}
+		}
+	}
+
+	if (Is_Mouse_Over_Standard(player, 720, 160))
+	{
+		tin->Add_Time(mining->Get_Power());
+	}
+
+	if (Is_Mouse_Over_Standard(player, 720, 230) &&
+		tin->Get_Worker_Cost() <= thalions->Get_Quantity())
+	{
+		tin->Add_Collect_Workers(1);
+		tin->Update_Collect_Rate();
+		thalions->Sub_Quantity(tin->Get_Worker_Cost());
+		tin->Set_Worker_Cost(tin->Get_Worker_Cost() * 1.2);
+	}
+
+	if (Is_Mouse_Over_Standard(player, 720, 300) &&
+		tin->Get_Collect_Cost() <= thalions->Get_Quantity())
+	{
+		tin->Add_Collect_Workers_Tool_Power(1);
+		tin->Update_Collect_Rate();
+		thalions->Sub_Quantity(tin->Get_Collect_Cost());
+		tin->Set_Collect_Cost(tin->Get_Collect_Cost() * 1.2);
+	}
+
+	if (Is_Mouse_Over_Standard(player, 720, 370) &&
+		tin->Get_Time_Upgrade_Cost() <= thalions->Get_Quantity())
+	{
+		tin->Add_Time_Escalaction(1);
+		thalions->Sub_Quantity(tin->Get_Time_Upgrade_Cost());
+		tin->Set_Time_Upgrade_Cost(tin->Get_Time_Upgrade_Cost() * 1.2);
+	}
+
+	if (Is_Mouse_Over_Standard(player, 840, 160))
+	{
+		auto softwood = resource_Manager->Get_Resource("SoftWood");
+
+		if (softwood->Get_Quantity() >= tin->Get_Depth_Cost())
+		{
+			softwood->Sub_Quantity(tin->Get_Depth_Cost());
+			tin->Set_Depth_Cost(tin->Get_Depth_Cost() * 1.2);
+			tin->Add_Depth(1);
+			tin->Add_Collect_Time(10);
 		}
 	}
 }
@@ -758,9 +857,12 @@ void Game_Manager::Smelting_Window(Player* player, Window_Manager* window_Manage
 	{
 		if (Is_Mouse_Over_Standard(player, SCRWIDTH / 2 - 50, SCRHEIGHT / 10 * 8 - 50))
 		{
-			active_Smelter->Add_Heat(resource_Manager->Get_Resource(active_Smelter->Get_Fuel())->Get_Heat_Minimal() / 100 * smelting->Get_Power());
-			resource_Manager->Get_Resource(active_Smelter->Get_Fuel())->Sub_Quantity(smelting->Get_Power());
-			player->Get_Stats("Smelting")->Add_Exp(player->Get_Stats("Smelting")->Get_Exp_Gain());
+			if (resource_Manager->Get_Resource(active_Smelter->Get_Fuel())->Get_Quantity() >= 1)
+			{
+				active_Smelter->Add_Heat(resource_Manager->Get_Resource(active_Smelter->Get_Fuel())->Get_Heat_Minimal() / 100 * smelting->Get_Power());
+				resource_Manager->Get_Resource(active_Smelter->Get_Fuel())->Sub_Quantity(smelting->Get_Power());
+				player->Get_Stats("Smelting")->Add_Exp(player->Get_Stats("Smelting")->Get_Exp_Gain());
+			}
 		}
 	}
 }
@@ -895,10 +997,17 @@ void Game_Manager::Update_All_Per_Seccond_Events(double deltaTime, Player* playe
 
 		if (all_Smelters[i]->Get_Heat() >= resource_Manager->Get_Resource(all_Smelters[i]->Get_Fuel())->Get_Heat_Minimal())
 		{
-			all_Smelters[i]->Add_Progress(all_Smelters[i]->Get_Heat() / resource_Manager->Get_Resource(all_Smelters[i]->Get_Fuel())->Get_Heat_Minimal() * delta_Seconds);
+			if (resource_Manager->Get_Resource(ore)->Get_Quantity() >= 1)
+			{
+				all_Smelters[i]->Add_Progress(all_Smelters[i]->Get_Heat() / resource_Manager->Get_Resource(all_Smelters[i]->Get_Fuel())->Get_Heat_Minimal() * delta_Seconds);
+			}
 			if (all_Smelters[i]->Get_Heat() > resource_Manager->Get_Resource(all_Smelters[i]->Get_Fuel())->Get_Heat_Minimal() + 1)
 			{
-				all_Smelters[i]->Sub_Heat(all_Smelters[i]->Get_Heat() / 60 * delta_Seconds);
+				all_Smelters[i]->Set_Heat_Loss(
+					((all_Smelters[i]->Get_Heat() / resource_Manager->Get_Resource(all_Smelters[i]->Get_Fuel())->Get_Heat_Minimal())
+						+
+						((all_Smelters[i]->Get_Heat() - resource_Manager->Get_Resource(all_Smelters[i]->Get_Fuel())->Get_Heat_Minimal()) / 60)));
+				all_Smelters[i]->Sub_Heat(all_Smelters[i]->Get_Heat_Loss() * delta_Seconds);
 			}
 		}
 	}

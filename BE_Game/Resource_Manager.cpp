@@ -105,6 +105,6 @@ void Resource_Manager::Create_All_Resources()
 	Add_Resource("SoftWood", "Quantity", 0, 10, 20, 0, true, Resources::Resource_Type::Crafting, Resources::Resource_Type::Fuel, "SoftWood");
 	Add_Resource("Stone", "Mined", 0, 25, 20, 1, false, Resources::Resource_Type::Crafting, Resources::Resource_Type::None, "Stone");
 
-	Add_Resource("Tin Ore", "Mined", 0, 100, 20, 0, false, Resources::Resource_Type::Ore, Resources::Resource_Type::None, "Tin");
-	Add_Resource("Tin", "Quantity", 0, 100, 20, 2, false, Resources::Resource_Type::Crafting, Resources::Resource_Type::None, "Tin");
+	Add_Resource("Tin Ore", "Mined", 0, 100, 20, 0, true, Resources::Resource_Type::Ore, Resources::Resource_Type::None, "Tin");
+	Add_Resource("Tin", "Quantity", 0, 100, 20, 2, true, Resources::Resource_Type::Crafting, Resources::Resource_Type::None, "Tin");
 }
