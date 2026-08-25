@@ -87,9 +87,6 @@ void Game::Init()
 	// all upgrades
 	m_Ascension_Manger->Create_Upgrades();
 
-	// Icons
-	m_Resource_Icon_Sheet = new Surface("Assets/Crafting Materials Icons.png");
-
 
 	// testing things
 	if (true)
@@ -116,7 +113,7 @@ void Game::Tick(float deltaTime)
 {
 	screen->Clear(0);
 	m_Game_Manager->Update_Mouse_Pos(m_Player);
-	m_UI->Draw_UI(deltaTime ,screen, m_Resource_Icon_Sheet, m_Resource_Manager, m_Player, m_Window_Manager, m_Craftingtable_Manager, m_Blueprint_Manager, m_Item_Manager, m_Draft_Manager, m_Unlock_Manager, m_Tutorial, m_Ascension_Upgrade_Screen, m_Ascension_Manger,m_Smelter_Manager);
+	m_UI->Draw_UI(deltaTime ,screen, m_Resource_Manager, m_Player, m_Window_Manager, m_Craftingtable_Manager, m_Blueprint_Manager, m_Item_Manager, m_Draft_Manager, m_Unlock_Manager, m_Tutorial, m_Ascension_Upgrade_Screen, m_Ascension_Manger,m_Smelter_Manager);
 	m_Game_Manager->If_Clicked(m_Player, m_Resource_Manager, m_Window_Manager, m_Craftingtable_Manager, m_Blueprint_Manager, m_Item_Manager, m_Draft_Manager, m_Unlock_Manager, m_Tutorial, m_Ascension_Manger, m_Ascension_Upgrade_Screen, m_Smelter_Manager);
 
 	//update per seccond events

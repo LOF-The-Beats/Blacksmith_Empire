@@ -23,7 +23,6 @@ UI::UI()
 void UI::Draw_UI(
 	float deltaTime,
 	Surface* screen,
-	Surface* resource_Icon_Sheet,
 	Resource_Manager* resource_Manager,
 	Player* player,
 	Window_Manager* window_Manager,
@@ -41,7 +40,6 @@ void UI::Draw_UI(
 
 	UI_Layout(
 		screen,
-		resource_Icon_Sheet,
 		resource_Manager,
 		unlock_Manager,
 		window_Manager,
@@ -152,7 +150,7 @@ void UI::Draw_UI(
 	return;
 }
 
-void UI::UI_Layout(Surface* screen,Surface* resource_Icon_Sheet, Resource_Manager* resource_Manager, Unlock_Manager* unlock_Manager, Window_Manager* window_Manager, Player* player)
+void UI::UI_Layout(Surface* screen, Resource_Manager* resource_Manager, Unlock_Manager* unlock_Manager, Window_Manager* window_Manager, Player* player)
 {
 	screen->Bar(0, 0, SCRWIDTH, 50, 0x120018);
 	screen->Line(0, 50, SCRWIDTH, 50, 0x6A0DAD);
@@ -1232,7 +1230,7 @@ void UI::draw_Ascension_Upgrades(Surface* screen, Ascension_Manager* ascension_M
 	}
 }
 
-void UI::draw_Resource_Icons(Surface* screen, string resource_Name, int text_X, int text_Y, int scale, Surface* resource_Icon_Sheet)
+void UI::draw_Resource_Icons(Surface* screen, string resource_Name, int text_X, int text_Y, int scale, Surface* Asset_Sheet)
 {
 	int icon_X = 0;
 	int icon_Y = 0;
@@ -1257,7 +1255,7 @@ void UI::draw_Resource_Icons(Surface* screen, string resource_Name, int text_X, 
 	int icon_Draw_X = text_X - ((icon_W * scale) + 4);
 	int icon_Draw_Y = text_Y - 8;
 
-	resource_Icon_Sheet->Copy_Region_To( screen, icon_X, icon_Y, icon_W, icon_H, icon_Draw_X, icon_Draw_Y, scale);
+	Asset_Sheet->Copy_Region_To( screen, icon_X, icon_Y, icon_W, icon_H, icon_Draw_X, icon_Draw_Y, scale);
 }
 
 void UI::button_Tab(string name, int x1, int y1, Surface* screen)
