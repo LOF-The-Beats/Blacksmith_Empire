@@ -52,6 +52,21 @@ void Ascension_Upgrades::Set_Name(string n)
 	return;
 }
 
+int Ascension_Upgrades::Get_Upgrade_State() const
+{
+	if (level >= max_Level)
+	{
+		return 2;
+	}
+
+	if (level > 0)
+	{
+		return 1;
+	}
+
+	return 0;
+}
+
 void Ascension_Upgrades::Set_Description(string n)
 {
 	description = n;

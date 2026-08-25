@@ -1065,24 +1065,325 @@ void UI::button_Standard(string name, string cost, string description, int x1, i
 		screen->Line(x1 + w - 2, y1 + 2, x1 + w - 2, y1 + h - 2, highlight_Color);
 	}
 
-	float name_Scale = Get_Text_Scale(name, w - 20, 1.5f);
+	float name_Scale = 1.0f;
 
 	int name_Width =
 		static_cast<int>(name.size() * 6 * name_Scale);
 
-	int name_X =
-		x1 + ((w - name_Width) / 2);
+	if (name_Width <= w - 10)
+	{
+		int name_Height =
+			static_cast<int>(5 * name_Scale);
 
-	screen->Print(name.c_str(),name_X, y1 + 12, text_Color, name_Scale);
+		int name_X =
+			x1 + ((w - name_Width) / 2);
 
+		int name_Y =
+			y1 + ((h - name_Height) / 2);
+
+		screen->Print(
+			name.c_str(),
+			name_X,
+			name_Y,
+			text_Color,
+			name_Scale
+		);
+	}
+	else
+	{
+		size_t space_Pos = name.find(' ');
+
+		if (space_Pos != string::npos)
+		{
+			string line_1 = name.substr(0, space_Pos);
+			string line_2 = name.substr(space_Pos + 1);
+
+			int line_1_Width =
+				static_cast<int>(line_1.size() * 6 * name_Scale);
+
+			int line_2_Width =
+				static_cast<int>(line_2.size() * 6 * name_Scale);
+
+			int line_Height =
+				static_cast<int>(5 * name_Scale);
+
+			int line_Spacing = 2;
+
+			int total_Text_Height =
+				(line_Height * 2) + line_Spacing;
+
+			int start_Y =
+				y1 + ((h - total_Text_Height) / 2);
+
+			int line_1_X =
+				x1 + ((w - line_1_Width) / 2);
+
+			int line_2_X =
+				x1 + ((w - line_2_Width) / 2);
+
+			screen->Print(
+				line_1.c_str(),
+				line_1_X,
+				start_Y,
+				text_Color,
+				name_Scale
+			);
+
+			screen->Print(
+				line_2.c_str(),
+				line_2_X,
+				start_Y + line_Height + line_Spacing,
+				text_Color,
+				name_Scale
+			);
+		}
+	}
+	
+}
+
+void UI::Ascension_Upgrade(Ascension_Upgrades* upgrade, int x1, int y1, Surface* screen, Window_Manager* window_Manager, Player* player)
+{
+	int w = 110;
+	int h = 50;
+
+	bool hover =
+		player->Get_Player_X() >= x1 &&
+		player->Get_Player_X() <= x1 + w &&
+		player->Get_Player_Y() >= y1 &&
+		player->Get_Player_Y() <= y1 + h;
+
+	bool pressed =
+		hover &&
+		glfwGetMouseButton(window, 0) == GLFW_PRESS;
+
+	// Default / not purchased
+	uint outer_Border = 0x050505;
+	uint accent_Color = 0x6A0DAD;
+	uint inner_Panel = 0x1A1A1A;
+	uint text_Color = 0xE6CCFF;
+	uint shadow_Color = 0x050505;
+	uint highlight_Color = 0xB266FF;
+
+	int state = upgrade->Get_Upgrade_State();
+
+	// Purchased, but not maxed
+	if (state == 1)
+	{
+		outer_Border = 0x3A1F00;
+		accent_Color = 0xFF8C00;
+		inner_Panel = 0x8B4500;
+		text_Color = 0xFFF0D0;
+		highlight_Color = 0xFFB347;
+	}
+	// Max level
+	else if (state == 2)
+	{
+		outer_Border = 0x0E2415;
+		accent_Color = 0x3CB371;
+		inner_Panel = 0x1F6B42;
+		text_Color = 0xD8FFD8;
+		highlight_Color = 0x90EE90;
+	}
+
+	// Hover
+	if (hover)
+	{
+		inner_Panel = accent_Color;
+	}
+
+	int button_Offset = 0;
+
+	if (pressed)
+	{
+		button_Offset = 2;
+	}
+
+	x1 += button_Offset;
+	y1 += button_Offset;
+
+	// Shadow
+	screen->Bar(
+		x1 + 3,
+		y1 + 3,
+		x1 + w + 3,
+		y1 + h + 3,
+		shadow_Color
+	);
+
+	// Button
+	screen->Bar(
+		x1,
+		y1,
+		x1 + w,
+		y1 + h,
+		outer_Border
+	);
+
+	screen->Box(
+		x1,
+		y1,
+		x1 + w,
+		y1 + h,
+		accent_Color
+	);
+
+	screen->Bar(
+		x1 + 4,
+		y1 + 4,
+		x1 + w - 4,
+		y1 + h - 4,
+		inner_Panel
+	);
+
+	// 3D edges
+	if (!pressed)
+	{
+		screen->Line(
+			x1 + 2, y1 + 2,
+			x1 + w - 2, y1 + 2,
+			highlight_Color
+		);
+
+		screen->Line(
+			x1 + 2, y1 + 2,
+			x1 + 2, y1 + h - 2,
+			highlight_Color
+		);
+
+		screen->Line(
+			x1 + 2, y1 + h - 2,
+			x1 + w - 2, y1 + h - 2,
+			shadow_Color
+		);
+
+		screen->Line(
+			x1 + w - 2, y1 + 2,
+			x1 + w - 2, y1 + h - 2,
+			shadow_Color
+		);
+	}
+	else
+	{
+		screen->Line(
+			x1 + 2, y1 + 2,
+			x1 + w - 2, y1 + 2,
+			shadow_Color
+		);
+
+		screen->Line(
+			x1 + 2, y1 + 2,
+			x1 + 2, y1 + h - 2,
+			shadow_Color
+		);
+
+		screen->Line(
+			x1 + 2, y1 + h - 2,
+			x1 + w - 2, y1 + h - 2,
+			highlight_Color
+		);
+
+		screen->Line(
+			x1 + w - 2, y1 + 2,
+			x1 + w - 2, y1 + h - 2,
+			highlight_Color
+		);
+	}
+
+	string name = upgrade->Get_Name();
+
+	float name_Scale = 1.0f;
+
+	int name_Width =
+		static_cast<int>(name.size() * 6 * name_Scale);
+
+	if (name_Width <= w - 10)
+	{
+		int name_Height =
+			static_cast<int>(5 * name_Scale);
+
+		int name_X =
+			x1 + ((w - name_Width) / 2);
+
+		int name_Y =
+			y1 + ((h - name_Height) / 2);
+
+		screen->Print(
+			name.c_str(),
+			name_X,
+			name_Y,
+			text_Color,
+			name_Scale
+		);
+	}
+	else
+	{
+		size_t space_Pos = name.find(' ');
+
+		if (space_Pos != string::npos)
+		{
+			string line_1 = name.substr(0, space_Pos);
+			string line_2 = name.substr(space_Pos + 1);
+
+			int line_1_Width =
+				static_cast<int>(line_1.size() * 6 * name_Scale);
+
+			int line_2_Width =
+				static_cast<int>(line_2.size() * 6 * name_Scale);
+
+			int line_Height =
+				static_cast<int>(5 * name_Scale);
+
+			int line_Spacing = 2;
+
+			int total_Text_Height =
+				(line_Height * 2) + line_Spacing;
+
+			int start_Y =
+				y1 + ((h - total_Text_Height) / 2);
+
+			int line_1_X =
+				x1 + ((w - line_1_Width) / 2);
+
+			int line_2_X =
+				x1 + ((w - line_2_Width) / 2);
+
+			screen->Print(
+				line_1.c_str(),
+				line_1_X,
+				start_Y,
+				text_Color,
+				name_Scale
+			);
+
+			screen->Print(
+				line_2.c_str(),
+				line_2_X,
+				start_Y + line_Height + line_Spacing,
+				text_Color,
+				name_Scale
+			);
+		}
+	}
+
+	// Hover information
 	if (hover)
 	{
 		hover_Active = true;
-		hover_Name = name;
-		hover_Cost = cost;
-		hover_Description = description;
+
+		hover_Name = upgrade->Get_Name();
+
+		hover_Cost =
+			"Cost: " +
+			to_string(
+				static_cast<int>(
+					round(upgrade->Get_Cost())
+					)
+			) +
+			" Hourglasses";
+
+		hover_Description =
+			upgrade->Get_Description();
 	}
-	
 }
 
 void UI::button_Standard_Selected(string name, int x1, int y1, Window_Manager* window_Manager, Surface* screen)
@@ -1226,7 +1527,7 @@ void UI::draw_Ascension_Upgrades(Surface* screen, Ascension_Manager* ascension_M
 			double cost = all_Upgrades[i]->Get_Cost();
 			string label = "Cost: " + to_string(static_cast<int>(std::round(cost))) + " Hourglasses";
 			string description = all_Upgrades[i]->Get_Description();
-			button_Standard(name.c_str(), label.c_str(), description.c_str(), screen_X, screen_Y, screen, window_Manager, player);
+			Ascension_Upgrade(all_Upgrades[i], static_cast<int>(screen_X), static_cast<int>(screen_Y), screen, window_Manager, player);
 		}
 
 	}

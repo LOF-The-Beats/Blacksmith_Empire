@@ -145,7 +145,11 @@ vector<Ascension_Upgrades*> Ascension_Manager::Get_All_Upgrades()
 }
 
 
-void Ascension_Manager::Buy_Upgrades(string name, Resource_Manager* resource_Manager, Player* player, Craftingtable_Manager* craftingtable_Manager)
+void Ascension_Manager::Buy_Upgrades(
+	string name,
+	Resource_Manager* resource_Manager,
+	Player* player,
+	Craftingtable_Manager* craftingtable_Manager)
 {
 	auto upgrade = Get_Upgrade(name);
 	auto hourglass = resource_Manager->Get_Resource("Hourglass");
@@ -166,10 +170,21 @@ void Ascension_Manager::Buy_Upgrades(string name, Resource_Manager* resource_Man
 	}
 
 	hourglass->Sub_Quantity(upgrade->Get_Cost());
-	upgrade->Set_Level(upgrade->Get_Level() + 1);
-	upgrade->Set_Cost(upgrade->Get_Cost() * 2);
 
-	Apply_Upgrade(name, resource_Manager, player, craftingtable_Manager);
+	upgrade->Set_Level(
+		upgrade->Get_Level() + 1
+	);
+
+	upgrade->Set_Cost(
+		upgrade->Get_Cost() * 2
+	);
+
+	Apply_Upgrade(
+		name,
+		resource_Manager,
+		player,
+		craftingtable_Manager
+	);
 }
 
 void Ascension_Manager::Create_Upgrades()

@@ -142,9 +142,6 @@ void Surface::Print(const char* s, int x1, int y1, uint c, float scale)
 	const int charWidth = 6;
 	const int charHeight = 5;
 
-	const float offsetX = (scale - 1.0f) * (charWidth / 2.0f);
-	const float offsetY = (scale - 1.0f) * (charHeight / 2.0f);
-
 	for (int i = 0; i < len; ++i)
 	{
 		unsigned char ch = (unsigned char)s[i];
@@ -171,8 +168,8 @@ void Surface::Print(const char* s, int x1, int y1, uint c, float scale)
 
 				if (row[h] == 'o')
 				{
-					int ix = (int)(x1 + i * charWidth * scale + px - offsetX);
-					int iy = (int)(y1 + py - offsetY);
+					int ix = (int)(x1 + i * charWidth * scale + px);
+					int iy = (int)(y1 + py);
 					if (ix >= 0 && ix < width && iy >= 0 && iy < height)
 						pixels[iy * width + ix] = c;
 				}

@@ -13,6 +13,7 @@ public:
 	double Get_World_X() const;
 	double Get_World_Y() const;
 	bool Get_Unlocked() const;
+	int Get_Upgrade_State() const;
 
 	// Setters
 	void Set_Name(string n);

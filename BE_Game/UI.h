@@ -11,6 +11,7 @@ class Tutorial;
 class Ascension_Upgrade_Screen;
 class Ascension_Manager;
 class Smelter_Manager;
+class Ascension_Upgrades;
 
 class UI
 {
@@ -33,6 +34,7 @@ public:
 
 	//Buttons
 	void button_Standard(string name, string cost, string description, int x1, int y1, Surface* screen, Window_Manager* window_Manager, Player* player);
+	void Ascension_Upgrade(Ascension_Upgrades* upgrade, int x1, int y1, Surface* screen, Window_Manager* window_Manager, Player* player);
 	void button_Standard_Selected(string name, int x1, int y1, Window_Manager* window_Manager, Surface* screen);
 	void button_Tab(string name, int x1, int y1, Surface* screen);
 	void button_Tab_Selected(string name, int x1, int y1, Surface* screen);
