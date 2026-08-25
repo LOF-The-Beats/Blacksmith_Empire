@@ -24,9 +24,12 @@ void Game_Manager::Update_Mouse_Pos(Player* player)
 {
 	double px = player->Get_Player_X();
 	double py = player->Get_Player_Y();
+
 	glfwGetCursorPos(window, &px, &py);
+
 	player->Set_Player_Pos(px, py);
-	return;
+
+	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
 }
 
 void Game_Manager::If_Clicked(Player* player, Resource_Manager* resource_Manager, Window_Manager* window_Manager, Craftingtable_Manager* craftingtable, Blueprint_Manager* blueprint_Manager, Item_Manager* item_Manager, Draft_Manager* draft_Manager, Unlock_Manager* unlock_Manager, Tutorial* tutorial, Ascension_Manager* ascension_Manager, Ascension_Upgrade_Screen* ascension_Upgrade_Screen, Smelter_Manager* smelter_Manager)
@@ -180,7 +183,7 @@ void Game_Manager::Forest_Buttons(Player* player, Resource_Manager* resource_Man
 		softWood->Get_Worker_Cost() <= thalions->Get_Quantity())
 	{
 
-		if (softWood->Get_Worker_Tool_Equiped() != "None" &&
+		if (softWood->Get_Worker_Tool_Equiped() != "Tool" &&
 			item->Get_Quantity() >= 1)
 		{
 
@@ -191,7 +194,7 @@ void Game_Manager::Forest_Buttons(Player* player, Resource_Manager* resource_Man
 
 			item->Sub_Quantity(1);
 		}
-		else if (softWood->Get_Worker_Tool_Equiped() == "None")
+		else if (softWood->Get_Worker_Tool_Equiped() == "Tool")
 		{
 			softWood->Add_Workers(1);
 			softWood->Update_Production_Rate();

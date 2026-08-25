@@ -145,8 +145,14 @@ void UI::Draw_UI(
 			player,
 			window_Manager
 		);
-	}
-
+	}	
+	draw_Mouse_Icons(
+		screen,
+		1,
+		mouse_Icon_Sheet,
+		player,
+		window_Manager
+	);
 	return;
 }
 
@@ -1086,6 +1092,14 @@ void UI::button_Standard(string name, string cost, string description, int x1, i
 			text_Color,
 			name_Scale
 		);
+	if (hover)
+		{
+			hover_Active = true;
+			hover_Name = name;
+			hover_Cost = cost;
+			hover_Description = description;
+		}
+
 	}
 	else
 	{
@@ -1557,6 +1571,45 @@ void UI::draw_Resource_Icons(Surface* screen, string resource_Name, int text_X, 
 	int icon_Draw_Y = text_Y - 8;
 
 	Asset_Sheet->Copy_Region_To( screen, icon_X, icon_Y, icon_W, icon_H, icon_Draw_X, icon_Draw_Y, scale);
+}
+
+void UI::draw_Mouse_Icons(Surface* screen, int scale, Surface* Asset_Sheet, Player* player, Window_Manager* window_Manager)
+{
+	int mouse_X = static_cast<int>(player->Get_Player_X());
+	int mouse_Y = static_cast<int>(player->Get_Player_Y());
+
+	int icon_X = 16 * 0;
+	int icon_Y = 16 * 5;
+
+	int icon_W = 16;
+	int icon_H = 16;
+
+	if (hover_Active)
+	{
+		icon_X = 16 * 1;
+		icon_Y = 16 * 8;
+
+		if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS)
+		{
+			icon_X = 16 * 2;
+			icon_Y = 16 * 8;
+		}
+	}
+
+	if (!hover_Active)
+	{
+		icon_X = 16 * 0;
+		icon_Y = 16 * 5;
+
+		if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS)
+		{
+			icon_X = 16 * 2;
+			icon_Y = 16 * 5;
+		}
+	}
+
+	Asset_Sheet->Copy_Region_To(screen, icon_X, icon_Y, icon_W, icon_H, mouse_X, mouse_Y, scale
+	);
 }
 
 void UI::button_Tab(string name, int x1, int y1, Surface* screen)
