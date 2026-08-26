@@ -50,6 +50,7 @@ void Game::Init()
 	m_Window_Manager->add_Window("Libary", false);
 	m_Window_Manager->add_Window("Witch Hut", false);
 	m_Window_Manager->add_Window("Mine", false);
+	m_Window_Manager->add_Window("Settings", false);
 
 
 	m_Window_Manager->add_Window("Craftingtable", false);
@@ -98,6 +99,7 @@ void Game::Init()
 		m_Unlock_Manager->Get_Unlocked("Player")->Set_Unlocked(true);
 		m_Unlock_Manager->Get_Unlocked("Libary")->Set_Unlocked(true);
 		m_Unlock_Manager->Get_Unlocked("Witch Hut")->Set_Unlocked(true);
+		m_Unlock_Manager->Get_Unlocked("Settings")->Set_Unlocked(true);
 
 		m_Smelter_Manager->Get_Smelter("Smelter 1")->Set_Unlocked(true);
 

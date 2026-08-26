@@ -38,49 +38,21 @@ void UI::Draw_UI(
 {
 	hover_Active = false;
 
-	UI_Layout(
-		screen,
-		resource_Manager,
-		unlock_Manager,
-		window_Manager,
-		player
-	);
+	UI_Layout(screen, resource_Manager, unlock_Manager, window_Manager, player);
 
-	tutorial->Draw_Tutorial_UI(
-		screen,
-		this,
-		player,
-		window_Manager
-	);
+	tutorial->Draw_Tutorial_UI(screen, this, player, window_Manager);
 
 	if (unlock_Manager->Get_Unlocked("Forest")->Get_Unlocked() &&
 		window_Manager->get_Active_Window() == "Forest")
 	{
-		Forest_UI(
-			deltaTime,
-			screen,
-			resource_Icon_Sheet,
-			resource_Manager,
-			player,
-			item_Manager,
-			window_Manager
-		);
+		Forest_UI(deltaTime, screen,resource_Icon_Sheet, resource_Manager, player, item_Manager, window_Manager);
 	}
 	else if (
 		window_Manager->get_Active_Window() == "Forge" ||
 		window_Manager->get_Active_Window() == "Craftingtable" ||
 		window_Manager->get_Active_Window() == "Smelter")
 	{
-		Forge_UI(
-			screen,
-			resource_Manager,
-			player,
-			window_Manager,
-			craftingtable,
-			blueprint_Manager,
-			item_Manager,
-			smelter_Manager
-		);
+		Forge_UI(screen, resource_Manager, player, window_Manager, craftingtable, blueprint_Manager, item_Manager, smelter_Manager );
 	}
 	else if (
 		window_Manager->get_Active_Window() == "Player" ||
@@ -88,71 +60,34 @@ void UI::Draw_UI(
 		window_Manager->get_Active_Window() == "Crafting Tool" ||
 		window_Manager->get_Active_Window() == "Mining Tool")
 	{
-		Player_UI(
-			screen,
-			window_Manager,
-			item_Manager,
-			player
-		);
+		Player_UI(screen, window_Manager, item_Manager, player);
 	}
 	else if (
 		window_Manager->get_Active_Window() == "Libary" ||
 		window_Manager->get_Active_Window() == "Blueprint Upgrade" ||
 		window_Manager->get_Active_Window() == "Blueprint Crafting")
 	{
-		Libary_UI(
-			screen,
-			resource_Manager,
-			blueprint_Manager,
-			player,
-			window_Manager,
-			draft_Manager
-		);
+		Libary_UI(screen, resource_Manager, blueprint_Manager, player, window_Manager, draft_Manager);
 	}
 	else if (
 		window_Manager->get_Active_Window() == "Witch Hut" ||
 		window_Manager->get_Active_Window() == "Ascension Upgrade")
 	{
-		Witch_Hut_UI(
-			screen,
-			resource_Manager,
-			blueprint_Manager,
-			player,
-			window_Manager,
-			draft_Manager,
-			ascension_Upgrade_Screen,
-			ascension_Manager
-		);
+		Witch_Hut_UI(screen, resource_Manager, blueprint_Manager, player, window_Manager, draft_Manager, ascension_Upgrade_Screen, ascension_Manager);
 	}
 	else if (window_Manager->get_Active_Window() == "Mine")
 	{
-		Mine_UI(
-			screen,
-			window_Manager,
-			player,
-			resource_Manager,
-			item_Manager
-		);
+		Mine_UI(screen, window_Manager, player, resource_Manager, item_Manager);
 	}
-
+	else if (window_Manager->get_Active_Window() == "Settings")
+	{
+		Settings_UI(screen, _Icon_Sheet, window_Manager, player);
+	}
 	if (hover_Active)
 	{
-		draw_Hover_Info(
-			hover_Name,
-			hover_Cost,
-			hover_Description,
-			screen,
-			player,
-			window_Manager
-		);
+		draw_Hover_Info(hover_Name, hover_Cost, hover_Description, screen, player, window_Manager);
 	}	
-	draw_Mouse_Icons(
-		screen,
-		1,
-		mouse_Icon_Sheet,
-		player,
-		window_Manager
-	);
+	draw_Mouse_Icons(screen, 1, mouse_Icon_Sheet, player, window_Manager);
 	return;
 }
 
@@ -166,23 +101,54 @@ void UI::UI_Layout(Surface* screen, Resource_Manager* resource_Manager, Unlock_M
 	auto thalions = resource_Manager->Get_Resource("Thalions");
 	auto hourglass = resource_Manager->Get_Resource("Hourglass");
 
-	string tekst = "Thalions : " + to_string(static_cast<int>(round(thalions->Get_Quantity())));
-	draw_Resource_Icons(screen, "Thalions", 30, 17, 2, resource_Icon_Sheet);
-	screen->Print(tekst.c_str(), (SCRWIDTH * 0 / 3) + 30, 20, 0xFF00FF, 2.5F);
+	float text_Scale = 2.5f;
+	int box_W = SCRWIDTH / 3;
+
+	// Thalions
+	string tekst =
+		"Thalions : " +
+		to_string(static_cast<int>(round(thalions->Get_Quantity())));
+
+	int text_W =
+		static_cast<int>(tekst.size() * 6 * text_Scale);
+
+	int thalion_Text_X =
+		((box_W - text_W) / 2);
+
+	draw_Resource_Icons( screen, "Thalions", thalion_Text_X, 20, 2, resource_Icon_Sheet);
+
+	screen->Print( tekst.c_str(), thalion_Text_X, 20, 0xFF00FF, text_Scale );
+
+	// Hourglasses
 	if (unlock_Manager->Get_Unlocked("Witch Hut")->Get_Unlocked())
 	{
-		tekst = "Hourglasses: " + to_string(static_cast<int>(round(hourglass->Get_Quantity()))) + "(" + to_string(static_cast<int>(round(hourglass->Get_Gain_On_Reset()))) + ")";
-		screen->Print(tekst.c_str(), (SCRWIDTH * 1 / 3) + 10, 20, 0xFF00FF, 2.5F);
+		tekst =
+			"Hourglasses: " +
+			to_string(static_cast<int>(round(hourglass->Get_Quantity()))) +
+			"(" +
+			to_string(static_cast<int>(round(hourglass->Get_Gain_On_Reset()))) +
+			")";
+
+		text_W = static_cast<int>(tekst.size() * 6 * text_Scale);
+
+		screen->Print(tekst.c_str(), (1 * box_W) + ((box_W - text_W) / 2), 20, 0xFF00FF, text_Scale);
 	}
-	tekst = "Timer idle: " + to_string(static_cast<int>(round(player->Get_Timer())));
-	screen->Print(tekst.c_str(), (SCRWIDTH * 2 / 3) + 30, 20, 0xFF00FF, 2.5F);
+
+	// Timer
+	tekst =
+		"Timer idle: " +
+		to_string(static_cast<int>(round(player->Get_Timer())));
+
+	text_W = static_cast<int>(tekst.size() * 6 * text_Scale);
+
+	screen->Print(tekst.c_str(), (2 * box_W) + ((box_W - text_W) / 2), 20, 0xFF00FF, text_Scale);
 
 	// left bar background
 	screen->Bar(0, 50, 150, SCRHEIGHT -1, 0x0A0710);
 	screen->Line(150, 50, 150, SCRHEIGHT - 1, 0x6A0DAD);
 
 	int tab_X = 0;
-	int tab_Y = 60;
+	int tab_Y = 50;
 	int tab_H = SCRHEIGHT / 10;
 
 	if (window_Manager->get_Active_Window() == "Forest")
@@ -229,6 +195,14 @@ void UI::UI_Layout(Surface* screen, Resource_Manager* resource_Manager, Unlock_M
 		else
 			button_Tab("Mine", tab_X, tab_Y + (5 * tab_H), screen);
 	}
+	if (window_Manager->get_Active_Window() == "Settings")
+	{
+		button_Tab_Selected("Settings", tab_X, tab_Y + (6 * tab_H), screen);
+	}
+	else
+	{
+		button_Tab("Settings", tab_X, tab_Y + (6 * tab_H), screen);
+	}
 }
 
 void UI::Forest_UI(float deltaTime, Surface* screen, Surface* resource_Icon_Sheet, Resource_Manager* resource_Manager, Player* player, Item_Manager* item_Manager, Window_Manager* window_Manager)
@@ -241,7 +215,7 @@ void UI::Forest_UI(float deltaTime, Surface* screen, Surface* resource_Icon_Shee
 		double player_Exp = round(player->Get_Stats("Lumberjack")->Get_Exp());
 		double player_Exp_Needed = round(player->Get_Stats("Lumberjack")->Get_Exp_Needed());
 		string level_Idicator_Tekst = "Exp: " + to_string(static_cast<int>(round(player_Exp))) + " / Exp Needed: " + to_string(static_cast<int>(std::round(player_Exp_Needed)));
-		screen->Print(level_Idicator_Tekst.c_str(), (SCRWIDTH - 150) / 2, 125, 0xFF0000 , 2.0F);
+		screen->Print(level_Idicator_Tekst.c_str(), (SCRWIDTH - 150) / 2, 120, 0xFF0000 , 2.0F);
 	}
 	screen->Line(150, 100, SCRWIDTH, 100, 0xFF00FF);
 	screen->Line(150, 150, SCRWIDTH, 150, 0xFF00FF);
@@ -277,8 +251,8 @@ void UI::Forest_UI(float deltaTime, Surface* screen, Surface* resource_Icon_Shee
 		button_Standard("Upgrade tools", "No Upgrades Available", "", 160, 300, screen, window_Manager, player); // upgrade tools
 	}
 
-	draw_Resource_Icons(screen, "SoftWood", 180, SCRHEIGHT / 30 * 1 + 35, 1, resource_Icon_Sheet);
-	screen->Print((string(resource_Manager->Get_Resource("SoftWood")->Get_Name()) + ": " + to_string(static_cast<int>(std::round(resource_Manager->Get_Resource("SoftWood")->Get_Quantity())))).c_str(), 180, SCRHEIGHT / 30 * 1 + 35, 0xFF00FF, 1.5);
+	draw_Resource_Icons(screen, "SoftWood", 196, SCRHEIGHT / 30 * 1 + 32, 2, resource_Icon_Sheet);
+	screen->Print((string(resource_Manager->Get_Resource("SoftWood")->Get_Name()) + ": " + to_string(static_cast<int>(std::round(resource_Manager->Get_Resource("SoftWood")->Get_Quantity())))).c_str(), 200, SCRHEIGHT / 30 * 1 + 25, 0xFF00FF, 2.0);
 	if (player->Get_Timer() >= player->Get_Idle_Deep_Timer())
 	{
 		cost = softwood->Get_Production_Rate() * player->Get_Idle_Deep_Multiplier() * player->Get_Idle_Multiplier();
@@ -292,8 +266,8 @@ void UI::Forest_UI(float deltaTime, Surface* screen, Surface* resource_Icon_Shee
 		cost = softwood->Get_Production_Rate();
 	}
 	
-	label = "SoftWood Gain = " + to_string(static_cast<int>(std::round(cost)));
-	screen->Print(label.c_str(), 180, SCRHEIGHT / 30 * 1 + 50, 0xFF00FF, 1.5);
+	label = "SoftWood Gain per sec = " + to_string(static_cast<int>(std::round(cost)));
+	screen->Print(label.c_str(), 200, SCRHEIGHT / 30 * 1 + 45, 0xFF00FF, 2);
 
 	// info tekst
 	
@@ -698,7 +672,7 @@ void UI::Libary_UI(Surface* screen, Resource_Manager* resource_Manager, Blueprin
 		double player_Exp = round(player->Get_Stats("Scribe")->Get_Exp());
 		double player_Exp_Needed = round(player->Get_Stats("Scribe")->Get_Exp_Needed());
 		string level_Idicator_Tekst = "Exp: " + to_string(static_cast<int>(round(player_Exp))) + " / Exp Needed: " + to_string(static_cast<int>(std::round(player_Exp_Needed)));
-		screen->Print(level_Idicator_Tekst.c_str(), (SCRWIDTH - 150) / 2, 125, 0xFF0000, 2.0F);
+		screen->Print(level_Idicator_Tekst.c_str(), (SCRWIDTH - 150) / 2, 120, 0xFF0000, 2.0F);
 
 		auto paper = resource_Manager->Get_Resource("Paper");
 		auto softwood = resource_Manager->Get_Resource("SoftWood");
@@ -831,7 +805,7 @@ void UI::Mine_UI(Surface* screen, Window_Manager* window_Manager, Player* player
 	double player_Exp = round(player->Get_Stats("Mining")->Get_Exp());
 	double player_Exp_Needed = round(player->Get_Stats("Mining")->Get_Exp_Needed());
 	string level_Idicator_Tekst = "Exp: " + to_string(static_cast<int>(round(player_Exp))) + " / Exp Needed: " + to_string(static_cast<int>(std::round(player_Exp_Needed)));
-	screen->Print(level_Idicator_Tekst.c_str(), (SCRWIDTH - 150) / 2, 125, 0xFF0000, 2.0F);
+	screen->Print(level_Idicator_Tekst.c_str(), (SCRWIDTH - 150) / 2, 120, 0xFF0000, 2.0F);
 	screen->Line(150, 100, SCRWIDTH, 100, 0xFF00FF);
 	screen->Line(150, 150, SCRWIDTH, 150, 0xFF00FF);
 
@@ -933,6 +907,92 @@ void UI::Mine_UI(Surface* screen, Window_Manager* window_Manager, Player* player
 	button_Standard("Delve", label.c_str(), "Delve deeper in into the mine", 840, 160, screen, window_Manager, player);
 
 
+}
+
+void UI::Settings_UI(
+	Surface* screen,
+	Surface* Icon_Sheet,
+	Window_Manager* window_Manager,
+	Player* player)
+{
+	int icon_X;
+	int icon_Y;
+
+	int icon_W = 16;
+	int icon_H = 16;
+
+	int draw_X = 315;
+	int draw_Y = 50;
+
+	int scale = 3;
+
+	string label;
+
+	if (window_Manager->Get_Fullscreen())
+	{
+		label = "Display Mode:    Fullscreen";
+	}
+	else
+	{
+		label = "Display Mode:    Windowed";
+	}
+
+	screen->Print(
+		label.c_str(),
+		draw_X - 152,
+		draw_Y + 18,
+		0xFFFFFF,
+		2.0f
+	);
+
+	// Choose icon
+	if (window_Manager->Get_Fullscreen())
+	{
+		icon_X = 16 * 32; // Fullscreen
+		icon_Y = 16 * 9;
+	}
+	else
+	{
+		icon_X = 16 * 33; // Windowed
+		icon_Y = 16 * 8;
+	}
+
+	// Is mouse over the icon?
+	bool hover =
+		player->Get_Player_X() >= draw_X &&
+		player->Get_Player_X() <= draw_X + (icon_W * scale) &&
+		player->Get_Player_Y() >= draw_Y &&
+		player->Get_Player_Y() <= draw_Y + (icon_H * scale);
+
+	// Is mouse currently held down?
+	bool mouse_Down =
+		glfwGetMouseButton(
+			window,
+			GLFW_MOUSE_BUTTON_LEFT
+		) == GLFW_PRESS;
+
+	// Only true on the FIRST frame of the click
+	bool clicked =
+		hover &&
+		mouse_Down &&
+		!mouse_Was_Down;
+
+	if (clicked)
+	{
+		if (window_Manager->Get_Fullscreen())
+		{
+			window_Manager->Apply_Windowed_Mode(1920, 1080);
+		}
+		else
+		{
+			window_Manager->Apply_Fullscreen_Mode();
+		}
+	}
+
+	// Remember mouse state for next frame
+	mouse_Was_Down = mouse_Down;
+
+	Icon_Sheet->Copy_Region_To(screen, icon_X, icon_Y, icon_W, icon_H, draw_X, draw_Y, scale);
 }
 
 void UI::button_Standard(string name, string cost, string description, int x1, int y1, Surface* screen, Window_Manager* window_Manager, Player* player)
@@ -1527,21 +1587,24 @@ void UI::draw_Ascension_Upgrades(Surface* screen, Ascension_Manager* ascension_M
 
 	for (size_t i = 0; i < all_Upgrades.size(); i++)
 	{
+		if (!all_Upgrades[i]->Get_Unlocked())
+		{
+			continue;
+		}
+
 		double world_X = all_Upgrades[i]->Get_World_X();
 		double world_Y = all_Upgrades[i]->Get_World_Y();
 
-		double screen_X = world_X - ascension_Upgrade_Screen->Get_Camera_X();
-		double screen_Y = world_Y - ascension_Upgrade_Screen->Get_Camera_Y();
+		double screen_X =
+			world_X - ascension_Upgrade_Screen->Get_Camera_X();
 
-		if (ascension_Upgrade_Screen->Is_In_View(screen_X, screen_Y, 150, 50, SCRWIDTH / 3 * 2 - 150, 950))
+		double screen_Y =
+			world_Y - ascension_Upgrade_Screen->Get_Camera_Y();
+
+		if (ascension_Upgrade_Screen->Is_In_View(screen_X, screen_Y, 150, 50, SCRWIDTH / 3 * 2 - 150,950))
 		{
-			string name = all_Upgrades[i]->Get_Name();
-			double cost = all_Upgrades[i]->Get_Cost();
-			string label = "Cost: " + to_string(static_cast<int>(std::round(cost))) + " Hourglasses";
-			string description = all_Upgrades[i]->Get_Description();
 			Ascension_Upgrade(all_Upgrades[i], static_cast<int>(screen_X), static_cast<int>(screen_Y), screen, window_Manager, player);
 		}
-
 	}
 }
 
@@ -1626,7 +1689,27 @@ void UI::button_Tab(string name, int x1, int y1, Surface* screen)
 	screen->Box(x1, y1, x1 + w, y1 + h, accent_Color);
 	screen->Bar(x1 + 4, y1 + 4, x1 + w - 4, y1 + h - 4, inner_Panel);
 
-	screen->Print(name.c_str(), x1 + 35, y1 + 28, text_Color, 1.5F);
+	float text_Scale = 2.0f;
+
+	int text_Width =
+		static_cast<int>(name.size() * 6 * text_Scale);
+
+	int text_Height =
+		static_cast<int>(5 * text_Scale);
+
+	int text_X =
+		x1 + ((w - text_Width) / 2);
+
+	int text_Y =
+		y1 + ((h - text_Height) / 2);
+
+	screen->Print(
+		name.c_str(),
+		text_X,
+		text_Y,
+		text_Color,
+		text_Scale
+	);
 }
 
 void UI::button_Tab_Selected(string name, int x1, int y1, Surface* screen)
@@ -1648,7 +1731,27 @@ void UI::button_Tab_Selected(string name, int x1, int y1, Surface* screen)
 	// no right border feel: selected tab connects to main window
 	screen->Line(x1 + w, y1 + 4, x1 + w, y1 + h - 4, inner_Panel);
 
-	screen->Print(name.c_str(), x1 + 35, y1 + 28, text_Color, 1.5F);
+	float text_Scale = 2.0f;
+
+	int text_Width =
+		static_cast<int>(name.size() * 6 * text_Scale);
+
+	int text_Height =
+		static_cast<int>(5 * text_Scale);
+
+	int text_X =
+		x1 + ((w - text_Width) / 2);
+
+	int text_Y =
+		y1 + ((h - text_Height) / 2);
+
+	screen->Print(
+		name.c_str(),
+		text_X,
+		text_Y,
+		text_Color,
+		text_Scale
+	);
 }
 
 float UI::Get_Text_Scale(string text, int max_Width, float start_Scale)
@@ -1682,7 +1785,7 @@ void UI::draw_Hover_Info(
 	int box_W = 300;
 	int max_Chars = 38;
 
-	float name_Scale = 1.5f;
+	float name_Scale = 2.0f;
 	float text_Scale = 1.0f;
 
 	vector<string> description_Lines;

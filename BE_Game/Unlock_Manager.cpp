@@ -33,6 +33,7 @@ void Unlock_Manager::Create_All_Unlocks()
 	Add_Unlocked("Libary");
 	Add_Unlocked("Witch Hut");
 	Add_Unlocked("Mine");
+	Add_Unlocked("Settings");
 
 
 	Get_Unlocked("Forest")->Set_Unlocked(true);
@@ -65,6 +66,11 @@ void Unlock_Manager::Check_Unlock(Resource_Manager* resource_Manager, Player* pl
 		!Get_Unlocked("Mine")->Get_Unlocked())
 	{
 		Get_Unlocked("Mine")->Set_Unlocked(true);
+	}
+	if (resource_Manager->Get_Resource("Softwood") &&
+		!Get_Unlocked("Settings")->Get_Unlocked())
+	{
+		Get_Unlocked("Settings")->Set_Unlocked(true);
 	}
 
 

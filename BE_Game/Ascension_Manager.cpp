@@ -175,6 +175,75 @@ void Ascension_Manager::Buy_Upgrades(
 		upgrade->Get_Level() + 1
 	);
 
+	if (name == "Stone" && upgrade->Get_Level() > 0)
+	{
+		Get_Upgrade("Lumberjack")->Set_Unlocked(true);
+		Get_Upgrade("Crafting")->Set_Unlocked(true);
+		Get_Upgrade("Mining")->Set_Unlocked(true);
+		Get_Upgrade("Workers Lumberjack")->Set_Unlocked(true);
+		Get_Upgrade("Workers Craftingtable")->Set_Unlocked(true);
+		Get_Upgrade("Workers Mining")->Set_Unlocked(true);
+	}
+
+	if (name == "Lumberjack" && upgrade->Get_Level() > 0)
+	{
+		Get_Upgrade("Lumberjack Crit Chance")->Set_Unlocked(true);
+		Get_Upgrade("Lumberjack Knowledge")->Set_Unlocked(true);
+	}
+
+	if (name == "Lumberjack Knowledge" && upgrade->Get_Level() > 0)
+	{
+		Get_Upgrade("Lumberjack Growth")->Set_Unlocked(true);
+	}
+
+	if (name == "Lumberjack Crit Chance" && upgrade->Get_Level() > 0)
+	{
+		Get_Upgrade("Lumberjack Crit Power")->Set_Unlocked(true);
+	}
+
+	if (name == "Crafting" && upgrade->Get_Level() > 0)
+	{
+		Get_Upgrade("Crafting Knowledge")->Set_Unlocked(true);
+	}
+
+	if (name == "Crafting Knowledge" && upgrade->Get_Level() > 0)
+	{
+		Get_Upgrade("Crafting Growth")->Set_Unlocked(true);
+		Get_Upgrade("Crafting Unlock table")->Set_Unlocked(true);
+		Get_Upgrade("Crafting Mass Production")->Set_Unlocked(true);
+	}
+
+	if (name == "Mining" && upgrade->Get_Level() > 0)
+	{
+		Get_Upgrade("Mining Crit Chance")->Set_Unlocked(true);
+		Get_Upgrade("Mining Knowledge")->Set_Unlocked(true);
+	}
+
+	if (name == "Mining Crit Chance" && upgrade->Get_Level() > 0)
+	{
+		Get_Upgrade("Mining Crit Power")->Set_Unlocked(true);
+	}
+
+	if (name == "Mining Knowledge" && upgrade->Get_Level() > 0)
+	{
+		Get_Upgrade("Mining Growth")->Set_Unlocked(true);
+	}
+
+	if (name == "Workers Lumberjack" && upgrade->Get_Level() > 0)
+	{
+		Get_Upgrade("Workers Idle")->Set_Unlocked(true);
+	}
+
+	if (name == "Workers Idle" && upgrade->Get_Level() > 0)
+	{
+		Get_Upgrade("Workers Deep Idle")->Set_Unlocked(true);
+	}
+
+	if (name == "Workers Mining" && upgrade->Get_Level() > 0)
+	{
+		Get_Upgrade("Workers Collecting")->Set_Unlocked(true);
+	}
+
 	upgrade->Set_Cost(
 		upgrade->Get_Cost() * 2
 	);
@@ -206,12 +275,13 @@ void Ascension_Manager::Create_Upgrades()
 	Add_Upgrade("Crafting Unlock table", "Unlock extra Craftingtable", 1, 1000, 1040, 200);
 	Add_Upgrade("Crafting Mass Production", "Can craft more items at a time", 1, 1000, 1040, 300);
 	Add_Upgrade("Workers Idle", "Increase idle multiplier by 10%", 10, 10, 500, 700);
-	Add_Upgrade("Workers Deep Idle", "Increase deep idle multiplier by 10%", 10, 25, 680, 700);
+	Add_Upgrade("Workers Deep Idle", "Increase deep idle multiplier by 10%", 10, 25, 500, 800);
 	Add_Upgrade("Mining Crit Chance", "Increase Mining crit chance by 1%", 5, 10, 140, 300);
 	Add_Upgrade("Mining Knowledge", "Increase Mining XP gain by 1", 1, 100, 320, 300);
 	Add_Upgrade("Mining Crit Power", "Increase Mining crit power by 10%", 5, 100, 140, 200);
 	Add_Upgrade("Mining Growth", "Increase Mining strength gain after level up by 1", 1, 1000, 320, 200);
-
+	
+	Get_Upgrade("Stone")->Set_Unlocked(true);
 }
 
 void Ascension_Manager::Apply_Upgrade(string name, Resource_Manager* resource_Manager, Player* player, Craftingtable_Manager* craftingtable_Manager)

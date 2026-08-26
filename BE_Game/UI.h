@@ -27,7 +27,7 @@ public:
 	void Libary_UI(Surface* screen, Resource_Manager* resource_Manager, Blueprint_Manager* blueprint_Manager, Player* player, Window_Manager* window_Manager, Draft_Manager* Draft_Manager);
 	void Witch_Hut_UI(Surface* screen, Resource_Manager* resource_Manager, Blueprint_Manager* blueprint_Manager, Player* player, Window_Manager* window_Manager, Draft_Manager* Draft_Manager, Ascension_Upgrade_Screen* ascension_Upgrade_Screen, Ascension_Manager* ascension_Manager);
 	void Mine_UI(Surface* screen, Window_Manager* window_Manager, Player* player, Resource_Manager* resource_Manager, Item_Manager* item_Manager);
-
+	void Settings_UI(Surface* screen, Surface* Icon_Sheet, Window_Manager* window_Manager, Player* player);
 
 
 
@@ -55,6 +55,7 @@ public:
 
 private:
 	bool hover_Active = false;
+	bool mouse_Was_Down = false;
 
 	string hover_Name;
 	string hover_Cost;
@@ -62,6 +63,6 @@ private:
 
 	Surface* resource_Icon_Sheet = new Surface("Assets/Crafting Materials Icons.png");
 	Surface* mouse_Icon_Sheet = new Surface("Assets/All_Art/Solaria UI Update 03c/Cursors & Pointers.png");
-
+	Surface* _Icon_Sheet = new Surface("Assets/All_Art/Solaria UI Update 03c/Windows.png");
 };
 
