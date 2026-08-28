@@ -230,8 +230,10 @@ void Game_Manager::Forge_Buttons(Player* player, Resource_Manager* resource_Mana
 	auto craftingtable = craftingtable_Manager->get_Craftingtable(craftingtable_Manager->Get_Active_Table());
 	auto craftingtable1 = craftingtable_Manager->get_Craftingtable("Craftingtable 1");
 	auto craftingtable2 = craftingtable_Manager->get_Craftingtable("Craftingtable 2");
+	auto smelter1 = smelter_Manager->Get_Smelter("Smelter 1");
 	auto thalions = resource_Manager->Get_Resource("Thalions");
-	auto item = item_Manager->Get_Item(craftingtable->Get_Worker_Tool_Equiped());
+	auto item_Craftingtable = item_Manager->Get_Item(craftingtable->Get_Worker_Tool_Equiped());
+	auto item_Smelter = item_Manager->Get_Item(smelter1->Get_Worker_Tool_Equiped());
 	if (Is_Mouse_Over_Standard(player, 160, 160) &&
 		craftingtable_Manager->get_Craftingtable("Craftingtable 1")->Get_Unlocked())
 	{
@@ -251,7 +253,7 @@ void Game_Manager::Forge_Buttons(Player* player, Resource_Manager* resource_Mana
 	{
 		
 		if (craftingtable1->Get_Worker_Tool_Equiped() != "None" &&
-			item->Get_Quantity() >= 1)
+			item_Craftingtable->Get_Quantity() >= 1)
 		{
 
 			craftingtable1->Add_Worker(1);
@@ -259,7 +261,7 @@ void Game_Manager::Forge_Buttons(Player* player, Resource_Manager* resource_Mana
 			thalions->Sub_Quantity(craftingtable1->Get_Worker_Cost());
 			craftingtable1->Set_Worker_Cost(craftingtable1->Get_Worker_Cost() * 1.2);
 
-			item->Sub_Quantity(1);
+			item_Craftingtable->Sub_Quantity(1);
 		}
 		else if (craftingtable1->Get_Worker_Tool_Equiped() == "None")
 		{
@@ -275,7 +277,7 @@ void Game_Manager::Forge_Buttons(Player* player, Resource_Manager* resource_Mana
 	{
 
 		if (craftingtable2->Get_Worker_Tool_Equiped() != "None" &&
-			item->Get_Quantity() >= 1)
+			item_Craftingtable->Get_Quantity() >= 1)
 		{
 
 			craftingtable2->Add_Worker(1);
@@ -283,7 +285,7 @@ void Game_Manager::Forge_Buttons(Player* player, Resource_Manager* resource_Mana
 			thalions->Sub_Quantity(craftingtable2->Get_Worker_Cost());
 			craftingtable2->Set_Worker_Cost(craftingtable2->Get_Worker_Cost() * 1.2);
 
-			item->Sub_Quantity(1);
+			item_Craftingtable->Sub_Quantity(1);
 		}
 		else if (craftingtable2->Get_Worker_Tool_Equiped() == "None")
 		{
@@ -332,6 +334,45 @@ void Game_Manager::Forge_Buttons(Player* player, Resource_Manager* resource_Mana
 	{
 		window_Manager->set_Active_Window("Smelter");
 		smelter_Manager->Set_Active_Smelter("Smelter 1");
+	}
+
+	if (Is_Mouse_Over_Standard(player, 160, 520) &&
+		smelter1->Get_Worker_Cost() <= thalions->Get_Quantity())
+	{
+		if (smelter1->Get_Worker_Tool_Equiped() != "None" &&
+			item_Smelter->Get_Quantity() >= 1)
+		{
+
+			smelter1->Add_Worker(1);
+			smelter1->Update_Production_Rate();
+			thalions->Sub_Quantity(smelter1->Get_Worker_Cost());
+			smelter1->Set_Worker_Cost(smelter1->Get_Worker_Cost() * 1.2);
+
+			item_Smelter->Sub_Quantity(1);
+		}
+		else if (smelter1->Get_Worker_Tool_Equiped() == "None")
+		{
+			smelter1->Add_Worker(1);
+			smelter1->Update_Production_Rate();
+			thalions->Sub_Quantity(smelter1->Get_Worker_Cost());
+			smelter1->Set_Worker_Cost(smelter1->Get_Worker_Cost() * 1.2);
+		}
+	}
+
+	if (Is_Mouse_Over_Standard(player, 160, 590))
+	{
+		auto sorted_Item = item_Manager->get_Item_Sorted_By_Power_And_Equip_Slot("Crafting");
+		if (!sorted_Item.empty() &&
+			sorted_Item[0]->Get_Power() > smelter1->Get_Worker_Tool_Power())
+		{
+			if (sorted_Item[0]->Get_Quantity() >= smelter1->Get_Workers())
+			{
+				sorted_Item[0]->Sub_Quantity(smelter1->Get_Workers());
+				smelter1->Set_Worker_Tool_Power(sorted_Item[0]->Get_Power());
+				smelter1->Set_Worker_Tool_Equiped(sorted_Item[0]->Get_Name());
+
+			}
+		}
 	}
 
 	if (Is_Mouse_Over_Standard(player, 160, 800))
@@ -1018,6 +1059,18 @@ void Game_Manager::Update_All_Per_Seccond_Events(double deltaTime, Player* playe
 				all_Smelters[i]->Sub_Heat(all_Smelters[i]->Get_Heat_Loss() * delta_Seconds);
 			}
 		}
+
+		if (all_Smelters[i]->Get_Workers() < 1)
+		{
+			continue;
+		}
+
+		if (all_Smelters[i]->Get_Production_Rate() <= resource_Manager->Get_Resource_Quantity(all_Smelters[i]->Get_Fuel()))
+		{
+			resource_Manager->Get_Resource(all_Smelters[i]->Get_Fuel())->Sub_Quantity(all_Smelters[i]->Get_Production_Rate() * delta_Seconds);
+			all_Smelters[i]->Add_Heat(resource_Manager->Get_Resource(all_Smelters[i]->Get_Fuel())->Get_Heat_Minimal() / 100 * all_Smelters[i]->Get_Production_Rate() * delta_Seconds);
+		}
+
 	}
 
 }

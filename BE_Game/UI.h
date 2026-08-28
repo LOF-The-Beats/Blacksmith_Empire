@@ -57,6 +57,8 @@ private:
 	bool hover_Active = false;
 	bool mouse_Was_Down = false;
 
+	int mine_Page = 0;
+
 	string hover_Name;
 	string hover_Cost;
 	string hover_Description;
