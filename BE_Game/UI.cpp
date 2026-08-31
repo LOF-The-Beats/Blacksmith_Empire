@@ -20,6 +20,7 @@ UI::UI()
 {
 }
 
+
 void UI::Draw_UI(
 	float deltaTime,
 	Surface* screen,
@@ -112,8 +113,7 @@ void UI::UI_Layout(Surface* screen, Resource_Manager* resource_Manager, Unlock_M
 	int text_W =
 		static_cast<int>(tekst.size() * 6 * text_Scale);
 
-	int thalion_Text_X =
-		((box_W - text_W) / 2);
+	int thalion_Text_X =((box_W - text_W) / 2);
 
 	draw_Resource_Icons( screen, "Thalions", thalion_Text_X, 20, 2, resource_Icon_Sheet);
 
@@ -207,88 +207,85 @@ void UI::UI_Layout(Surface* screen, Resource_Manager* resource_Manager, Unlock_M
 
 void UI::Forest_UI(float deltaTime, Surface* screen, Surface* resource_Icon_Sheet, Resource_Manager* resource_Manager, Player* player, Item_Manager* item_Manager, Window_Manager* window_Manager)
 {
-	auto softwood = resource_Manager->Get_Resource("SoftWood");
-	// draws the level progress bar
-	{
-		double level_Indicator = 150 + (player->Get_Stats("Lumberjack")->Get_Exp() / player->Get_Stats("Lumberjack")->Get_Exp_Needed() * (SCRWIDTH - 150));
-		screen->Bar(150, 100, level_Indicator, 150, 0x00FF00);
-		double player_Exp = round(player->Get_Stats("Lumberjack")->Get_Exp());
-		double player_Exp_Needed = round(player->Get_Stats("Lumberjack")->Get_Exp_Needed());
-		string level_Idicator_Tekst = "Exp: " + to_string(static_cast<int>(round(player_Exp))) + " / Exp Needed: " + to_string(static_cast<int>(std::round(player_Exp_Needed)));
-		screen->Print(level_Idicator_Tekst.c_str(), (SCRWIDTH - 150) / 2, 120, 0xFF0000 , 2.0F);
-	}
-	screen->Line(150, 100, SCRWIDTH, 100, 0xFF00FF);
-	screen->Line(150, 150, SCRWIDTH, 150, 0xFF00FF);
+	int x_Base = 150;
+	int x_Increase = 425;
+	int y_Base = 50;
+	int increase_Multi = 0;
+	string tekst;
 
+	auto all_Wood_Resources = resource_Manager->Get_All_Resources();
 
-	string test = "Click To Gather " + to_string(static_cast<int>(player->Get_Stats("Lumberjack")->Get_Power())) + " SoftWood";
-	button_Standard("Gather", "", test.c_str(), 160, 160, screen, window_Manager, player); //gather resource knop
-	
-	double cost =  round(resource_Manager->Get_Resource("SoftWood")->Get_Worker_Cost());
-	string label;
-	if (resource_Manager->Get_Resource("SoftWood")->Get_Worker_Tool_Equiped() == "Tool")
+	for (size_t i = 0; i < all_Wood_Resources.size(); i++)
 	{
-		label = "Cost = " + std::to_string(static_cast<int>(std::round(cost))) + " " + resource_Manager->Get_Resource("Thalions")->Get_Name();
-	}
-	else
-	{
-		label = "Cost = " + std::to_string(static_cast<int>(std::round(cost))) + " " + resource_Manager->Get_Resource("Thalions")->Get_Name() + " and 1 " + resource_Manager->Get_Resource("SoftWood")->Get_Worker_Tool_Equiped();
+		if (all_Wood_Resources[i]->Get_Name() == "SoftWood" ||
+			all_Wood_Resources[i]->Get_Name() == "HardWood" ||
+			all_Wood_Resources[i]->Get_Name() == "IronWood")
+		{
+			auto resource = all_Wood_Resources[i];
 
-	}
-	button_Standard("Buy Worker", label.c_str(), "", 160, 230, screen, window_Manager, player); // buy worker
+			screen->Box(x_Base + (x_Increase * increase_Multi), y_Base, x_Base + x_Increase * (increase_Multi + 1), SCRHEIGHT, 0xFF00FF);
+			tekst = resource->Get_Name();
+			screen->Print(tekst.c_str(), x_Base + x_Increase / 2 + (x_Increase * increase_Multi), y_Base + 30, 0xFF00FF, 2.0);
 
-	auto sorted_Item = item_Manager->get_Item_Sorted_By_Power_And_Equip_Slot("Lumberjack");
-	auto softWood = resource_Manager->Get_Resource("SoftWood");
-	if (!sorted_Item.empty() &&
-		sorted_Item[0]->Get_Power() > softWood->Get_Workers_Tool_Power())
-	{
-		cost = round(softWood->Get_Workers());
-		label = "Cost: " + to_string(static_cast<int>(std::round(cost))) + " " + sorted_Item[0]->Get_Name();
-		button_Standard("Upgrade tools", label.c_str(), "", 160, 300, screen, window_Manager, player); // upgrade tools
-	}
-	else
-	{
-		button_Standard("Upgrade tools", "No Upgrades Available", "", 160, 300, screen, window_Manager, player); // upgrade tools
-	}
+			tekst = "Quantity: " + to_string(static_cast<int>(round(resource->Get_Quantity())));
+			screen->Print(tekst.c_str(), x_Base + x_Increase / 2 + (x_Increase * increase_Multi), y_Base + 60, 0xFF00FF, 1.0);
 
-	draw_Resource_Icons(screen, "SoftWood", 196, SCRHEIGHT / 30 * 1 + 32, 2, resource_Icon_Sheet);
-	screen->Print((string(resource_Manager->Get_Resource("SoftWood")->Get_Name()) + ": " + to_string(static_cast<int>(std::round(resource_Manager->Get_Resource("SoftWood")->Get_Quantity())))).c_str(), 200, SCRHEIGHT / 30 * 1 + 25, 0xFF00FF, 2.0);
-	if (player->Get_Timer() >= player->Get_Idle_Deep_Timer())
-	{
-		cost = softwood->Get_Production_Rate() * player->Get_Idle_Deep_Multiplier() * player->Get_Idle_Multiplier();
-	}
-	else if (player->Get_Timer() >= player->Get_Idle_Timer())
-	{
-		cost = softwood->Get_Production_Rate() * player->Get_Idle_Multiplier();
-	}
-	else
-	{
-		cost = softwood->Get_Production_Rate();
-	}
-	
-	label = "SoftWood Gain per sec = " + to_string(static_cast<int>(std::round(cost)));
-	screen->Print(label.c_str(), 200, SCRHEIGHT / 30 * 1 + 45, 0xFF00FF, 2);
+			tekst = "Production:";
+			screen->Print(tekst.c_str(), x_Base + x_Increase / 2 + (x_Increase * increase_Multi), y_Base + 90, 0xFF00FF, 1.0);
 
-	// info tekst
-	
-	string test2 = "Total workers " + to_string(static_cast<int>(resource_Manager->Get_Resource("SoftWood")->Get_Workers()));
-	string test3 = "";
-	string test4 = "Workers gather total: " + to_string(static_cast<int>(resource_Manager->Get_Resource("SoftWood")->Get_Production_Rate()));
+			tekst = to_string(static_cast<int>(round(resource->Get_Production_Rate())));
+			screen->Print(tekst.c_str(), x_Base + x_Increase / 2 + (x_Increase * increase_Multi), y_Base + 100, 0xFF00FF, 1.0);
 
-	if (resource_Manager->Get_Resource("SoftWood")->Get_Workers() >= 1)
-	{
-		test3 = "One Workers gathers: " + to_string(static_cast<int>(resource_Manager->Get_Resource("SoftWood")->Get_Production_Rate() / resource_Manager->Get_Resource("SoftWood")->Get_Workers()));
+			tekst = "Chop Wood";
+			button_Standard(tekst.c_str(), "", "", x_Base + x_Increase / 2 + (x_Increase * increase_Multi), 160, screen, window_Manager, player);
+
+			tekst = "Add "+ to_string(static_cast<int>(round(player->Get_Stats("Lumberjack")->Get_Power()))) + " " + resource->Get_Name();
+			screen->Print(tekst.c_str(), x_Base + x_Increase / 2 + (x_Increase * increase_Multi), y_Base + 170, 0xFF00FF, 1.0);
+
+			screen->Line(x_Base + (x_Increase * increase_Multi), y_Base + 200, x_Base + x_Increase * (increase_Multi + 1), y_Base + 200, 0xFF00FF);
+
+			tekst = "Upgrades";
+			screen->Print(tekst.c_str(), x_Base + x_Increase / 2 + (x_Increase * increase_Multi), y_Base + 220, 0xFF00FF, 2.0);
+
+			screen->Box(x_Base + (x_Increase * increase_Multi), y_Base + 240, x_Base + x_Increase * (increase_Multi + 1), y_Base + 310, 0xFF00FF);
+			if (resource->Get_Worker_Tool_Equiped() == "Tool")
+			{
+				tekst = to_string(static_cast<int>(round(resource->Get_Worker_Cost())));
+			}
+			else
+			{
+				tekst = to_string(static_cast<int>(round(resource->Get_Worker_Cost()))) + " and 1 " + resource->Get_Worker_Tool_Equiped();
+
+			}
+			button_Standard(tekst.c_str(), "", "", x_Base + x_Increase - 120 + (x_Increase * increase_Multi), 300, screen, window_Manager, player);
+			draw_Resource_Icons(screen, "Thalions", x_Base + (x_Increase - 75) + x_Increase * increase_Multi, y_Base + 265, 2, resource_Icon_Sheet);
+			tekst = "Workers";
+			screen->Print(tekst.c_str(), x_Base + x_Increase / 2 + (x_Increase * increase_Multi), y_Base + 250, 0xFF00FF, 1.5);
+			tekst ="Quantity: "+ to_string(static_cast<int>(round(resource->Get_Workers())));
+			screen->Print(tekst.c_str(), x_Base + x_Increase  / 2 + (x_Increase * increase_Multi), y_Base + 270, 0xFF00FF, 1.0);
+
+			screen->Box(x_Base + (x_Increase * increase_Multi), y_Base + 310, x_Base + x_Increase * (increase_Multi + 1), y_Base + 380, 0xFF00FF);
+			auto sorted_Item = item_Manager->get_Item_Sorted_By_Power_And_Equip_Slot("Lumberjack");
+			if (!sorted_Item.empty() &&
+				sorted_Item[0]->Get_Power() > resource->Get_Workers_Tool_Power())
+			{
+				tekst =to_string(static_cast<int>(std::round(resource->Get_Workers()))) + " " + sorted_Item[0]->Get_Name();
+			}
+			else
+			{
+				tekst = "No Upgrades Available";
+			}
+			button_Standard(tekst.c_str(), "", "", x_Base + x_Increase - 120 + (x_Increase * increase_Multi), 370, screen, window_Manager, player);
+			tekst = "Tool Equiped";
+			screen->Print(tekst.c_str(), x_Base + x_Increase / 2 + (x_Increase * increase_Multi), y_Base + 320, 0xFF00FF, 1.5);
+			tekst = resource->Get_Worker_Tool_Equiped();
+			screen->Print(tekst.c_str(), x_Base + x_Increase  / 2 + (x_Increase * increase_Multi), y_Base + 340, 0xFF00FF, 1.0);
+			
+			increase_Multi++;
+
+			
+		}
 	}
-	else
-	{
-		test3 = "One Workers gathers: 0";
-	}
-
-	screen->Print(test2.c_str(), 360, 170, 0xFF00FF, 1.0F);
-	screen->Print(test3.c_str(), 360, 180, 0xFF00FF, 1.0F);
-	screen->Print(test4.c_str(), 360, 190, 0xFF00FF, 1.0F);
-
-
 }
 
 void UI::Forge_UI(Surface* screen, Resource_Manager* resource_Manager, Player* player, Window_Manager* window_Manager, Craftingtable_Manager* craftingtable, Blueprint_Manager* blueprint_Manager, Item_Manager* item_Manager, Smelter_Manager* smelter_Manager)
@@ -405,13 +402,15 @@ void UI::Forge_UI(Surface* screen, Resource_Manager* resource_Manager, Player* p
 		//Testing
 		auto Sorted_Blueprints = blueprint_Manager->Get_Sorted_Blueprints_Numbers();
 		auto sorted_Resources = resource_Manager->Get_Sorted_Resources_Numbers(Resources::Resource_Type::Crafting);
+		int row = 0;
+	
 
 		for (size_t i = 0; i < Sorted_Blueprints.size(); i++)
 		{
 			int start_Y = 160;
 			if (craftingtable->get_Craftingtable(craftingtable->Get_Active_Table())->Get_Blueprint() == Sorted_Blueprints[i]->Get_Name())
 			{
-				button_Standard_Selected(Sorted_Blueprints[i]->Get_Name(), SCRWIDTH / 3 * 2 + 10, start_Y + (i * 60), window_Manager, screen);
+				button_Standard_Selected(Sorted_Blueprints[i]->Get_Name(), SCRWIDTH / 3 * 2 + 10 + (120 * (i - row * 4)), start_Y + (row * 60), window_Manager, screen);
 				double number;
 				string tekst = "Name: " + blueprint_Manager->Get_Blueprints(Sorted_Blueprints[i]->Get_Name())->Get_Name();
 				screen->Print(tekst.c_str(), SCRWIDTH / 3 * 2 + 10, 925, 0xFF00FF, 1.5F);
@@ -424,18 +423,25 @@ void UI::Forge_UI(Surface* screen, Resource_Manager* resource_Manager, Player* p
 				tekst = "Cost: " + to_string(static_cast<int>(number));
 				screen->Print(tekst.c_str(), SCRWIDTH / 3 * 2 + 10, 975, 0xFF00FF, 1.5F);
 			}
-		else
+			else
 			{
-				button_Standard(Sorted_Blueprints[i]->Get_Name(), "", "", SCRWIDTH / 3 * 2 + 10, start_Y + (i * 60), screen, window_Manager, player);
+				button_Standard(Sorted_Blueprints[i]->Get_Name(), "", "", SCRWIDTH / 3 * 2 + 10 + (120 * (i - row * 4)), start_Y + (row * 60), screen, window_Manager, player);
+			}
+
+			if ((i + 1) % 4 == 0)
+			{
+				row++;
 			}
 		}
+
+		row = 0;
 
 		for (size_t i = 0; i < sorted_Resources.size(); i++)
 		{
 			int start_Y = 160;
 			if (craftingtable->get_Craftingtable(craftingtable->Get_Active_Table())->Get_Resource() == sorted_Resources[i]->Get_Name())
 			{
-				button_Standard_Selected(sorted_Resources[i]->Get_Name(), SCRWIDTH / 3 * 1 - 120, start_Y + (i * 60), window_Manager, screen);
+				button_Standard_Selected(sorted_Resources[i]->Get_Name(), 160 + (120 * (i - row * 4)), start_Y + (row * 60), window_Manager, screen);
 				double number;
 				string tekst = "Name: " + resource_Manager->Get_Resource(sorted_Resources[i]->Get_Name())->Get_Name();
 				screen->Print(tekst.c_str(), 160, 925, 0xFF00FF, 1.5F);
@@ -446,7 +452,12 @@ void UI::Forge_UI(Surface* screen, Resource_Manager* resource_Manager, Player* p
 			}
 			else
 			{
-				button_Standard(sorted_Resources[i]->Get_Name(), "", "", SCRWIDTH / 3 * 1 - 120, start_Y + (i * 60), screen, window_Manager, player);
+				button_Standard(sorted_Resources[i]->Get_Name(), "", "", 160 + (120 * (i - row * 4)), start_Y + (row * 60), screen, window_Manager, player);
+			}
+
+			if ((i + 1) % 4 == 0)
+			{
+				row++;
 			}
 		}
 
@@ -532,7 +543,7 @@ void UI::Forge_UI(Surface* screen, Resource_Manager* resource_Manager, Player* p
 		auto sorted_Ore = resource_Manager->Get_Sorted_Resources_Numbers(Resources::Resource_Type::Ore);
 		auto sorted_Fuel = resource_Manager->Get_Sorted_Resources_Numbers(Resources::Resource_Type::Fuel);
 		auto active_Smelter = smelter_Manager->Get_Smelter(smelter_Manager->Get_Active_Smelter());
-		int q = 0;
+		int row = 0;
 		int start_Y = 160;
 
 		for (size_t i = 0; i < sorted_Fuel.size(); i++)
@@ -541,7 +552,7 @@ void UI::Forge_UI(Surface* screen, Resource_Manager* resource_Manager, Player* p
 			{
 				if (active_Smelter->Get_Fuel() == sorted_Fuel[i]->Get_Name())
 				{
-					button_Standard_Selected(sorted_Fuel[i]->Get_Name(), SCRWIDTH / 3 * 1 - 120, start_Y + (q * 60), window_Manager, screen);
+					button_Standard_Selected(sorted_Fuel[i]->Get_Name(), 160 + (120 * (i - row * 4)), start_Y + (row * 60), window_Manager, screen);
 
 					double number = sorted_Fuel[i]->Get_Heat_Minimal() / 100;
 					string label = "Heat gain: " + to_string(static_cast<int>(number));
@@ -550,27 +561,35 @@ void UI::Forge_UI(Surface* screen, Resource_Manager* resource_Manager, Player* p
 				}
 				else
 				{
-					button_Standard(sorted_Fuel[i]->Get_Name(), "", "", SCRWIDTH / 3 * 1 - 120, start_Y + (q * 60), screen, window_Manager, player);
+					button_Standard(sorted_Fuel[i]->Get_Name(), "", "", 160 + (120 * (i - row * 4)), start_Y + (row * 60), screen, window_Manager, player);
 				}
-				q++;
+				
+				if ((i + 1) % 4 == 0)
+				{
+					row++;
+				}
 			}
 		}
-		q = 0;
+		row = 0;
 		for (size_t i = 0; i < sorted_Ore.size(); i++)
 		{
 			if (sorted_Ore[i]->Check_Resource_Type(Resources::Resource_Type::Ore))
 			{
 				if (active_Smelter->Get_Ore() == sorted_Ore[i]->Get_Name())
 				{
-					button_Standard_Selected(sorted_Ore[i]->Get_Name(), SCRWIDTH / 3 * 2 + 10, start_Y + (q * 60), window_Manager, screen);
+					button_Standard_Selected(sorted_Ore[i]->Get_Name(), SCRWIDTH / 3 * 2 + 10 + (120 * (i - row * 4)), start_Y + (row * 60), window_Manager, screen);
 
 					screen->Print("test", SCRWIDTH / 3 * 2 + 10, 925, 0xFF00FF, 1.5F);
 				}
 				else
 				{
-					button_Standard(sorted_Ore[i]->Get_Name(), "", "", SCRWIDTH / 3 * 2 + 10, start_Y + (q * 60), screen, window_Manager, player);
+					button_Standard(sorted_Ore[i]->Get_Name(), "", "", SCRWIDTH / 3 * 2 + 10 + (120 * (i - row * 4)), start_Y + (row * 60), screen, window_Manager, player);
 				}
-				q++;
+
+				if ((i + 1) % 4 == 0)
+				{
+					row++;
+				}
 			}
 		}
 
@@ -816,6 +835,7 @@ void UI::Witch_Hut_UI(Surface* screen, Resource_Manager* resource_Manager, Bluep
 
 void UI::Mine_UI(Surface* screen, Window_Manager* window_Manager, Player* player, Resource_Manager* resource_Manager, Item_Manager* item_Manager)
 {
+
 	double level_Indicator = 150 + (player->Get_Stats("Mining")->Get_Exp() / player->Get_Stats("Mining")->Get_Exp_Needed() * (SCRWIDTH - 150));
 	screen->Bar(150, 100, level_Indicator, 150, 0x00FF00);
 	double player_Exp = round(player->Get_Stats("Mining")->Get_Exp());
@@ -824,6 +844,9 @@ void UI::Mine_UI(Surface* screen, Window_Manager* window_Manager, Player* player
 	screen->Print(level_Idicator_Tekst.c_str(), (SCRWIDTH - 150) / 2, 120, 0xFF0000, 2.0F);
 	screen->Line(150, 100, SCRWIDTH, 100, 0xFF00FF);
 	screen->Line(150, 150, SCRWIDTH, 150, 0xFF00FF);
+
+	button_Standard("Page Up", "", "", 1400, 160, screen, window_Manager, player);
+	button_Standard("Page Down", "", "", 1400, 900, screen, window_Manager, player);
 	
 
 	auto all_Mine_Resources = resource_Manager->Get_All_Resources();
@@ -839,7 +862,7 @@ void UI::Mine_UI(Surface* screen, Window_Manager* window_Manager, Player* player
 		{
 			auto resource = resource_Manager->Get_Resource(all_Mine_Resources[i]->Get_Name());
 
-			if (mine_Page == page)
+			if (currentPage == page)
 			{
 				string label = "Click power: " + to_string(static_cast<int>(round(mine->Get_Power() * resource->Get_Depth())));
 				button_Standard("Mine", label.c_str(), "Mine " + resource->Get_Name(), 160 + (row * 440), 160, screen, window_Manager, player);
@@ -862,6 +885,9 @@ void UI::Mine_UI(Surface* screen, Window_Manager* window_Manager, Player* player
 				}
 
 				button_Standard("Collect", "", "Collect mined " + resource->Get_Name(), 280 + (row * 440), 160, screen, window_Manager, player);
+				double level_Indicator = (280 + (row * 440)) + (all_Mine_Resources[i]->Get_Time() / all_Mine_Resources[i]->Get_Collect_Time() * 110);
+				screen->Bar(280 + (row * 440), 215, level_Indicator, 225, 0x00FF00);
+				
 
 				cost = round(resource_Manager->Get_Resource("Stone")->Get_Worker_Cost());
 				label = "Cost: " + std::to_string(static_cast<int>(std::round(cost))) + " " + Thalions->Get_Name();

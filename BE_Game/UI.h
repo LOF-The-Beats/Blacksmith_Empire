@@ -53,12 +53,19 @@ public:
 	float Get_Text_Scale(string text, int max_Width, float start_Scale);
 	void draw_Hover_Info(string name, string cost, string description, Surface* screen, Player* player, Window_Manager* window_Manager);
 
+
+
+
+	int currentPage = 0;
+	int minPage = 0;
+	int maxPage = 3;
+
+
 private:
+
 	bool hover_Active = false;
 	bool mouse_Was_Down = false;
-
-	int mine_Page = 0;
-
+	
 	string hover_Name;
 	string hover_Cost;
 	string hover_Description;

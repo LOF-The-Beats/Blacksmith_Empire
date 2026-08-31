@@ -13,6 +13,7 @@
 #include "Ascension_Upgrade_Screen.h"
 #include "Ascension_Upgrades.h"
 #include "Smelter_Manager.h"
+#include "UI.h"
 
 extern GLFWwindow* window;
 
@@ -32,7 +33,7 @@ void Game_Manager::Update_Mouse_Pos(Player* player)
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
 }
 
-void Game_Manager::If_Clicked(Player* player, Resource_Manager* resource_Manager, Window_Manager* window_Manager, Craftingtable_Manager* craftingtable, Blueprint_Manager* blueprint_Manager, Item_Manager* item_Manager, Draft_Manager* draft_Manager, Unlock_Manager* unlock_Manager, Tutorial* tutorial, Ascension_Manager* ascension_Manager, Ascension_Upgrade_Screen* ascension_Upgrade_Screen, Smelter_Manager* smelter_Manager)
+void Game_Manager::If_Clicked(Player* player, UI* ui, Resource_Manager* resource_Manager, Window_Manager* window_Manager, Craftingtable_Manager* craftingtable, Blueprint_Manager* blueprint_Manager, Item_Manager* item_Manager, Draft_Manager* draft_Manager, Unlock_Manager* unlock_Manager, Tutorial* tutorial, Ascension_Manager* ascension_Manager, Ascension_Upgrade_Screen* ascension_Upgrade_Screen, Smelter_Manager* smelter_Manager)
 {
 	if (glfwGetMouseButton(window, 0) == GLFW_PRESS)
 	{
@@ -40,31 +41,7 @@ void Game_Manager::If_Clicked(Player* player, Resource_Manager* resource_Manager
 		{
 			Location_Buttons_Pressed(player, window_Manager, unlock_Manager);
 			tutorial->Tutorial_Buttons(this, player, resource_Manager, craftingtable, unlock_Manager);
-			if (window_Manager->get_Active_Window() == "Forest")
-			{
-				Forest_Buttons(player, resource_Manager, item_Manager);
-			}
-			else if (window_Manager->get_Active_Window() == "Forge")
-			{
-				Forge_Buttons(player, resource_Manager, window_Manager, item_Manager, craftingtable, smelter_Manager);
-			}
-			else if (window_Manager->get_Active_Window() == "Player")
-			{
-				Player_Buttons(player, window_Manager, item_Manager);
-			}
-			else if (window_Manager->get_Active_Window() == "Libary")
-			{
-				Libary_Buttons(player, window_Manager, item_Manager, resource_Manager, draft_Manager, blueprint_Manager);
-			}
-			else if (window_Manager->get_Active_Window() == "Witch Hut")
-			{
-				Witch_Hut_Buttons(player, window_Manager, item_Manager, resource_Manager, craftingtable, draft_Manager, blueprint_Manager, ascension_Manager, ascension_Upgrade_Screen);
-			}			
-			else if (window_Manager->get_Active_Window() == "Mine")
-			{
-				Mine_Buttons(player, resource_Manager, item_Manager);
-			}
-
+			
 			if (window_Manager->get_Active_Window() == "Craftingtable")
 			{
 				Craftingtable_Window(player, craftingtable, window_Manager, blueprint_Manager, resource_Manager);
@@ -91,6 +68,33 @@ void Game_Manager::If_Clicked(Player* player, Resource_Manager* resource_Manager
 			{
 				Smelting_Window(player, window_Manager, item_Manager, blueprint_Manager, draft_Manager, resource_Manager, ascension_Upgrade_Screen, ascension_Manager, craftingtable, smelter_Manager);
 			}
+
+			if (window_Manager->get_Active_Window() == "Forest")
+			{
+				Forest_Buttons(player, resource_Manager, item_Manager);
+			}
+			else if (window_Manager->get_Active_Window() == "Forge")
+			{
+				Forge_Buttons(player, resource_Manager, window_Manager, item_Manager, craftingtable, smelter_Manager);
+			}
+			else if (window_Manager->get_Active_Window() == "Player")
+			{
+				Player_Buttons(player, window_Manager, item_Manager);
+			}
+			else if (window_Manager->get_Active_Window() == "Libary")
+			{
+				Libary_Buttons(player, window_Manager, item_Manager, resource_Manager, draft_Manager, blueprint_Manager);
+			}
+			else if (window_Manager->get_Active_Window() == "Witch Hut")
+			{
+				Witch_Hut_Buttons(player, window_Manager, item_Manager, resource_Manager, craftingtable, draft_Manager, blueprint_Manager, ascension_Manager, ascension_Upgrade_Screen);
+			}			
+			else if (window_Manager->get_Active_Window() == "Mine")
+			{
+				Mine_Buttons(player, ui, resource_Manager, item_Manager);
+			}
+
+			
 		}
 		clicked = true;
 	}
@@ -166,60 +170,82 @@ void Game_Manager::Location_Buttons_Pressed(Player* player, Window_Manager* wind
 
 void Game_Manager::Forest_Buttons(Player* player, Resource_Manager* resource_Manager, Item_Manager* item_Manager)
 {
+
+	int x_Base = 150;
+	int x_Increase = 425;
+	int y_Base = 50;
+	int increase_Multi = 0;
+	string tekst;
+
 	auto softWood = resource_Manager->Get_Resource("SoftWood");
 	auto thalions = resource_Manager->Get_Resource("Thalions");
 	auto lumberjack = player->Get_Stats("Lumberjack");
-	auto item = item_Manager->Get_Item(softWood->Get_Worker_Tool_Equiped());
+	
+	auto all_Wood_Resources = resource_Manager->Get_All_Resources();
 
-	if (Is_Mouse_Over_Standard(player, 160, 160))
+	for (size_t i = 0; i < all_Wood_Resources.size(); i++)
 	{
-		if (lumberjack->is_Crit())
+		if (all_Wood_Resources[i]->Get_Name() == "SoftWood" ||
+			all_Wood_Resources[i]->Get_Name() == "HardWood" ||
+			all_Wood_Resources[i]->Get_Name() == "IronWood")
 		{
-			softWood->Add_Quantity(lumberjack->Get_Power() * lumberjack->Get_Crit_Power());
-			lumberjack->Add_Exp(lumberjack->Get_Exp_Gain());
-		}
-		else
-		{
-			softWood->Add_Quantity(lumberjack->Get_Power());
-			lumberjack->Add_Exp(lumberjack->Get_Exp_Gain());
-		}
-	}
-	if (Is_Mouse_Over_Standard(player, 160, 230) &&
-		softWood->Get_Worker_Cost() <= thalions->Get_Quantity())
-	{
+			auto resource = all_Wood_Resources[i];
+			auto item = item_Manager->Get_Item(resource->Get_Worker_Tool_Equiped());
 
-		if (softWood->Get_Worker_Tool_Equiped() != "Tool" &&
-			item->Get_Quantity() >= 1)
-		{
-
-			softWood->Add_Workers(1);
-			softWood->Update_Production_Rate();
-			thalions->Sub_Quantity(softWood->Get_Worker_Cost());
-			softWood->Set_Worker_Cost(softWood->Get_Worker_Cost() * 1.2);
-
-			item->Sub_Quantity(1);
-		}
-		else if (softWood->Get_Worker_Tool_Equiped() == "Tool")
-		{
-			softWood->Add_Workers(1);
-			softWood->Update_Production_Rate();
-			thalions->Sub_Quantity(softWood->Get_Worker_Cost());
-			softWood->Set_Worker_Cost(softWood->Get_Worker_Cost() * 1.2);
-		}
-	}
-	if (Is_Mouse_Over_Standard(player, 160, 300))
-	{
-		auto sorted_Item = item_Manager->get_Item_Sorted_By_Power_And_Equip_Slot("Lumberjack");
-		if (!sorted_Item.empty() &&
-			sorted_Item[0]->Get_Power() > softWood->Get_Workers_Tool_Power())
-		{
-			if (sorted_Item[0]->Get_Quantity() >= softWood->Get_Workers())
+			if (Is_Mouse_Over_Standard(player, x_Base + x_Increase / 2 + (x_Increase * increase_Multi), 160))
 			{
-				sorted_Item[0]->Sub_Quantity(softWood->Get_Workers());
-				softWood->Set_Workers_Tool_Power(sorted_Item[0]->Get_Power());
-				softWood->Set_Worker_Tool_Equiped(sorted_Item[0]->Get_Name());
-
+				if (lumberjack->is_Crit())
+				{
+					resource->Add_Quantity(lumberjack->Get_Power() * lumberjack->Get_Crit_Power());
+					lumberjack->Add_Exp(lumberjack->Get_Exp_Gain());
+				}
+				else
+				{
+					resource->Add_Quantity(lumberjack->Get_Power());
+					lumberjack->Add_Exp(lumberjack->Get_Exp_Gain());
+				}
 			}
+
+			if (Is_Mouse_Over_Standard(player, x_Base + x_Increase - 120 + (x_Increase * increase_Multi), 300) &&
+					resource->Get_Worker_Cost() <= thalions->Get_Quantity())
+			{
+
+				if (resource->Get_Worker_Tool_Equiped() != "Tool" &&
+					item->Get_Quantity() >= 1)
+				{
+
+					resource->Add_Workers(1);
+					resource->Update_Production_Rate();
+					thalions->Sub_Quantity(resource->Get_Worker_Cost());
+					resource->Set_Worker_Cost(resource->Get_Worker_Cost() * 1.2);
+
+					item->Sub_Quantity(1);
+				}
+				else if (resource->Get_Worker_Tool_Equiped() == "Tool")
+				{
+					resource->Add_Workers(1);
+					resource->Update_Production_Rate();
+					thalions->Sub_Quantity(resource->Get_Worker_Cost());
+					resource->Set_Worker_Cost(resource->Get_Worker_Cost() * 1.2);
+				}
+			}
+
+			if (Is_Mouse_Over_Standard(player, x_Base + x_Increase - 120 + (x_Increase * increase_Multi), 370))
+			{
+				auto sorted_Item = item_Manager->get_Item_Sorted_By_Power_And_Equip_Slot("Lumberjack");
+				if (!sorted_Item.empty() &&
+					sorted_Item[0]->Get_Power() > resource->Get_Workers_Tool_Power())
+				{
+					if (sorted_Item[0]->Get_Quantity() >= resource->Get_Workers())
+					{
+						sorted_Item[0]->Sub_Quantity(resource->Get_Workers());
+						resource->Set_Workers_Tool_Power(sorted_Item[0]->Get_Power());
+						resource->Set_Worker_Tool_Equiped(sorted_Item[0]->Get_Name());
+
+					}
+				}
+			}
+			increase_Multi++;
 		}
 	}
 }
@@ -443,13 +469,32 @@ void Game_Manager::Witch_Hut_Buttons(Player* player, Window_Manager* window_Mana
 	}
 }
 
-void Game_Manager::Mine_Buttons(Player* player, Resource_Manager* resource_Manager, Item_Manager* item_Manager)
+void Game_Manager::Mine_Buttons(Player* player, UI* ui, Resource_Manager* resource_Manager, Item_Manager* item_Manager)
 {
 	auto mining = player->Get_Stats("Mining");
 	auto stone = resource_Manager->Get_Resource("Stone");
 	auto tin = resource_Manager->Get_Resource("Tin Ore");
 	auto thalions = resource_Manager->Get_Resource("Thalions");
 	auto item = item_Manager->Get_Item(stone->Get_Worker_Tool_Equiped());
+
+	if (Is_Mouse_Over_Standard(player, 1400, 160))
+	{
+		ui->currentPage++;
+
+		if (ui->currentPage > ui->maxPage)
+		{
+			ui->currentPage = ui->maxPage;
+		}
+	}
+
+	if (Is_Mouse_Over_Standard(player, 1400, 900))
+	{
+		ui->currentPage--;
+		if (ui->currentPage < ui->minPage)
+		{
+			ui->currentPage = ui->minPage;
+		}
+	}
 
 	if (Is_Mouse_Over_Standard(player, 160, 160))
 	{
@@ -655,23 +700,38 @@ void Game_Manager::Craftingtable_Window(Player* player, Craftingtable_Manager* c
 {
 
 	auto sorted_Resources = resource_Manager->Get_Sorted_Resources_Numbers(Resources::Resource_Type::Crafting);
+
 	auto craftingtables = craftingtable->get_Craftingtable(craftingtable->Get_Active_Table());
+	int row = 0;
 	for (size_t i = 0; i < sorted_Resources.size(); i++)
 	{
 		int start_Y = 160;
-		if (Is_Mouse_Over_Standard(player, SCRWIDTH / 3 * 1 - 120, start_Y + (i * 60)))
+		if (Is_Mouse_Over_Standard(player, 160 + (120 * (i - row * 4)), start_Y + (row * 60)))
 		{
 			craftingtable->get_Craftingtable(craftingtable->Get_Active_Table())->Set_Resource(sorted_Resources[i]->Get_Name());
 		}
+
+		if ((i + 1) % 4 == 0)
+		{
+			row++;
+		}
 	}
+
+	row = 0;
 	auto sorted_Blueprints = blueprint_Manager->Get_Sorted_Blueprints_Numbers();
 	for (size_t i = 0; i < sorted_Blueprints.size(); i++)
 	{
 		int start_Y = 160;
-		if (Is_Mouse_Over_Standard(player, SCRWIDTH / 3 * 2 + 10, start_Y + (i * 60)))
+		if (Is_Mouse_Over_Standard(player, SCRWIDTH / 3 * 2 + 10 + (120 * (i - row * 4)), start_Y + (row * 60)))
 		{
 			craftingtable->get_Craftingtable(craftingtable->Get_Active_Table())->Set_Blueprint(sorted_Blueprints[i]->Get_Name());
 		}
+
+		if ((i + 1) % 4 == 0)
+		{
+			row++;
+		}
+
 	}
 
 	
@@ -869,30 +929,36 @@ void Game_Manager::Smelting_Window(Player* player, Window_Manager* window_Manage
 	auto sorted_Fuel = resource_Manager->Get_Sorted_Resources_Numbers(Resources::Resource_Type::Fuel);
 	auto active_Smelter = smelter_Manager->Get_Smelter(smelter_Manager->Get_Active_Smelter());
 	auto smelting = player->Get_Stats("Smelting");
-	int q = 0;
+	int row = 0;
 	int start_Y = 160;
 
 	for (size_t i = 0; i < sorted_Fuel.size(); i++)
 	{
 		if (sorted_Fuel[i]->Check_Resource_Type(Resources::Resource_Type::Fuel))
 		{
-			if (Is_Mouse_Over_Standard(player, SCRWIDTH / 3 * 1 - 120, start_Y + (q * 60)))
+			if (Is_Mouse_Over_Standard(player, 160 + (120 * (i - row * 4)), start_Y + (row * 60)))
 			{
 				active_Smelter->Set_Fuel(sorted_Fuel[i]->Get_Name());
 			}
-			q++;
+			if ((i + 1) % 4 == 0)
+			{
+				row++;
+			}
 		}
 	}
-	q = 0;
+	row = 0;
 	for (size_t i = 0; i < sorted_Ore.size(); i++)
 	{
 		if (sorted_Ore[i]->Check_Resource_Type(Resources::Resource_Type::Ore))
 		{
-			if (Is_Mouse_Over_Standard(player, SCRWIDTH / 3 * 2 + 10, start_Y + (q * 60)))
+			if (Is_Mouse_Over_Standard(player, SCRWIDTH / 3 * 2 + 10 + (120 * (i - row * 4)), start_Y + (row * 60)))
 			{
 				active_Smelter->Set_Ore(sorted_Ore[i]->Get_Name());
 			}
-			q++;
+			if ((i + 1) % 4 == 0)
+			{
+				row++;
+			}
 		}
 	}
 

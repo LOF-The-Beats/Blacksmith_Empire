@@ -12,6 +12,7 @@ class Tutorial;
 class Ascension_Manager;
 class Ascension_Upgrade_Screen;
 class Smelter_Manager;
+class UI;
 
 class Game_Manager
 {
@@ -19,7 +20,7 @@ public:
 	Game_Manager();
 
 	void Update_Mouse_Pos(Player* player);
-	void If_Clicked(Player* player, Resource_Manager* resource_Manager, Window_Manager* window_Manager, Craftingtable_Manager* craftingtable, Blueprint_Manager* blueprint_Manager, Item_Manager* item_Manager, Draft_Manager* draft_Manager, Unlock_Manager* unlock_Manager, Tutorial* tutorial, Ascension_Manager* ascension_Manager, Ascension_Upgrade_Screen* ascension_Upgrade_Screen, Smelter_Manager* smelter_Manager);
+	void If_Clicked(Player* player, UI* ui, Resource_Manager* resource_Manager, Window_Manager* window_Manager, Craftingtable_Manager* craftingtable, Blueprint_Manager* blueprint_Manager, Item_Manager* item_Manager, Draft_Manager* draft_Manager, Unlock_Manager* unlock_Manager, Tutorial* tutorial, Ascension_Manager* ascension_Manager, Ascension_Upgrade_Screen* ascension_Upgrade_Screen, Smelter_Manager* smelter_Manager);
 	bool Is_Mouse_Over_Standard(Player* player, double x, double y);
 	bool Is_Mouse_Over_Location(Player* player, double x, double y, double z);
 	void Location_Buttons_Pressed(Player* player, Window_Manager* window_Manager, Unlock_Manager* unlock_Manger);
@@ -31,7 +32,7 @@ public:
 	void Player_Buttons(Player* player, Window_Manager* window_Manager, Item_Manager* item_Manager);
 	void Libary_Buttons(Player* player, Window_Manager* window_Manager, Item_Manager* item_Manager, Resource_Manager* resource_Manager, Draft_Manager* draft_Manager, Blueprint_Manager* blueprint_Manager);
 	void Witch_Hut_Buttons(Player* player, Window_Manager* window_Manager, Item_Manager* item_Manager, Resource_Manager* resource_Manager, Craftingtable_Manager* craftingtable_Manager, Draft_Manager* draft_Manager, Blueprint_Manager* blueprint_Manager, Ascension_Manager* ascension_Manager, Ascension_Upgrade_Screen* ascension_Upgrade_Screen);
-	void Mine_Buttons(Player* player, Resource_Manager* resource_Manager, Item_Manager* item_Manager);
+	void Mine_Buttons(Player* player, UI* ui, Resource_Manager* resource_Manager, Item_Manager* item_Manager);
 
 
 
@@ -57,4 +58,5 @@ private:
 	bool clicked = false;
 
 };
+
 
