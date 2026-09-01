@@ -1593,6 +1593,56 @@ void UI::draw_Ascension_Upgrades(Surface* screen, Ascension_Manager* ascension_M
 {
 	auto all_Upgrades = ascension_Manager->Get_All_Upgrades();
 
+
+	for (size_t i = 0; i < all_Upgrades.size(); i++)
+	{
+		auto parent = all_Upgrades[i];
+
+		if (!parent->Get_Unlocked())
+		{
+			continue;
+		}
+
+		double parent_X =
+			parent->Get_World_X() -
+			ascension_Upgrade_Screen->Get_Camera_X();
+
+		double parent_Y =
+			parent->Get_World_Y() -
+			ascension_Upgrade_Screen->Get_Camera_Y();
+
+		for (const string& child_Name : parent->Get_Unlocks())
+		{
+			auto child = ascension_Manager->Get_Upgrade(child_Name);
+
+			if (!child)
+			{
+				continue;
+			}
+
+			if (!child->Get_Unlocked())
+			{
+				continue;
+			}
+
+			double child_X =
+				child->Get_World_X() -
+				ascension_Upgrade_Screen->Get_Camera_X();
+
+			double child_Y =
+				child->Get_World_Y() -
+				ascension_Upgrade_Screen->Get_Camera_Y();
+
+			screen->Line(
+				static_cast<int>(parent_X + 55),
+				static_cast<int>(parent_Y + 25),
+				static_cast<int>(child_X + 55),
+				static_cast<int>(child_Y + 25),
+				0x6A0DAD
+			);
+		}
+	}
+
 	for (size_t i = 0; i < all_Upgrades.size(); i++)
 	{
 		if (!all_Upgrades[i]->Get_Unlocked())
@@ -1683,19 +1733,16 @@ void UI::draw_Mouse_Icons(Surface* screen, int scale, Surface* Asset_Sheet, Play
 	);
 }
 
-void UI::button_Tab(string name, int x1, int y1, Surface* screen)
+void UI::button_Tab(
+	string name,
+	int x1,
+	int y1,
+	Surface* screen)
 {
-	int w = 150;
-	int h = SCRHEIGHT / 10;
+	int w = 160;
+	int h = 96;
 
-	uint outer_Border = 0x1A0A1F;
-	uint accent_Color = 0x6A0DAD;
-	uint inner_Panel = 0x2A1035;
-	uint text_Color = 0xE6CCFF;
-
-	screen->Bar(x1, y1, x1 + w, y1 + h, outer_Border);
-	screen->Box(x1, y1, x1 + w, y1 + h, accent_Color);
-	screen->Bar(x1 + 4, y1 + 4, x1 + w - 4, y1 + h - 4, inner_Panel);
+	_Icon_Sheet->Copy_Region_To(screen, 16 * 18, 16 * 7, 48, 48, x1, y1, 3);
 
 	float text_Scale = 2.0f;
 
@@ -1715,29 +1762,22 @@ void UI::button_Tab(string name, int x1, int y1, Surface* screen)
 		name.c_str(),
 		text_X,
 		text_Y,
-		text_Color,
+		0xE6CCFF,
 		text_Scale
 	);
 }
 
-void UI::button_Tab_Selected(string name, int x1, int y1, Surface* screen)
+void UI::button_Tab_Selected(
+	string name,
+	int x1,
+	int y1,
+	Surface* screen)
 {
-	int w = 150;
-	int h = SCRHEIGHT / 10;
+	int w = 160;
+	int h = 96;
 
-	uint outer_Border = 0x050505;
-	uint accent_Color = 0xB266FF;
-	uint inner_Panel = 0x4A235A;
-	uint text_Color = 0xFFFFFF;
-
-
-
-	screen->Bar(x1, y1, x1 + w, y1 + h, outer_Border);
-	screen->Box(x1, y1, x1 + w, y1 + h, accent_Color);
-	screen->Bar(x1 + 4, y1 + 4, x1 + w - 4, y1 + h - 4, inner_Panel);
-
-	// no right border feel: selected tab connects to main window
-	screen->Line(x1 + w, y1 + 4, x1 + w, y1 + h - 4, inner_Panel);
+	_Icon_Sheet->Copy_Region_To(screen, 16 * 21, 16 * 7, 48, 48, x1, y1, 3);
+	_Icon_Sheet->Copy_Region_To(screen, 16 * 14, 16 * 9, 16, 16, x1 + 144, y1 + 48, 3);
 
 	float text_Scale = 2.0f;
 
@@ -1757,7 +1797,7 @@ void UI::button_Tab_Selected(string name, int x1, int y1, Surface* screen)
 		name.c_str(),
 		text_X,
 		text_Y,
-		text_Color,
+		0xFFFFFF,
 		text_Scale
 	);
 }

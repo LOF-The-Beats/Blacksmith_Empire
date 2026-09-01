@@ -25,11 +25,14 @@ public:
 	void Set_World_Y(double amount);
 	void Set_Unlocked(bool b);
 
+	void Add_Unlock(string name);
+	vector<string> Get_Unlocks() const;
+
 private:
 	string name, description;
 	double level, max_Level, cost, world_X, world_Y;
 	bool unlocked;
 
-
+	vector<string> unlocks;
 };
 

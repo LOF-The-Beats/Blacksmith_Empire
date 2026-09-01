@@ -108,3 +108,13 @@ void Ascension_Upgrades::Set_Unlocked(bool b)
 	unlocked = b;
 	return;
 }
+
+void Ascension_Upgrades::Add_Unlock(string name)
+{
+	unlocks.push_back(name);
+}
+
+vector<string> Ascension_Upgrades::Get_Unlocks() const
+{
+	return unlocks;
+}

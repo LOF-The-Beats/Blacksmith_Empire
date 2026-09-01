@@ -175,73 +175,12 @@ void Ascension_Manager::Buy_Upgrades(
 		upgrade->Get_Level() + 1
 	);
 
-	if (name == "Stone" && upgrade->Get_Level() > 0)
+	if (upgrade->Get_Level() > 0)
 	{
-		Get_Upgrade("Lumberjack")->Set_Unlocked(true);
-		Get_Upgrade("Crafting")->Set_Unlocked(true);
-		Get_Upgrade("Mining")->Set_Unlocked(true);
-		Get_Upgrade("Workers Lumberjack")->Set_Unlocked(true);
-		Get_Upgrade("Workers Craftingtable")->Set_Unlocked(true);
-		Get_Upgrade("Workers Mining")->Set_Unlocked(true);
-	}
-
-	if (name == "Lumberjack" && upgrade->Get_Level() > 0)
-	{
-		Get_Upgrade("Lumberjack Crit Chance")->Set_Unlocked(true);
-		Get_Upgrade("Lumberjack Knowledge")->Set_Unlocked(true);
-	}
-
-	if (name == "Lumberjack Knowledge" && upgrade->Get_Level() > 0)
-	{
-		Get_Upgrade("Lumberjack Growth")->Set_Unlocked(true);
-	}
-
-	if (name == "Lumberjack Crit Chance" && upgrade->Get_Level() > 0)
-	{
-		Get_Upgrade("Lumberjack Crit Power")->Set_Unlocked(true);
-	}
-
-	if (name == "Crafting" && upgrade->Get_Level() > 0)
-	{
-		Get_Upgrade("Crafting Knowledge")->Set_Unlocked(true);
-	}
-
-	if (name == "Crafting Knowledge" && upgrade->Get_Level() > 0)
-	{
-		Get_Upgrade("Crafting Growth")->Set_Unlocked(true);
-		Get_Upgrade("Crafting Unlock table")->Set_Unlocked(true);
-		Get_Upgrade("Crafting Mass Production")->Set_Unlocked(true);
-	}
-
-	if (name == "Mining" && upgrade->Get_Level() > 0)
-	{
-		Get_Upgrade("Mining Crit Chance")->Set_Unlocked(true);
-		Get_Upgrade("Mining Knowledge")->Set_Unlocked(true);
-	}
-
-	if (name == "Mining Crit Chance" && upgrade->Get_Level() > 0)
-	{
-		Get_Upgrade("Mining Crit Power")->Set_Unlocked(true);
-	}
-
-	if (name == "Mining Knowledge" && upgrade->Get_Level() > 0)
-	{
-		Get_Upgrade("Mining Growth")->Set_Unlocked(true);
-	}
-
-	if (name == "Workers Lumberjack" && upgrade->Get_Level() > 0)
-	{
-		Get_Upgrade("Workers Idle")->Set_Unlocked(true);
-	}
-
-	if (name == "Workers Idle" && upgrade->Get_Level() > 0)
-	{
-		Get_Upgrade("Workers Deep Idle")->Set_Unlocked(true);
-	}
-
-	if (name == "Workers Mining" && upgrade->Get_Level() > 0)
-	{
-		Get_Upgrade("Workers Collecting")->Set_Unlocked(true);
+		for (const string& unlock_Name : upgrade->Get_Unlocks())
+		{
+			Get_Upgrade(unlock_Name)->Set_Unlocked(true);
+		}
 	}
 
 	upgrade->Set_Cost(
@@ -280,7 +219,30 @@ void Ascension_Manager::Create_Upgrades()
 	Add_Upgrade("Mining Knowledge", "Increase Mining XP gain by 1", 1, 100, 320, 300);
 	Add_Upgrade("Mining Crit Power", "Increase Mining crit power by 10%", 5, 100, 140, 200);
 	Add_Upgrade("Mining Growth", "Increase Mining strength gain after level up by 1", 1, 1000, 320, 200);
-	
+
+
+	Get_Upgrade("Stone")->Add_Unlock("Lumberjack");
+	Get_Upgrade("Stone")->Add_Unlock("Crafting");
+	Get_Upgrade("Stone")->Add_Unlock("Mining");
+	Get_Upgrade("Stone")->Add_Unlock("Workers Lumberjack");
+	Get_Upgrade("Stone")->Add_Unlock("Workers Craftingtable");
+	Get_Upgrade("Stone")->Add_Unlock("Workers Mining");
+	Get_Upgrade("Lumberjack")->Add_Unlock("Lumberjack Crit Chance");
+	Get_Upgrade("Lumberjack")->Add_Unlock("Lumberjack Knowledge");
+	Get_Upgrade("Lumberjack Knowledge")->Add_Unlock("Lumberjack Growth");
+	Get_Upgrade("Lumberjack Crit Chance")->Add_Unlock("Lumberjack Crit Power");
+	Get_Upgrade("Crafting")->Add_Unlock("Crafting Knowledge");
+	Get_Upgrade("Crafting Knowledge")->Add_Unlock("Crafting Growth");
+	Get_Upgrade("Crafting Knowledge")->Add_Unlock("Crafting Unlock table");
+	Get_Upgrade("Crafting Knowledge")->Add_Unlock("Crafting Mass Production");
+	Get_Upgrade("Mining")->Add_Unlock("Mining Crit Chance");
+	Get_Upgrade("Mining")->Add_Unlock("Mining Knowledge");
+	Get_Upgrade("Mining Crit Chance")->Add_Unlock("Mining Crit Power");
+	Get_Upgrade("Mining Knowledge")->Add_Unlock("Mining Growth");
+	Get_Upgrade("Workers Lumberjack")->Add_Unlock("Workers Idle");
+	Get_Upgrade("Workers Idle")->Add_Unlock("Workers Deep Idle");
+	Get_Upgrade("Workers Mining")->Add_Unlock("Workers Collecting");
+
 	Get_Upgrade("Stone")->Set_Unlocked(true);
 }
 
