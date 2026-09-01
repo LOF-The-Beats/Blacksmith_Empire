@@ -80,6 +80,10 @@ void UI::Draw_UI(
 	{
 		Mine_UI(screen, window_Manager, player, resource_Manager, item_Manager);
 	}
+	else if (window_Manager->get_Active_Window() == "Dungeon")
+	{
+		Dungeon_UI(screen, window_Manager, player, resource_Manager, item_Manager);
+	}
 	else if (window_Manager->get_Active_Window() == "Settings")
 	{
 		Settings_UI(screen, _Icon_Sheet, window_Manager, player);
@@ -195,14 +199,23 @@ void UI::UI_Layout(Surface* screen, Resource_Manager* resource_Manager, Unlock_M
 		else
 			button_Tab("Mine", tab_X, tab_Y + (5 * tab_H), screen);
 	}
-	if (window_Manager->get_Active_Window() == "Settings")
+
+	if (unlock_Manager->Get_Unlocked("Dungeon")->Get_Unlocked())
 	{
-		button_Tab_Selected("Settings", tab_X, tab_Y + (6 * tab_H), screen);
+		if (window_Manager->get_Active_Window() == "Dungeon")
+			button_Tab_Selected("Dungeon", tab_X, tab_Y + (6 * tab_H), screen);
+		else
+			button_Tab("Dungeon", tab_X, tab_Y + (6 * tab_H), screen);
 	}
-	else
+
+	if (unlock_Manager->Get_Unlocked("Settings")->Get_Unlocked())
 	{
-		button_Tab("Settings", tab_X, tab_Y + (6 * tab_H), screen);
+		if (window_Manager->get_Active_Window() == "Settings")
+			button_Tab_Selected("Settings", tab_X, tab_Y + (7 * tab_H), screen);
+		else
+			button_Tab("Settings", tab_X, tab_Y + (7 * tab_H), screen);
 	}
+
 }
 
 void UI::Forest_UI(float deltaTime, Surface* screen, Surface* resource_Icon_Sheet, Resource_Manager* resource_Manager, Player* player, Item_Manager* item_Manager, Window_Manager* window_Manager)
@@ -915,6 +928,26 @@ void UI::Mine_UI(Surface* screen, Window_Manager* window_Manager, Player* player
 			}
 		}
 	}
+}
+
+void UI::Dungeon_UI(Surface* screen, Window_Manager* window_Manager, Player* player, Resource_Manager* resource_Manager, Item_Manager* item_Manager)
+{
+	int x_Base = 150;
+	int y_Base = 75;
+
+	string tekst;
+
+	screen->Box(x_Base, y_Base, x_Base + 500, SCRHEIGHT - 25, 0xFF0000);
+	tekst = "Adventurers";
+	screen->Print(tekst.c_str(), x_Base + 75, y_Base +10, 0xFF0000, 2.0);
+
+	screen->Box(x_Base + 25, y_Base + 25, x_Base + 475, SCRHEIGHT - 50, 0xFF0000);
+	tekst = "Hire Adventurer";
+	screen->Print(tekst.c_str(), x_Base + 75, y_Base + 75, 0xFF0000, 2.0);
+	tekst = "Price";
+	button_Standard(tekst.c_str(), "", "", x_Base + 275, y_Base + 60, screen, window_Manager, player);
+
+
 }
 
 void UI::Settings_UI(

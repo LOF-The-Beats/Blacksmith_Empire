@@ -128,7 +128,9 @@
     <ClCompile Include="Blueprint_Manager.cpp" />
     <ClCompile Include="Craftingtable.cpp" />
     <ClCompile Include="Craftingtable_Manager.cpp" />
+    <ClCompile Include="Creatures.cpp" />
     <ClCompile Include="Draft_Manager.cpp" />
+    <ClCompile Include="Dungeon.cpp" />
     <ClCompile Include="game.cpp" />
     <ClCompile Include="Game_Manager.cpp" />
     <ClCompile Include="Item.cpp" />
@@ -169,7 +171,9 @@
     <ClInclude Include="cl\tools.cl" />
     <ClInclude Include="Craftingtable.h" />
     <ClInclude Include="Craftingtable_Manager.h" />
+    <ClInclude Include="Creatures.h" />
     <ClInclude Include="Draft_Manager.h" />
+    <ClInclude Include="Dungeon.h" />
     <ClInclude Include="game.h" />
     <ClInclude Include="Game_Manager.h" />
     <ClInclude Include="Item.h" />

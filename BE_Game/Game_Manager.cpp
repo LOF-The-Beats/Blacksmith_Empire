@@ -161,8 +161,13 @@ void Game_Manager::Location_Buttons_Pressed(Player* player, Window_Manager* wind
 	{
 		window_Manager->set_Active_Window("Mine");
 	}
-	else if (unlock_Manager->Get_Unlocked("Settings")->Get_Unlocked() &&
+	else if (unlock_Manager->Get_Unlocked("Dungeon")->Get_Unlocked() &&
 		Is_Mouse_Over_Location(player, 0, 0, 6))
+	{
+		window_Manager->set_Active_Window("Dungeon");
+	}
+	else if (unlock_Manager->Get_Unlocked("Settings")->Get_Unlocked() &&
+		Is_Mouse_Over_Location(player, 0, 0, 7))
 	{
 		window_Manager->set_Active_Window("Settings");
 	}

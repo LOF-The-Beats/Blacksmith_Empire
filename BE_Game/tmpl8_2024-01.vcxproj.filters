@@ -45,6 +45,8 @@
     <ClCompile Include="Ascension_Upgrades.cpp" />
     <ClCompile Include="Smelter.cpp" />
     <ClCompile Include="Smelter_Manager.cpp" />
+    <ClCompile Include="Dungeon.cpp" />
+    <ClCompile Include="Creatures.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="game.h" />
@@ -97,6 +99,8 @@
     <ClInclude Include="Ascension_Upgrades.h" />
     <ClInclude Include="Smelter.h" />
     <ClInclude Include="Smelter_Manager.h" />
+    <ClInclude Include="Dungeon.h" />
+    <ClInclude Include="Creatures.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="README.md">

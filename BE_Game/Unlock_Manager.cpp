@@ -33,6 +33,7 @@ void Unlock_Manager::Create_All_Unlocks()
 	Add_Unlocked("Libary");
 	Add_Unlocked("Witch Hut");
 	Add_Unlocked("Mine");
+	Add_Unlocked("Dungeon");
 	Add_Unlocked("Settings");
 
 
