@@ -12,9 +12,11 @@ public:
 	Item* Get_Item(const string name) const;
 	vector<Item*> Get_All_Items();
 
+
+
 	//adder
 
-	void Add_Item(const string name, string resource, string blueprint, string equip_Slot, double level, double value, double power);
+	void Add_Item(const string name, string resource, string blueprint, string equip_Slot, double level, double value, double power, double weight, double strength, double agility, double vitality, double luck, double armor);
 
 	//Deleter
 

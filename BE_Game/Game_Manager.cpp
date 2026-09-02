@@ -1199,6 +1199,19 @@ void Game_Manager::Check_Craftingtable_Progress(Resource_Manager* resource_Manag
 				resource->Sub_Quantity(blueprint->Get_Cost());
 				double level = blueprint->Get_Level();
 				string combined_Name = all_Craftingtables[i]->Get_Resource() + " " + all_Craftingtables[i]->Get_Blueprint() + " Level: " + to_string(static_cast<int>(blueprint->Get_Level()));
+				string resource_Name = all_Craftingtables[i]->Get_Resource();
+				string blueprint_Name = all_Craftingtables[i]->Get_Blueprint();
+				string equipslot_Name = blueprint->Get_Equip_Slot();
+				double blueprint_Level = blueprint->Get_Level();
+				double item_Value = resource->Get_Hardness() * blueprint->Get_Level() * blueprint->Get_value();
+				double item_Power = resource->Get_Hardness() * blueprint->Get_Conversion_Rate();
+				double item_Weigth = resource->Get_Hardness() * blueprint->Get_Weight_Value();
+				double item_Strength = item_Power * blueprint->Get_Strength_Value();
+				double item_Agility = item_Power * blueprint->Get_Agility_Value();
+				double item_Vitality = item_Power * blueprint->Get_Vitality_Value();
+				double item_Luck = item_Power * blueprint->Get_Luck_Value();
+				double item_Armor = item_Power * blueprint->Get_Armor();
+				
 				auto item = item_Manager->Get_Item(combined_Name);
 				if (item)
 				{
@@ -1207,7 +1220,7 @@ void Game_Manager::Check_Craftingtable_Progress(Resource_Manager* resource_Manag
 				}
 				else
 				{
-					item_Manager->Add_Item(combined_Name, all_Craftingtables[i]->Get_Resource(), all_Craftingtables[i]->Get_Blueprint(), blueprint->Get_Equip_Slot(), blueprint->Get_Level(), resource->Get_Hardness() * blueprint->Get_Level() * (blueprint->Get_Cost() / resource->Get_Hardness()), resource->Get_Hardness() * blueprint->Get_Conversion_Rate());
+					item_Manager->Add_Item(combined_Name, resource_Name, blueprint_Name, equipslot_Name, blueprint_Level, item_Value, item_Power, item_Weigth, item_Strength, item_Agility, item_Vitality, item_Luck, item_Armor);
 					all_Craftingtables[i]->Set_In_Use(false);
 				}
 			}
@@ -1218,7 +1231,21 @@ void Game_Manager::Check_Craftingtable_Progress(Resource_Manager* resource_Manag
 			all_Craftingtables[i]->Set_Progress(0);
 			double level = blueprint->Get_Level();
 			string combined_Name = all_Craftingtables[i]->Get_Resource() + " " + all_Craftingtables[i]->Get_Blueprint() + " Level: " + to_string(static_cast<int>(blueprint->Get_Level()));
+			string resource_Name = all_Craftingtables[i]->Get_Resource();
+			string blueprint_Name = all_Craftingtables[i]->Get_Blueprint();
+			string equipslot_Name = blueprint->Get_Equip_Slot();
+			double blueprint_Level = blueprint->Get_Level();
+			double item_Value = resource->Get_Hardness() * blueprint->Get_Level() * blueprint->Get_value();
+			double item_Power = resource->Get_Hardness() * blueprint->Get_Conversion_Rate();
+			double item_Weigth = resource->Get_Hardness() * blueprint->Get_Weight_Value();
+			double item_Strength = item_Power * blueprint->Get_Strength_Value();
+			double item_Agility = item_Power * blueprint->Get_Agility_Value();
+			double item_Vitality = item_Power * blueprint->Get_Vitality_Value();
+			double item_Luck = item_Power * blueprint->Get_Luck_Value();
+			double item_Armor = item_Power * blueprint->Get_Armor();
+
 			auto item = item_Manager->Get_Item(combined_Name);
+
 			if (item)
 			{
 				item->Add_Quantity(1);
@@ -1226,7 +1253,9 @@ void Game_Manager::Check_Craftingtable_Progress(Resource_Manager* resource_Manag
 			}
 			else
 			{
-				item_Manager->Add_Item(combined_Name, all_Craftingtables[i]->Get_Resource(), all_Craftingtables[i]->Get_Blueprint(), blueprint->Get_Equip_Slot(), blueprint->Get_Level(), resource->Get_Hardness() * blueprint->Get_Level() * blueprint->Get_value(), resource->Get_Hardness() * blueprint->Get_Conversion_Rate());
+				
+
+				item_Manager->Add_Item(combined_Name, resource_Name, blueprint_Name, equipslot_Name, blueprint_Level, item_Value, item_Power, item_Weigth, item_Strength, item_Agility, item_Vitality, item_Luck, item_Armor);
 				all_Craftingtables[i]->Set_In_Use(false);
 			}
 		}

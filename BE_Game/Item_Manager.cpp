@@ -27,11 +27,11 @@ vector<Item*> Item_Manager::Get_All_Items()
 	return all_Items;
 }
 
-void Item_Manager::Add_Item(const string name, string resource, string blueprint, string equip_Slot, double level, double value, double power)
+void Item_Manager::Add_Item(const string name, string resource, string blueprint, string equip_Slot, double level, double value, double power, double weight, double strength, double agility, double vitality, double luck, double armor)
 {
 	if (item.find(name) == item.end())
 	{
-		item[name] = new Item(name, resource, blueprint, equip_Slot, level, value, power);
+		item[name] = new Item(name, resource, blueprint, equip_Slot, level, value, power, weight, strength, agility, vitality, luck, armor);
 	}
 }
 

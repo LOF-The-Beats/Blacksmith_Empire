@@ -1,8 +1,8 @@
 #include "precomp.h"
 #include "Blueprints.h"
 
-Blueprints::Blueprints(string name, string equip_Slot, double base_Conversion_Rate, double cost, double value,  int order)
-	:name(name), equip_Slot(equip_Slot), conversion_Rate(base_Conversion_Rate), base_Conversion_Rate(base_Conversion_Rate), order(order), level(1.0), cost(cost), value(value), unlocked(false), researched(true)
+Blueprints::Blueprints(string name, string equip_Slot, double base_Conversion_Rate, double cost, double value,  int order, double weight_Value, double strength_Value, double agility_Value, double vitality_Value, double luck_Value, double armor)
+	:name(name), equip_Slot(equip_Slot), conversion_Rate(base_Conversion_Rate), base_Conversion_Rate(base_Conversion_Rate), order(order), level(1.0), cost(cost), value(value), unlocked(false), researched(true), weight_Value(weight_Value), strength_Value(strength_Value), agility_Value(agility_Value), vitality_Value(vitality_Value), luck_Value(luck_Value), armor(armor)
 {
 }
 
@@ -55,6 +55,36 @@ bool Blueprints::Get_Unlocked() const
 bool Blueprints::Get_Researched() const
 {
 	return researched;
+}
+
+double Blueprints::Get_Weight_Value() const
+{
+	return weight_Value;
+}
+
+double Blueprints::Get_Strength_Value() const
+{
+	return strength_Value;
+}
+
+double Blueprints::Get_Agility_Value() const
+{
+	return agility_Value;
+}
+
+double Blueprints::Get_Vitality_Value() const
+{
+	return vitality_Value;
+}
+
+double Blueprints::Get_Luck_Value() const
+{
+	return luck_Value;
+}
+
+double Blueprints::Get_Armor() const
+{
+	return armor;
 }
 
 void Blueprints::Set_Name(string n)

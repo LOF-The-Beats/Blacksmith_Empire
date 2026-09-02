@@ -68,9 +68,9 @@ double Creatures::Get_Armor() const
 	return armor;
 }
 
-double Creatures::Get_Hit_Chance() const
+double Creatures::Get_Armor_Pen() const
 {
-	return hit_Chance;
+	return armor_Pen;
 }
 
 double Creatures::Get_Speed() const
@@ -83,10 +83,6 @@ double Creatures::Get_Crit_Chance() const
 	return crit_Chance;
 }
 
-double Creatures::Get_Dodge_Chance() const
-{
-	return dodge_Chance;
-}
 
 
 // Setters
@@ -150,9 +146,9 @@ void Creatures::Set_Armor(double new_Armor)
 	armor = new_Armor;
 }
 
-void Creatures::Set_Hit_Chance(double new_Hit_Chance)
+void Creatures::Set_Armor_Pen(double new_Armor_Pen)
 {
-	hit_Chance = new_Hit_Chance;
+	armor_Pen = new_Armor_Pen;
 }
 
 void Creatures::Set_Speed(double new_Speed)
@@ -165,10 +161,6 @@ void Creatures::Set_Crit_Chance(double new_Crit_Chance)
 	crit_Chance = new_Crit_Chance;
 }
 
-void Creatures::Set_Dodge_Chance(double new_Dodge_Chance)
-{
-	dodge_Chance = new_Dodge_Chance;
-}
 
 
 // Adders
@@ -222,9 +214,9 @@ void Creatures::Add_Armor(double amount)
 	armor += amount;
 }
 
-void Creatures::Add_Hit_Chance(double amount)
+void Creatures::Add_Armor_Pen(double amount)
 {
-	hit_Chance += amount;
+	armor_Pen += amount;
 }
 
 void Creatures::Add_Speed(double amount)
@@ -237,10 +229,6 @@ void Creatures::Add_Crit_Chance(double amount)
 	crit_Chance += amount;
 }
 
-void Creatures::Add_Dodge_Chance(double amount)
-{
-	dodge_Chance += amount;
-}
 
 
 // Subtracters
@@ -254,14 +242,45 @@ void Creatures::Sub_Health(double amount)
 	}
 }
 
+void Creatures::Set_Race(string race)
+{
+	if (race == "Human")
+	{
+		strength = 1;
+		vitality = 1;
+		agility = 1;
+		luck = 2;
+	}
+	else if (race == "Dwarf")
+	{
+		strength = 2;
+		vitality = 1;
+		agility = 1;
+		luck = 1;
+	}
+	else if (race == "Elf")
+	{
+		strength = 1;
+		vitality = 1;
+		agility = 2;
+		luck = 1;
+	}
+	else if (race == "Orc")
+	{
+		strength = 1;
+		vitality = 2;
+		agility = 1;
+		luck = 1;
+	}
+}
+
 void Creatures::calculate_Stats()
 {
-	max_Health = (strength)+(vitality);
+	max_Health = (strength) + (vitality * 5);
 	health = max_Health;
 	damage = (strength);
 	armor = 0;
-	hit_Chance = (agility);
+	armor_Pen = (40.0 * (agility / (agility + 10000.0))) + (10.0 * (luck / (luck + 10000.0)));
 	speed = (agility);
-	crit_Chance = (luck);
-	dodge_Chance = (agility);
+	crit_Chance = 5.0 + (70.0 * (luck / (luck + 1000.0)));
 }

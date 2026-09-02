@@ -16,12 +16,12 @@ public:
 	double Get_Luck() const;
 
 	double Get_Health() const;
+	double Get_Max_Health() const;
 	double Get_Damage() const;
 	double Get_Armor() const;
-	double Get_Hit_Chance() const;
+	double Get_Armor_Pen() const;
 	double Get_Speed() const;
 	double Get_Crit_Chance() const;
-	double Get_Dodge_Chance() const;
 
 
 	// Setters
@@ -36,12 +36,12 @@ public:
 	void Set_Luck(double new_Luck);
 
 	void Set_Health(double new_Health);
+	void Set_Max_Health(double new_Max_Health);
 	void Set_Damage(double new_Damage);
 	void Set_Armor(double new_Armor);
-	void Set_Hit_Chance(double new_Hit_Chance);
+	void Set_Armor_Pen(double new_Armor_Pen);
 	void Set_Speed(double new_Speed);
 	void Set_Crit_Chance(double new_Crit_Chance);
-	void Set_Dodge_Chance(double new_Dodge_Chance);
 
 
 	// Adders
@@ -54,18 +54,21 @@ public:
 	void Add_Luck(double amount);
 
 	void Add_Health(double amount);
+	void Add_Max_Health(double amount);
 	void Add_Damage(double amount);
 	void Add_Armor(double amount);
-	void Add_Hit_Chance(double amount);
+	void Add_Armor_Pen(double amount);
 	void Add_Speed(double amount);
 	void Add_Crit_Chance(double amount);
-	void Add_Dodge_Chance(double amount);
 
 
 	// Subtracters
 	void Sub_Health(double amount);
 
+
+
 	//Calculator
+	void Set_Race(string race);
 	void calculate_Stats();
 
 private:
@@ -73,6 +76,6 @@ private:
 	string name;
 	double level, exp, exp_Needed;
 	double strength, agility, vitality, luck;
-	double health, damage, armor, hit_Chance, speed, crit_Chance, dodge_Chance;
+	double health, max_Health, damage, armor, armor_Pen, speed, crit_Chance;
 };
 

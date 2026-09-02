@@ -1854,19 +1854,11 @@ void UI::draw_Mouse_Icons(Surface* screen, int scale, Surface* Asset_Sheet, Play
 	);
 }
 
-<<<<<<< Updated upstream
-void UI::button_Tab(
-	string name,
-	int x1,
-	int y1,
-	Surface* screen)
-=======
 void UI::Draw_Bars_Icons(Surface* screen)
 {
 }
 
 void UI::button_Tab(string name, int x1, int y1, Surface* screen)
->>>>>>> Stashed changes
 {
 	int w = 160;
 	int h = 96;

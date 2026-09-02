@@ -15,8 +15,10 @@ public:
 
 
 
+
+
 	//adders
-	void Add_Blueprints(const string name, string equip_Slot, const double conversion_Rate, double cost, double value, int order);
+	void Add_Blueprints(const string name, string equip_Slot, const double conversion_Rate, double cost, double value, int order, double weight_Value, double strength_Value, double agility_Value, double vitality_Value, double luck_Value, double armor);
 
 	//creator
 	void Create_All_Blueprints();

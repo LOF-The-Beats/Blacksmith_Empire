@@ -1,8 +1,8 @@
 #include "precomp.h"
 #include "Item.h"
 
-Item::Item(string name, string resource, string blueprint, string equip_Slot, double level, double value, double power)
-	:name(name), resource(resource), blueprint(blueprint), equip_Slot(equip_Slot), level(level), power(power), quantity(1.0), value(value)
+Item::Item(string name, string resource, string blueprint, string equip_Slot, double level, double value, double power, double weight, double strength, double agility, double vitality, double luck, double armor)
+	:name(name), resource(resource), blueprint(blueprint), equip_Slot(equip_Slot), level(level), power(power), quantity(1.0), value(value), weight(weight), strength(strength), agility(agility), vitality(vitality), luck(luck), armor(armor)
 {
 }
 
@@ -44,6 +44,36 @@ double Item::Get_Quantity() const
 double Item::Get_Value() const
 {
 	return value;
+}
+
+double Item::Get_Weight() const
+{
+	return weight;
+}
+
+double Item::Get_Strength() const
+{
+	return strength;
+}
+
+double Item::Get_Agility() const
+{
+	return agility;
+}
+
+double Item::Get_Vitality() const
+{
+	return vitality;
+}
+
+double Item::Get_Luck() const
+{
+	return luck;
+}
+
+double Item::Get_Armor() const
+{
+	return armor;
 }
 
 void Item::Set_Name(string n)
@@ -92,6 +122,36 @@ void Item::Set_Value(double amount)
 {
 	value = amount;
 	return;
+}
+
+void Item::Set_Weight(double amount)
+{
+	weight = amount;
+}
+
+void Item::Set_Strength(double amount)
+{
+	strength = amount;
+}
+
+void Item::Set_Agility(double amount)
+{
+	agility = amount;
+}
+
+void Item::Set_Vitality(double amount)
+{
+	vitality = amount;
+}
+
+void Item::Set_Luck(double amount)
+{
+	luck = amount;
+}
+
+void Item::Set_Armor(double amount)
+{
+	armor = amount;
 }
 
 void Item::Add_Level(double amount)

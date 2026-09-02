@@ -2,8 +2,7 @@
 class Blueprints
 {
 public:
-
-	Blueprints(string name, string equip_Slot, double base_Conversion_Rate, double cost, double value, int order);
+	Blueprints(string name, string equip_Slot, double base_Conversion_Rate, double cost, double value, int order, double weight_Value, double strength_Value, double agility_Value, double vitality_Value, double luck_Value, double armor);
 
 	// getters
 	string Get_Name() const;
@@ -16,6 +15,12 @@ public:
 	double Get_Base_Conversion_Rate() const;
 	bool Get_Unlocked() const;
 	bool Get_Researched() const;
+	double Get_Weight_Value() const;
+	double Get_Strength_Value() const;
+	double Get_Agility_Value() const;
+	double Get_Vitality_Value() const;
+	double Get_Luck_Value() const;
+	double Get_Armor() const;
 
 	//setters
 	void Set_Name(string n);
@@ -51,6 +56,8 @@ private:
 	double base_Conversion_Rate;
 	bool unlocked;
 	bool researched;
+
+	double weight_Value, strength_Value, agility_Value, vitality_Value, luck_Value, armor;
 
 };
 
