@@ -107,7 +107,11 @@ void Game::Init()
 
 		for (size_t i = 0; i < all_Resources.size(); i++)
 		{
-			all_Resources[i]->Set_Quantity(10000000);
+			auto resources = all_Resources[i];
+
+			resources->Set_Quantity(10000000);
+			resources->Set_Unlocked(true);
+			
 		}
 	}
 	m_Tutorial->Set_Enabled(false);

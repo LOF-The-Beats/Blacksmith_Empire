@@ -220,13 +220,91 @@ void UI::UI_Layout(Surface* screen, Resource_Manager* resource_Manager, Unlock_M
 
 void UI::Forest_UI(float deltaTime, Surface* screen, Surface* resource_Icon_Sheet, Resource_Manager* resource_Manager, Player* player, Item_Manager* item_Manager, Window_Manager* window_Manager)
 {
-	int x_Base = 150;
+	int x_Base = 1425;
 	int x_Increase = 425;
 	int y_Base = 50;
+	int y_Increase = 100;
 	int increase_Multi = 0;
 	string tekst;
 
 	auto all_Wood_Resources = resource_Manager->Get_All_Resources();
+	auto lumberjack = player->Get_Stats("Lumberjack");
+	auto crafting = player->Get_Stats("Crafting");
+	auto mining = player->Get_Stats("Mining");
+
+	//first box top right
+	screen->Box(x_Base, y_Base, SCRWIDTH, 250, 0xFF00FF);
+	tekst = "Lumberjack Level";
+	screen->Print(tekst.c_str(), x_Base + (SCRWIDTH - x_Base) / 2, 75, 0xFF00FF, 2.0);
+	screen->Box(1450, 100, 1500, 150, 0xFF00FF);
+	tekst = to_string(static_cast<int>(round(lumberjack->Get_Level())));
+	screen->Print(tekst.c_str(), 1465, 115, 0xFF00FF, 3.0);
+	screen->Box(1550, 100, SCRWIDTH - 50, 150, 0xFF00FF);
+	screen->Bar(1550, 100, 1550 + (lumberjack->Get_Exp() / lumberjack->Get_Exp_Needed() * (SCRWIDTH - 50 - 1550)), 150, 0xFF00FF);
+	tekst = to_string(static_cast<int>(round(lumberjack->Get_Exp()))) + " / " + to_string(static_cast<int>(round(lumberjack->Get_Exp_Needed())));
+	screen->Print(tekst.c_str(), 1425 + (SCRWIDTH - 1425) / 2, 175, 0xFF00FF, 2.0);
+	
+	//sceccond box top right
+	screen->Box(1425, 250, SCRWIDTH, 450, 0xFF00FF);
+	tekst = "Player Equipment";
+	screen->Print(tekst.c_str(), 1425 + (SCRWIDTH - 1425) / 2, 275, 0xFF00FF, 2.0);
+	tekst = "Lumberjack: " + lumberjack->Get_Tool_Name() + ". Tool power " + to_string(static_cast<int>(round(lumberjack->Get_Tool_Power())));
+	screen->Print(tekst.c_str(), 1430, 300, 0xFF00FF, 1.5);
+	tekst = "Crafting: " + crafting->Get_Tool_Name() + ". Tool power " + to_string(static_cast<int>(round(crafting->Get_Tool_Power())));
+	screen->Print(tekst.c_str(), 1430, 315, 0xFF00FF, 1.5);
+	tekst = "Mining: " + mining->Get_Tool_Name() + ". Tool power " + to_string(static_cast<int>(round(mining->Get_Tool_Power())));
+	screen->Print(tekst.c_str(), 1430, 330, 0xFF00FF, 1.5);
+
+	//third box middle right.
+	screen->Box(x_Base, y_Base +400 , SCRWIDTH, y_Base + 700, 0xFF00FF);
+	for (size_t i = 0; i < all_Wood_Resources.size(); i++)
+	{
+		if (all_Wood_Resources[i]->Get_Name() == "SoftWood" ||
+			all_Wood_Resources[i]->Get_Name() == "HardWood" ||
+			all_Wood_Resources[i]->Get_Name() == "IronWood")
+		{
+			auto resource = all_Wood_Resources[i];
+
+			tekst = resource->Get_Name();
+			screen->Print(tekst.c_str(), x_Base + (SCRWIDTH - x_Base) / 2, y_Base + (y_Increase * increase_Multi) + 425, 0xFF00FF, 2.0);
+			screen->Box(x_Base, y_Base + (400 + 100 * increase_Multi), SCRWIDTH, y_Base + (500 + 100 * increase_Multi), 0xFF00FF);
+			tekst = "Total Workers: " + to_string(static_cast<int>(round(resource->Get_Workers())));
+			screen->Print(tekst.c_str(), x_Base + 5, y_Base + (y_Increase * increase_Multi) + 440, 0xFF00FF, 1.5);
+			tekst = "Tool Power: " + to_string(static_cast<int>(round(resource->Get_Workers_Tool_Power())));
+			screen->Print(tekst.c_str(), x_Base + 5, y_Base + (y_Increase * increase_Multi) + 450, 0xFF00FF, 1.5);
+			tekst = "Tool Equped: " + resource->Get_Worker_Tool_Equiped();
+			screen->Print(tekst.c_str(), x_Base + 5, y_Base + (y_Increase * increase_Multi) + 460, 0xFF00FF, 1.5);
+			tekst = "Production: " + to_string(static_cast<int>(round(resource->Get_Production_Rate())));
+			screen->Print(tekst.c_str(), x_Base + 5, y_Base + (y_Increase * increase_Multi) + 470, 0xFF00FF, 1.5);
+
+			increase_Multi++;
+		}
+	}
+
+	//bar bottum leftforth box buttom right
+	screen->Box(x_Base, y_Base + 700, SCRWIDTH, y_Base + SCRHEIGHT, 0xFF00FF);
+	tekst = "Resources";
+	screen->Print(tekst.c_str(), x_Base + (SCRWIDTH - x_Base) / 2, y_Base + 725, 0xFF00FF, 2.0);
+	for (size_t i = 0; i < all_Wood_Resources.size(); i++)
+	{
+		if (all_Wood_Resources[i]->Get_Name() == "SoftWood" ||
+			all_Wood_Resources[i]->Get_Name() == "HardWood" ||
+			all_Wood_Resources[i]->Get_Name() == "IronWood")
+		{
+			auto resource = all_Wood_Resources[i];
+
+			tekst = resource->Get_Name() + ": " + to_string(static_cast<int>(round(resource->Get_Quantity())));
+			screen->Print(tekst.c_str(), x_Base + 5, y_Base + (750 + 10 * increase_Multi), 0xFF00FF, 1.5);
+
+			increase_Multi++;
+		}
+	}
+
+
+	x_Base = 150;
+	x_Increase = 425;
+	y_Base = 50;
+	increase_Multi = 0;
 
 	for (size_t i = 0; i < all_Wood_Resources.size(); i++)
 	{
@@ -235,6 +313,11 @@ void UI::Forest_UI(float deltaTime, Surface* screen, Surface* resource_Icon_Shee
 			all_Wood_Resources[i]->Get_Name() == "IronWood")
 		{
 			auto resource = all_Wood_Resources[i];
+
+			if (!resource->Get_Unlocked())
+			{
+				continue;
+			}
 
 			screen->Box(x_Base + (x_Increase * increase_Multi), y_Base, x_Base + x_Increase * (increase_Multi + 1), SCRHEIGHT, 0xFF00FF);
 			tekst = resource->Get_Name();
@@ -874,6 +957,11 @@ void UI::Mine_UI(Surface* screen, Window_Manager* window_Manager, Player* player
 		if (all_Mine_Resources[i]->Get_Gathering_Destination() == "Mined")
 		{
 			auto resource = resource_Manager->Get_Resource(all_Mine_Resources[i]->Get_Name());
+
+			if (!resource->Get_Unlocked())
+			{
+				continue;
+			}
 
 			if (currentPage == page)
 			{
@@ -1766,11 +1854,19 @@ void UI::draw_Mouse_Icons(Surface* screen, int scale, Surface* Asset_Sheet, Play
 	);
 }
 
+<<<<<<< Updated upstream
 void UI::button_Tab(
 	string name,
 	int x1,
 	int y1,
 	Surface* screen)
+=======
+void UI::Draw_Bars_Icons(Surface* screen)
+{
+}
+
+void UI::button_Tab(string name, int x1, int y1, Surface* screen)
+>>>>>>> Stashed changes
 {
 	int w = 160;
 	int h = 96;

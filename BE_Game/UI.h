@@ -51,6 +51,7 @@ public:
 	void draw_Ascension_Upgrades(Surface* screen, Ascension_Manager* ascension_Manager, Ascension_Upgrade_Screen* ascension_Upgrade_Screen, Player* player, Window_Manager* window_Manager);
 	void draw_Resource_Icons(Surface* screen, string resource_Name, int text_X, int text_Y, int scale, Surface* Asset_Sheet);
 	void draw_Mouse_Icons(Surface* screen, int scale, Surface* Asset_Sheet, Player* player, Window_Manager* window_Manager);
+	void Draw_Bars_Icons(Surface* screen);
 	float Get_Text_Scale(string text, int max_Width, float start_Scale);
 	void draw_Hover_Info(string name, string cost, string description, Surface* screen, Player* player, Window_Manager* window_Manager);
 
@@ -74,5 +75,6 @@ private:
 	Surface* resource_Icon_Sheet = new Surface("Assets/Crafting Materials Icons.png");
 	Surface* mouse_Icon_Sheet = new Surface("Assets/All_Art/Solaria UI Update 03c/Cursors & Pointers.png");
 	Surface* _Icon_Sheet = new Surface("Assets/All_Art/Solaria UI Update 03c/Windows.png");
+	Surface* Bars_Icon_Sheet = new Surface("Assets/All_Art/Solaria UI Update 03c/Bars & Meters.png");
 };
 

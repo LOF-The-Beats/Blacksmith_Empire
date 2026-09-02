@@ -80,7 +80,7 @@ void Ascension_Manager::Ascend_Run(Resource_Manager* resource_Manager, Blueprint
 			all_Resources[i]->Set_Workers(0);
 			all_Resources[i]->Set_Workers_Tool_Power(1);
 			all_Resources[i]->Set_Worker_Cost(20);
-			all_Resources[i]->Set_Worker_Tool_Equiped("None");
+			all_Resources[i]->Set_Worker_Tool_Equiped("Tool");
 			all_Resources[i]->Set_Production_Rate(0);
 			all_Resources[i]->Set_Depth(1);
 			all_Resources[i]->Set_Depth_Cost(1000);

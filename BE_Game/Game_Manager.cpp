@@ -197,6 +197,11 @@ void Game_Manager::Forest_Buttons(Player* player, Resource_Manager* resource_Man
 			auto resource = all_Wood_Resources[i];
 			auto item = item_Manager->Get_Item(resource->Get_Worker_Tool_Equiped());
 
+			if (!resource->Get_Unlocked())
+			{
+				continue;
+			}
+
 			if (Is_Mouse_Over_Standard(player, x_Base + x_Increase / 2 + (x_Increase * increase_Multi), 160))
 			{
 				if (lumberjack->is_Crit())
