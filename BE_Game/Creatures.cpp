@@ -1,10 +1,24 @@
 #include "precomp.h"
 #include "Creatures.h"
+#include "Item_Manager.h"
 
-Creatures::Creatures(string name, double strength, double agility, double vitality, double luck)
-	:name(name), strength(strength), agility(agility), vitality(vitality), luck(luck)
+Creatures::Creatures(Item_Manager* item_Manager, string name, string race
+)
+	: name(name),
+	level(1),
+	exp(0),
+	exp_Needed(100),
+	head_Slot("None"),
+	chest_Slot("None"),
+	legs_Slot("None"),
+	hands_Slot("None"),
+	feet_Slot("None"),
+	main_Hand("None"),
+	off_Hand("None")
 {
-	calculate_Stats();
+
+	Set_Race(race);
+	calculate_Stats(item_Manager);
 }
 
 // Getters
@@ -81,6 +95,41 @@ double Creatures::Get_Speed() const
 double Creatures::Get_Crit_Chance() const
 {
 	return crit_Chance;
+}
+
+string Creatures::Get_Head_Slot() const
+{
+	return head_Slot;
+}
+
+string Creatures::Get_Chest_Slot() const
+{
+	return chest_Slot;
+}
+
+string Creatures::Get_Legs_Slot() const
+{
+	return legs_Slot;
+}
+
+string Creatures::Get_Hands_Slot() const
+{
+	return hands_Slot;
+}
+
+string Creatures::Get_Feet_Slot() const
+{
+	return feet_Slot;
+}
+
+string Creatures::Get_Main_Hand() const
+{
+	return main_Hand;
+}
+
+string Creatures::Get_Off_Hand() const
+{
+	return off_Hand;
 }
 
 
@@ -161,6 +210,40 @@ void Creatures::Set_Crit_Chance(double new_Crit_Chance)
 	crit_Chance = new_Crit_Chance;
 }
 
+void Creatures::Set_Head_Slot(string new_Head_Slot)
+{
+	head_Slot = new_Head_Slot;
+}
+
+void Creatures::Set_Chest_Slot(string new_Chest_Slot)
+{
+	chest_Slot = new_Chest_Slot;
+}
+
+void Creatures::Set_Legs_Slot(string new_Legs_Slot)
+{
+	legs_Slot = new_Legs_Slot;
+}
+
+void Creatures::Set_Hands_Slot(string new_Hands_Slot)
+{
+	hands_Slot = new_Hands_Slot;
+}
+
+void Creatures::Set_Feet_Slot(string new_Feet_Slot)
+{
+	feet_Slot = new_Feet_Slot;
+}
+
+void Creatures::Set_Main_Hand(string new_Main_Hand)
+{
+	main_Hand = new_Main_Hand;
+}
+
+void Creatures::Set_Off_Hand(string new_Off_Hand)
+{
+	off_Hand = new_Off_Hand;
+}
 
 
 // Adders
@@ -272,15 +355,49 @@ void Creatures::Set_Race(string race)
 		agility = 1;
 		luck = 1;
 	}
+	else
+	{
+		strength = 1;
+		vitality = 1;
+		agility = 1;
+		luck = 1;
+	}
 }
 
-void Creatures::calculate_Stats()
+void Creatures::calculate_Stats(Item_Manager* item_Manager)
 {
-	max_Health = (strength) + (vitality * 5);
+	auto all_Items = item_Manager->Get_All_Items();
+	double item_Total_Strength = 0;
+	double item_Total_Agility = 0;
+	double item_Total_Vitality = 0;
+	double item_Total_Luck = 0;
+	double item_Total_Armor = 0;
+
+	for (size_t i = 0; i < all_Items.size(); i++)
+	{
+		auto items = all_Items[i];
+
+		if (items->Get_Name() == head_Slot ||
+			items->Get_Name() == chest_Slot ||
+			items->Get_Name() == legs_Slot ||
+			items->Get_Name() == hands_Slot ||
+			items->Get_Name() == feet_Slot ||
+			items->Get_Name() == main_Hand ||
+			items->Get_Name() == off_Hand)
+		{
+			item_Total_Strength = item_Total_Strength + items->Get_Strength();
+			item_Total_Agility = item_Total_Agility + items->Get_Agility();
+			item_Total_Vitality = item_Total_Vitality + items->Get_Vitality();
+			item_Total_Luck = item_Total_Luck + items->Get_Luck();
+			item_Total_Armor = item_Total_Armor + items->Get_Armor();
+		}
+	}
+
+	max_Health = (strength + item_Total_Strength) + ((vitality + item_Total_Vitality) * 5);
 	health = max_Health;
-	damage = (strength);
-	armor = 0;
-	armor_Pen = (40.0 * (agility / (agility + 10000.0))) + (10.0 * (luck / (luck + 10000.0)));
-	speed = (agility);
-	crit_Chance = 5.0 + (70.0 * (luck / (luck + 1000.0)));
+	damage = (strength + item_Total_Strength);
+	armor = item_Total_Armor;
+	armor_Pen = (40.0 * ((agility + item_Total_Agility) / ((agility + item_Total_Agility) + 10000.0))) + (10.0 * ((luck + item_Total_Luck) / ((luck + item_Total_Luck) + 10000.0)));
+	speed = (agility + item_Total_Agility);
+	crit_Chance = 5.0 + (70.0 * ((luck + item_Total_Luck) / ((luck + item_Total_Luck) + 1000.0)));
 }

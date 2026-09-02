@@ -14,6 +14,7 @@
 #include "Ascension_Manager.h"
 #include "Ascension_Upgrade_Screen.h"
 #include "Smelter_Manager.h"
+#include "creature_Manager.h"
 
 
 
@@ -37,6 +38,7 @@ void Game::Init()
 	m_Ascension_Manger = new Ascension_Manager;
 	m_Ascension_Upgrade_Screen = new Ascension_Upgrade_Screen;
 	m_Smelter_Manager = new Smelter_Manager;
+	m_Creature_Manager = new Creature_Manager;
 
 	//Resources
 	
@@ -91,6 +93,9 @@ void Game::Init()
 
 
 	// testing things
+
+	m_Creature_Manager->Add_Creature(m_Item_Manager, "name 1", "Human");
+
 	if (true)
 	{
 		vector all_Resources = m_Resource_Manager->Get_All_Resources();

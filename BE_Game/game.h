@@ -18,6 +18,7 @@ class Tutorial;
 class Ascension_Manager;
 class Ascension_Upgrade_Screen;
 class Smelter_Manager;
+class Creature_Manager;
 
 
 namespace Tmpl8
@@ -54,6 +55,7 @@ public:
 	Ascension_Manager* m_Ascension_Manger;
 	Ascension_Upgrade_Screen* m_Ascension_Upgrade_Screen;
 	Smelter_Manager* m_Smelter_Manager;
+	Creature_Manager* m_Creature_Manager;
 
 
 };
